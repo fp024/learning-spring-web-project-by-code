@@ -13,7 +13,18 @@
 		현재 XML파일에서 오른쪽 메뉴열어 Spring -> Add as Bean Configuration 를 선택
 	 -->
 	
-	<context:component-scan base-package="org.fp024.sample">
-	</context:component-scan>
+	<bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig">	
+		<property name="driverClassName" value="oracle.jdbc.OracleDriver"/>
+		<property name="jdbcUrl" value="jdbc:oracle:thin:@192.168.137.152:1521:XE" />
+		<property name="username"  value="book_ex"/>
+		<property name="password"  value="book_ex"/>
+	</bean>
+	
+	<!-- hikariCP configuration -->
+	<bean id="dataSource" class="com.zaxxer.hikari.HikariDataSource" destroy-method="close">
+		<constructor-arg ref="hikariConfig"/>
+	</bean>
+	
+	<context:component-scan base-package="org.fp024.sample"></context:component-scan>
 			
 </beans>
