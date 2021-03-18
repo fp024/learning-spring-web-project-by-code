@@ -1,4 +1,4 @@
-# learing-spring-web-project-by-code
+# learning-spring-web-project-by-code
 
 ## 코드로 배우는 스프링 웹 프로젝트 (저자: 구멍가게코딩단)
 
