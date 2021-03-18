@@ -37,9 +37,10 @@
   적용을 하려다, 아래 사유로 적용을 하지 않았습니다.
     * JDK 11, ojdbc8 실행환경
     * 2013년 이후로 라이브러리 업데이트가 되지 않고 있음.
+    * 데이터 소스 생성시 드라이버 클래스로 로깅 라이브러리의 Spy클래스를 쓰는 것에 거부감이 듬.
 
-    * MyBatis에서 처리해주는 로깅 방식 사용
-      test 리소스의 log4j.xml 에다 mapper에 대한 TRACE 로거 설정을 하였습니다.
+    * MyBatis에서 처리해주는 로깅 방식 사용  
+      test 리소스의 log4j.xml 에다 mapper에 대한 TRACE 로거를 설정하였습니다.
   
     ```xml
 	<logger name="org.fp024.mapper">
