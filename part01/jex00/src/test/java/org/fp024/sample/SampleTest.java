@@ -10,11 +10,11 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import lombok.Setter;
-import lombok.extern.log4j.Log4j;
+import lombok.extern.slf4j.Slf4j;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {RootConfig.class})
-@Log4j
+@Slf4j
 public class SampleTest {
 	
 	// JDK 버전에 따라 달라질 수 도 있는 부분이여서, 처음부터 필드 위에 @Autowired를 붙이거나
@@ -26,9 +26,9 @@ public class SampleTest {
 	public void testExist() {
 		assertNotNull(restaurant);
 
-		logger.info(restaurant);
+		logger.info("{}", restaurant);
 		logger.info("------------------------------------------");
-		logger.info(restaurant.getChef());
+		logger.info("{}", restaurant.getChef());
 	}
 	
 }

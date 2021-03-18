@@ -11,10 +11,11 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import lombok.extern.log4j.Log4j;
+import lombok.extern.slf4j.Slf4j;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {RootConfig.class})
-@Log4j
+@Slf4j
 public class SampleHotelTest {
 
 	@Autowired
@@ -28,7 +29,7 @@ public class SampleHotelTest {
 
 		assertNotNull(hotel);
 		logger.info("-----------------------------------");
-		logger.info(hotel.getChef());
+		logger.info("{}", hotel.getChef());
 	}
 
 }

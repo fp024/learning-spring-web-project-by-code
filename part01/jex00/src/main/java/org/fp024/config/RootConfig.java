@@ -2,6 +2,9 @@ package org.fp024.config;
 
 import javax.sql.DataSource;
 
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.mybatis.spring.SqlSessionFactoryBean;
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -11,6 +14,7 @@ import com.zaxxer.hikari.HikariDataSource;
 
 @Configuration
 @ComponentScan(basePackages = { "org.fp024.sample" })
+@MapperScan(basePackages = {"org.fp024.mapper"})
 public class RootConfig {
 
 	@Bean
@@ -22,6 +26,13 @@ public class RootConfig {
 		hikariConfig.setPassword("book_ex");
 
 		return new HikariDataSource(hikariConfig);
+	}
+	
+	@Bean
+	public SqlSessionFactory sqlSessionFactory() throws Exception {
+		SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
+		sqlSessionFactoryBean.setDataSource(dataSource());
+		return sqlSessionFactoryBean.getObject();
 	}
 
 }
