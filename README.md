@@ -14,7 +14,6 @@
 
 
 ## 의견
-### 개정판이 나온다면..
 * Oracle JDK는 개인 용도 사용이 아닌 경우라면 라이선스 문제가 있을 수 있어, OpenJDK 설치로
 소개해주시면 좋을 것 같습니다.
     * https://adoptopenjdk.net/archive.html?variant=openjdk11&jvmVariant=hotspot
@@ -41,22 +40,21 @@
 
     * MyBatis에서 처리해주는 로깅 방식 사용  
       test 리소스의 log4j.xml 에다 mapper에 대한 TRACE 로거를 설정하였습니다.
-  
-    ```xml
-	<logger name="org.fp024.mapper">
-		<level value="trace" />
-	</logger>
-    ```
+	    ```xml
+		<logger name="org.fp024.mapper">
+			<level value="trace" />
+		</logger>
+	    ```
     * 결과
-    ```
-    INFO : org.fp024.persistence.TimeMapperTest - getTime2
-    DEBUG: org.fp024.mapper.TimeMapper.getTime2 - ==>  Preparing: SELECT sysdate FROM dual
-    DEBUG: org.fp024.mapper.TimeMapper.getTime2 - ==> Parameters: 
-    TRACE: org.fp024.mapper.TimeMapper.getTime2 - <==    Columns: SYSDATE
-    TRACE: org.fp024.mapper.TimeMapper.getTime2 - <==        Row: 2021-03-19 01:02:47
-    DEBUG: org.fp024.mapper.TimeMapper.getTime2 - <==      Total: 1
-    INFO : org.fp024.persistence.TimeMapperTest - 2021-03-19 01:02:47
-    ```
+	    ```
+	    INFO : org.fp024.persistence.TimeMapperTest - getTime2
+	    DEBUG: org.fp024.mapper.TimeMapper.getTime2 - ==>  Preparing: SELECT sysdate FROM dual
+	    DEBUG: org.fp024.mapper.TimeMapper.getTime2 - ==> Parameters: 
+	    TRACE: org.fp024.mapper.TimeMapper.getTime2 - <==    Columns: SYSDATE
+	    TRACE: org.fp024.mapper.TimeMapper.getTime2 - <==        Row: 2021-03-19 01:02:47
+	    DEBUG: org.fp024.mapper.TimeMapper.getTime2 - <==      Total: 1
+	    INFO : org.fp024.persistence.TimeMapperTest - 2021-03-19 01:02:47
+	    ```
     MyBatis 3.2 부터 이렇게 할 수 있다고 합니다.
 
 
