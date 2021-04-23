@@ -1,5 +1,10 @@
 package org.fp024.config;
 
+import java.nio.charset.StandardCharsets;
+
+import javax.servlet.Filter;
+
+import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 /**
@@ -20,5 +25,13 @@ public class WebConfig extends AbstractAnnotationConfigDispatcherServletInitiali
 	@Override
 	protected String[] getServletMappings() {
 		return new String[] { "/" };
+	}
+	
+	@Override
+	protected Filter[] getServletFilters() {
+		CharacterEncodingFilter encodingFilter = new CharacterEncodingFilter();
+		encodingFilter.setEncoding(StandardCharsets.UTF_8.name());
+		encodingFilter.setForceEncoding(true);
+		return new Filter[] {encodingFilter};
 	}
 }
