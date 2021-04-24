@@ -26,12 +26,12 @@ public class WebConfig extends AbstractAnnotationConfigDispatcherServletInitiali
 	protected String[] getServletMappings() {
 		return new String[] { "/" };
 	}
-	
+
 	@Override
 	protected Filter[] getServletFilters() {
 		CharacterEncodingFilter encodingFilter = new CharacterEncodingFilter();
 		encodingFilter.setEncoding(StandardCharsets.UTF_8.name());
 		encodingFilter.setForceEncoding(true);
-		return new Filter[] {encodingFilter};
+		return new Filter[] { encodingFilter };
 	}
 }
