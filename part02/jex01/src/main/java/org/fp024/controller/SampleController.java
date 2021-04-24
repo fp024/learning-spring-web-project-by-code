@@ -25,28 +25,45 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/sample/*")
 @Slf4j
 public class SampleController {
+	
+	/**
+	 * http://localhost:8080/jex01/sample/a
+	 */
 	@RequestMapping("")
 	public void basic() {
 		LOGGER.info("basic...................");
 	}
-
+	
+	
+	/**
+	 * http://localhost:8080/jex01/sample/basic
+	 */
 	@RequestMapping(value = "/basic", method = { RequestMethod.GET, RequestMethod.POST })
 	public void basicGet() {
 		LOGGER.info("basic get...................");
 	}
 
+	/**
+	 * http://localhost:8080/jex01/sample/basicOnlyGet
+	 */
 	@GetMapping("/basicOnlyGet")
 	public void basicGet2() {
 		LOGGER.info("basic get only get..................");
 	}
-
+	
+	/**
+	 * http://localhost:8080/jex01/sample/ex01?name=AAA&age=20
+	 */
 	@GetMapping("/ex01")
 	public String ex01(SampleDTO dto) {
 		LOGGER.info(dto.toString());
 		return "ex01";
 	}
 
+	
 	/**
+	 * http://localhost:8080/jex01/sample/ex02?name=AAA&age=20
+	 * 
 	 * 객체형이 아닌 기본 형을 required = false 로 두고 관련 파라미터를 전달하지 않으면...
 	 * 
 	 * Optional int parameter 'age' is present but cannot be translated into a null
@@ -63,35 +80,37 @@ public class SampleController {
 
 		return "ex02";
 	}
-
+	
+	
 	/**
 	 * 6.3.2 리스트 배열 처리 
 	 * - 요소를 쉼표로 나눠서 보내도 되고,
-	 * http://localhost:8080/ex01/sample/ex02List?ids=111,222,333
+	 *   http://localhost:8080/jex01/sample/ex02List?ids=111,222,333
 	 * 
-	 * * 이름을 중복해서 여러번 보내도 된다.
-	 * http://localhost:8080/ex01/sample/ex02List?ids=111&ids=222&ids=333
+	 * - 이름을 중복해서 여러번 보내도 된다. 
+	 *   http://localhost:8080/jex01/sample/ex02List?ids=111&ids=222&ids=333
 	 */
 	@GetMapping("/ex02List")
 	public String ex02List(@RequestParam("ids") List<String> ids) {
 		LOGGER.info("ids: {}, ids size: {}", ids, ids.size());
 		return "ex02List";
 	}
-
+	
 	/**
-	 * http://localhost:8080/ex01/sample/ex02Array?ids=111,222,333
-	 * http://localhost:8080/ex01/sample/ex02Array?ids=111&ids=222&ids=333
+	 * http://localhost:8080/jex01/sample/ex02Array?ids=111,222,333
+	 * http://localhost:8080/jex01/sample/ex02Array?ids=111&ids=222&ids=333
 	 */
 	@GetMapping("/ex02Array")
 	public String ex02Array(@RequestParam("ids") String[] ids) {
 		LOGGER.info("array ids: {}, array ids length: {}", ids, ids.length);
 		return "ex02List";
 	}
-
+	
+	
 	/**
 	 * 6.3.3 객체 리스트
 	 * 
-	 * http://localhost:8080/ex01/sample/ex02Bean?list[0].name=aaa&list[0].age=1
+	 * http://localhost:8080/jex01/sample/ex02Bean?list[0].name=aaa&list[0].age=1
 	 * 
 	 * * 톰켓 9.0에서 아래 오류 발생 java.lang.IllegalArgumentException: Invalid character
 	 * found in the request target
@@ -103,10 +122,10 @@ public class SampleController {
 	 * 
 	 * URI 인코드 해서 보내라함...
 	 * 
-	 * encodeURI("http://localhost:8080/ex01/sample/ex02Bean?list[0].name=aaa&list[0].age=1&list[1].name=bbb&list[1].age=2&list[4].name=bbb")
+	 * encodeURI("http://localhost:8080/jex01/sample/ex02Bean?list[0].name=aaa&list[0].age=1&list[1].name=bbb&list[1].age=2&list[4].name=bbb")
 	 * 
 	 * ==>
-	 * "http://localhost:8080/ex01/sample/ex02Bean?list%5B0%5D.name=…&list%5B1%5D.name=bbb&list%5B1%5D.age=2&list%5B4%5D.name=bbb"
+	 * "http://localhost:8080/jex01/sample/ex02Bean?list%5B0%5D.name=aaa&list%5B1%5D.name=bbb&list%5B1%5D.age=2&list%5B4%5D.name=bbb"
 	 * 
 	 * * (참고) 3번째 요소를 넘기고 4번째 요소의 이름만 입력했을 때, 3번째는 빈 객체로 들어간다. - list dtos:
 	 * SampleDTOList(list=[SampleDTO(name=aaa, age=1), SampleDTO(name=bbb, age=2),
@@ -121,21 +140,22 @@ public class SampleController {
 		LOGGER.info("list dtos: {}", list);
 		return "ex02Bean";
 	}
-
+	
+	
 	/**
 	 * 6.3.4 @InitBinder
 	 */
 	/*
 	 * // 도메인 Date 필드에 @DateTimeFormat을 사용하면 @InitBinder 설정은 필요없음.
-	 * 
-	 * @InitBinder public void initBinder(WebDataBinder binder) { SimpleDateFormat
-	 * dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-	 * binder.registerCustomEditor(java.util.Date.class, new
-	 * CustomDateEditor(dateFormat, false)); }
+	 *
+	 * @InitBinder 
+	 * public void initBinder(WebDataBinder binder) { 
+	 *     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+	 *     binder.registerCustomEditor(java.util.Date.class, new CustomDateEditor(dateFormat, false)); 
+	 * }
 	 */
-
 	/**
-	 * http://localhost:8080/ex01/sample/ex03?title=InitBinder%EC%97%B0%EC%8A%B5&dueDate=2021-04-24
+	 * http://localhost:8080/jex01/sample/ex03?title=InitBinder%EC%97%B0%EC%8A%B5&dueDate=2021-04-24
 	 * ==> TodoDTO(title=InitBinder연습, dueDate=Sat Apr 24 00:00:00 KST 2021)
 	 */
 	@GetMapping
@@ -143,11 +163,12 @@ public class SampleController {
 		LOGGER.info("todo: {}", todo);
 		return "ex03";
 	}
-
+	
 	/**
-	 * Spring MVC의 컨트롤러는 기본적으로 Java Beans 규칙에 맞는 객체는 다시 화면으로 객체를 전달함.
+	 * Spring MVC의 컨트롤러는 기본적으로 Java Beans 규칙에 맞는 객체는 
+	 * 다시 화면으로 객체를 전달함. (그동안 정확히 몰랐음.. 그동안 항상 model attribute로 추가해줬었음. ㅠㅠ)
 	 * 
-	 * http://localhost:8080/ex01/sample/ex04?page=1&name=aaa&age=10 
+	 * http://localhost:8080/jex01/sample/ex04?page=1&name=aaa&age=10 
 	 * ==> 기본형으로 전달된 page 정보는 출력되지 않지만, SampleDTO에 대한 정보가 JSP에 출력됨.
 	 * 
 	 * 그러나 기본형 타입 파라미터라도 @ModelAttribute 를 붙여사용하면, 무조건 Model에 담아서 전달하므로, 파라미터로 전달된
@@ -161,7 +182,7 @@ public class SampleController {
 
 		return "sample/ex04";
 	}
-
+	
 	/**
 	 * 6.4.2 RedirectAttributes
 	 * 
@@ -178,7 +199,8 @@ public class SampleController {
 	public void ex05() {
 		LOGGER.info("/ex05 ..........");
 	}
-
+	
+	
 	/**
 	 * 6.5.3 객체 타입
 	 * 
@@ -198,7 +220,9 @@ public class SampleController {
 
 		return dto;
 	}
-
+	
+	
+	
 	/**
 	 * 6.5.4 ResponseEntity 타입
 	 */
@@ -222,17 +246,18 @@ public class SampleController {
 
 		return new ResponseEntity<>(msg, header, HttpStatus.OK);
 	}
-
+	
 	
 	/**
 	 * 6.5.5 파일 업로드 처리
 	 * 
-	 * 로딩은 했지만 타겟 경로로 저장하는 일은 구현하지 않았다
+	 * http://localhost:8080/jex01/sample/exUpload
 	 */
 	@GetMapping("/exUpload")
 	public void exUpload() {
 		LOGGER.info("/exUpload....................");
 	}
+	
 	
 	@PostMapping("/exUploadPost")
 	public void exUploadPost(List<MultipartFile> files) {
@@ -247,6 +272,6 @@ public class SampleController {
 	
 	/**
 	 * 에러 페이지 접근 테스트
-	 * ==> http://localhost:8080/ex01/sample/ex04?name=aaa&age=a
+	 * ==> http://localhost:8080/jex01/sample/ex04?name=aaa&age=a
 	 */
 }
