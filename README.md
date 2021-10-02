@@ -2,8 +2,17 @@
 
 ## 코드로 배우는 스프링 웹 프로젝트 (저자: 구멍가게코딩단)
 
-* [yes24 도서 판매 페이지 링크](http://www.yes24.com/Product/Goods/64340061)
+* 도서 판매처
+
+    * yes24
+        * http://www.yes24.com/Product/Goods/64340061
+    * 교보문고
+        * https://www.kyobobook.co.kr/product/detailViewKor.laf?barcode=9791189184070
+
+    
+
 * 실습 진행 환경
+    
     * STS 3 3.9.14.RELEASE 또는 Eclipse 2021-03
     * AdoptOpenJDK 11.0.10
         * 책 환경: Oracle JDK 1.8
@@ -12,8 +21,21 @@
     * Tomcat 9.0.44
     * Maven 3.6.3
 
+## 목차
+
+* [Part 1. 스프링 개발환경 구축](part01)
+* [Part 2. 스프링 MVC설정](part02)
+* [Part 3. 기본적인 웹 게시물 관리](part03)
+* Part 4. REST 방식과 Ajax를 이용하는 댓글 처리
+* Part 5. AOP와 트랜젝션
+* Part 6. 파일 업로드 처리
+* Part 7. Spring Web Security를 이용한 로그인 처리
+* 부록
+
+
 
 ## 의견
+
 * Oracle JDK는 개인 용도 사용이 아닌 경우라면 라이선스 문제가 있을 수 있어, OpenJDK 설치로
 소개해주시면 좋을 것 같습니다.
     * https://adoptopenjdk.net/archive.html?variant=openjdk11&jvmVariant=hotspot
@@ -55,7 +77,7 @@
 	    DEBUG: org.fp024.mapper.TimeMapper.getTime2 - <==      Total: 1
 	    INFO : org.fp024.persistence.TimeMapperTest - 2021-03-19 01:02:47
 	    ```
-    MyBatis 3.2 부터 이렇게 할 수 있다고 합니다.
+      MyBatis 3.2 부터 이렇게 할 수 있다고 합니다.
 
 
 ## 정오표
