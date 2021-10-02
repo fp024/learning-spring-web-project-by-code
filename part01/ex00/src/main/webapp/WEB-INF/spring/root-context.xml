@@ -17,7 +17,7 @@
 	
 	<bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig">	
 		<property name="driverClassName" value="oracle.jdbc.OracleDriver"/>
-		<property name="jdbcUrl" value="jdbc:oracle:thin:@192.168.137.152:1521:XE" />
+		<property name="jdbcUrl" value="jdbc:oracle:thin:@localvmdb.oracle_xe_18c:1521:XE" />
 		<property name="username"  value="book_ex"/>
 		<property name="password"  value="book_ex"/>
 	</bean>

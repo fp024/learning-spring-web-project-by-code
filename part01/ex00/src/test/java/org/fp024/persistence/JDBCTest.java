@@ -25,7 +25,7 @@ public class JDBCTest {
 
 	@Test
 	public void testConnection() {
-		String url = "jdbc:oracle:thin:@192.168.137.152:1521:XE";
+		String url = "jdbc:oracle:thin:@localvmdb.oracle_xe_18c:1521:XE";
 		try (Connection con = DriverManager.getConnection(url, "book_ex", "book_ex")) {
 			logger.info("{}", con);
 		} catch (Exception e) {
