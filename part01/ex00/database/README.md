@@ -36,8 +36,11 @@
 	GRANT CONNECT, RESOURCE TO book_ex;
 	
 	```
+	
+	* book_ex로 접속할 때는... Driver Properties의 internal_login에 sysdba 설정 내용을 제거해주자!
 
 ## 8080 포트 변경
+
 * Oracle 18c에서 `SELECT dbms_xdb.gethttpport() FROM DUAL;` 쿼리 수행시 결과가 0임
     * Oracle 18c XE를 설치한 가상머신은 Oralce 전용으로만 사용할 것이여서, 일단 추가 설정은 하지 않는다. 
 
@@ -53,5 +56,4 @@
     
 ## 드라이버 클래스 
 * Oracle 9이후로 oracle.jdbc.driver.OracleDriver 대신에 oracle.jdbc.OracleDriver를 사용해야한다고 함. 예전 클래스가 경로에 남아있긴 하지만, HikariCP 초기화시 경고가 나타남 
-
 
