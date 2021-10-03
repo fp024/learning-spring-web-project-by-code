@@ -12,7 +12,7 @@
     
 
 * 실습 진행 환경
-    
+  
     * STS 3 3.9.14.RELEASE 또는 Eclipse 2021-03
     * AdoptOpenJDK 11.0.10
         * 책 환경: Oracle JDK 1.8
@@ -24,6 +24,7 @@
 ## 목차
 
 * [Part 1. 스프링 개발환경 구축](part01)
+  * [데이터베이스 설정](part01/ex00/database)
 * [Part 2. 스프링 MVC설정](part02)
 * [Part 3. 기본적인 웹 게시물 관리](part03)
 * Part 4. REST 방식과 Ajax를 이용하는 댓글 처리
