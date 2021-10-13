@@ -13,13 +13,14 @@
 
 * 실습 진행 환경
   
-    * STS 3 3.9.14.RELEASE 또는 Eclipse 2021-03
-    * AdoptOpenJDK 11.0.10
+    * STS 3 3.9.14.RELEASE 또는 Eclipse 2021-09
+    * Adoptium OpenJDK 11
         * 책 환경: Oracle JDK 1.8
     * Oracle 18c Express Edition
         * 책 환경: Oracle 11c Express Edition
-    * Tomcat 9.0.44
-    * Maven 3.6.3
+    * Tomcat 8.5.x
+    * Jetty 9.4.x
+    * Maven 3.8.x
 
 ## 목차
 
@@ -39,7 +40,7 @@
 
 * Oracle JDK는 개인 용도 사용이 아닌 경우라면 라이선스 문제가 있을 수 있어, OpenJDK 설치로
 소개해주시면 좋을 것 같습니다.
-    * https://adoptopenjdk.net/archive.html?variant=openjdk11&jvmVariant=hotspot
+    * https://adoptium.net/?variant=openjdk11&jvmVariant=hotspot
 
 * Part1에서 lombok의 @Setter를 통해 @Autowired를 붙이는 것을 가이드 해주셨는데,
   클래스의 멤버 변수에 직접 @Autowired를 붙일 수 있으므로 반드시 필요한 부분이 아닐 것 같습니다.
@@ -58,27 +59,33 @@
 * Part1 - log4jdbc-log4j2 설정관련..
   적용을 하려다, 아래 사유로 적용을 하지 않았습니다.
     * JDK 11, ojdbc8 실행환경
+  
     * 2013년 이후로 라이브러리 업데이트가 되지 않고 있음.
-    * 데이터 소스 생성시 드라이버 클래스로 로깅 라이브러리의 Spy클래스를 쓰는 것에 거부감이 듬.
 
-    * MyBatis에서 처리해주는 로깅 방식 사용  
-      test 리소스의 log4j.xml 에다 mapper에 대한 TRACE 로거를 설정하였습니다.
+    * 데이터 소스 생성시 드라이버 클래스로 로깅 라이브러리의 Spy클래스를 쓰는 것에 거부감이 듬.
+  
+	  * MyBatis에서 처리해주는 로깅 방식 사용  
+	    test 리소스의 log4j.xml 에다 mapper에 대한 TRACE 로거를 설정하였습니다.
 	    ```xml
 		<logger name="org.fp024.mapper">
 			<level value="trace" />
-		</logger>
+  	</logger>
 	    ```
-    * 결과
+	    
+	  * 결과
 	    ```
 	    INFO : org.fp024.persistence.TimeMapperTest - getTime2
 	    DEBUG: org.fp024.mapper.TimeMapper.getTime2 - ==>  Preparing: SELECT sysdate FROM dual
 	    DEBUG: org.fp024.mapper.TimeMapper.getTime2 - ==> Parameters: 
 	    TRACE: org.fp024.mapper.TimeMapper.getTime2 - <==    Columns: SYSDATE
 	    TRACE: org.fp024.mapper.TimeMapper.getTime2 - <==        Row: 2021-03-19 01:02:47
-	    DEBUG: org.fp024.mapper.TimeMapper.getTime2 - <==      Total: 1
-	    INFO : org.fp024.persistence.TimeMapperTest - 2021-03-19 01:02:47
-	    ```
+      DEBUG: org.fp024.mapper.TimeMapper.getTime2 - <==      Total: 1
+      INFO : org.fp024.persistence.TimeMapperTest - 2021-03-19 01:02:47
+      ```
       MyBatis 3.2 부터 이렇게 할 수 있다고 합니다.
+  
+  * Log4j 1이 End of Life 상태이고 보안취약점이 있어, 개정판에는 Log4j2로 변경되야할 것 같습니다.
+    * [Spring MVC Template 생성 프로젝트의 Log4j에서 Log42 전환](./log4j-to-logj2.md)
 
 
 ## 정오표

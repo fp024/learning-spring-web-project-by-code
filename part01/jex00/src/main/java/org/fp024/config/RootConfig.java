@@ -13,8 +13,8 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
 @Configuration
-@ComponentScan(basePackages = { "org.fp024.sample" })
-@MapperScan(basePackages = {"org.fp024.mapper"})
+@ComponentScan(basePackages = { "org.fp024.sample"})
+@MapperScan(basePackages = { "org.fp024.mapper" })
 public class RootConfig {
 
 	@Bean
@@ -27,7 +27,7 @@ public class RootConfig {
 
 		return new HikariDataSource(hikariConfig);
 	}
-	
+
 	@Bean
 	public SqlSessionFactory sqlSessionFactory() throws Exception {
 		SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
