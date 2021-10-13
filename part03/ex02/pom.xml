@@ -3,7 +3,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.fp024</groupId>
-	<artifactId>controller</artifactId>
+	<artifactId>ex02</artifactId>
 	<name>ex02</name>
 	<packaging>war</packaging>
 	<version>1.0.0-BUILD-SNAPSHOT</version>
@@ -62,13 +62,16 @@
 			<artifactId>slf4j-api</artifactId>
 			<version>${org.slf4j-version}</version>
 		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>jcl-over-slf4j</artifactId>
-			<version>${org.slf4j-version}</version>
-			<scope>runtime</scope>
-		</dependency>
-		<dependency>
+        
+        <!-- // spring-jcl-5.2.17.RELEASE 에 같은 패키지로 포함이 되어있다.
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>jcl-over-slf4j</artifactId>
+            <version>${org.slf4j-version}</version>
+            <scope>runtime</scope>
+        </dependency>
+        -->		
+        <dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-log4j12</artifactId>
 			<version>${org.slf4j-version}</version>
@@ -123,14 +126,16 @@
 			<groupId>javax.servlet</groupId>
 			<artifactId>jstl</artifactId>
 			<version>1.2</version>
+            <scope>provided</scope>
 		</dependency>
 		
-		<!-- Database -->
-		<dependency>
-    		<groupId>com.oracle.database.jdbc</groupId>
-    		<artifactId>ojdbc8</artifactId>
-    		<version>18.3.0.0</version>
-		</dependency>
+        <!-- Database -->
+        <!-- https://mvnrepository.com/artifact/com.oracle.database.jdbc/ojdbc8/18.3.0.0 -->
+        <dependency>
+            <groupId>com.oracle.database.jdbc</groupId>
+            <artifactId>ojdbc8</artifactId>
+            <version>18.3.0.0</version>
+        </dependency>
 
 	 	<dependency>
 	        <groupId>com.zaxxer</groupId>
@@ -167,7 +172,7 @@
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
-			<version>1.18.20</version>
+			<version>1.18.22</version>
 			<scope>provided</scope>
 		</dependency>
 	
@@ -200,6 +205,49 @@
         -->
 	</dependencies>
     <build>
+        <finalName>${project.name}</finalName>
+        <pluginManagement>
+            <plugins>
+                <!-- JUnit 5 사용을 위해서 maven-surefire-plugin 버전을 올려두자! -->
+                <!-- IDE에서는 잘되는 것 처럼 보여도, 콘솔의 메이븐으로 실행할 때 안될 수 있음. -->
+                <plugin>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>2.22.2</version>
+                </plugin>
+                <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+                <plugin>
+                    <groupId>org.eclipse.m2e</groupId>
+                    <artifactId>lifecycle-mapping</artifactId>
+                    <version>1.0.0</version>
+                    <configuration>
+                        <lifecycleMappingMetadata>
+                            <pluginExecutions>
+                                <pluginExecution>
+                                    <pluginExecutionFilter>
+                                        <groupId>
+                                            org.apache.maven.plugins
+                                        </groupId>
+                                        <artifactId>
+                                            maven-toolchains-plugin
+                                        </artifactId>
+                                        <versionRange>
+                                            [1.1,)
+                                        </versionRange>
+                                        <goals>
+                                            <goal>toolchain</goal>
+                                        </goals>
+                                    </pluginExecutionFilter>
+                                    <action>
+                                        <ignore></ignore> <!-- m2e에서 toolchain 동작 무시 -->
+                                    </action>
+                                </pluginExecution>
+                            </pluginExecutions>
+                        </lifecycleMappingMetadata>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+        
         <plugins>
             <plugin>
                 <artifactId>maven-eclipse-plugin</artifactId>
@@ -215,6 +263,7 @@
                     <downloadJavadocs>true</downloadJavadocs>
                 </configuration>
             </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -222,11 +271,35 @@
                 <configuration>
                     <source>${java-version}</source>
                     <target>${java-version}</target>
-                    <compilerArgument>-Xlint:all</compilerArgument>
+                    <compilerArgs>
+                        <arg>-Xlint:all</arg>
+                        <arg>-Xlint:-processing</arg>  <!-- No processor claimed any of these annotations 경고는 노출되지않게 설정 -->
+                    </compilerArgs>
                     <showWarnings>true</showWarnings>
                     <showDeprecation>true</showDeprecation>
                 </configuration>
             </plugin>
+            
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-toolchains-plugin</artifactId>
+                <version>3.0.0</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>toolchain</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <toolchains>
+                        <jdk>
+                            <version>${java-version}</version>                            
+                        </jdk>
+                    </toolchains>                    
+                </configuration>                
+            </plugin>  
+            
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
@@ -235,6 +308,28 @@
                     <mainClass>org.test.int1.Main</mainClass>
                 </configuration>
             </plugin>
+            
+            <!-- Jetty 서버 구동 -->
+            <plugin>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-maven-plugin</artifactId>
+                <version>9.4.44.v20210927</version>
+                <configuration>                
+                    <javaPath>${java.home}</javaPath>
+                    <webApp>
+                        <contextPath>/${project.name}</contextPath>
+                        <sessionHandler>
+                            <sessionIdPathParameterName>none</sessionIdPathParameterName>
+                        </sessionHandler>
+                    </webApp>
+                    <stopKey>CTRL+C</stopKey>
+                    <stopPort>8999</stopPort>
+                    <scanIntervalSeconds>10</scanIntervalSeconds>
+                    <scanTargets>
+                        <scanTarget>src/main/webapp/WEB-INF/web.xml</scanTarget>
+                    </scanTargets>
+                </configuration>
+            </plugin>                   
         </plugins>
     </build>
 </project>

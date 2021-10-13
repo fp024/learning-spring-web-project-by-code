@@ -2,6 +2,7 @@ package org.fp024.persistence;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import org.fp024.config.RootConfig;
 import org.fp024.mapper.TimeMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,7 +13,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import lombok.extern.slf4j.Slf4j;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration("file:src/main/webapp/WEB-INF/spring/root-context.xml")
+@ContextConfiguration(classes = {RootConfig.class})
 @Slf4j
 class TimeMapperTest {
 	@Autowired

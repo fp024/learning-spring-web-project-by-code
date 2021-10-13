@@ -102,20 +102,98 @@
 
 
 
-
-
 ### 7.4 데이터베이스 관련 설정 및 테스트
 
+* 이전과 마찬가지로 log4jdbc 설정없이 mapper 패키지 로깅방식으로 쿼리 로그를 출력하게 했다. test resource의 log4j.xml 참고
 
+* JUnit 5로 설정한 테스트 케이스를 돌리려면  maven-surefire-plugin 을 버전업 해두자!
 
+  ```xml
+  <pluginManagement>
+      <plugins>
+          <!-- JUnit 5 사용을 위해서 maven-surefire-plugin 버전을 올려두자! -->
+          <plugin>
+              <artifactId>maven-surefire-plugin</artifactId>
+              <version>2.22.2</version>
+          </plugin>
+          ...
+  ```
 
+* mvnw 로 명령 프롬프트에서 실행하면 경고가 남는 부분이 있다. IDE에서도 남던 경고인데, 그동안 신경을 안써서 몰랐다.
+
+  ```
+  [WARNING] [path] bad path element "C:\Users\사용자_이름\.m2\repository\com\oracle\database\jdbc\ojdbc8\18.3.0.0\oraclepki.jar": no such file or directory
+  [WARNING] [path] bad path element "C:\Users\사용자_이름\.m2\repository\com\oracle\database\security\oraclepki\18.3.0.0\osdt_core.jar": no such file or directory
+  [WARNING] [path] bad path element "C:\Users\사용자_이름\.m2\repository\com\oracle\database\security\oraclepki\18.3.0.0\osdt_cert.jar": no such file or directory
+  [WARNING] [path] bad path element "C:\Users\사용자_이름\.m2\repository\com\oracle\database\security\oraclepki\oracle.osdt\osdt_core.jar": no such file or directory
+  [WARNING] [path] bad path element "C:\Users\사용자_이름\.m2\repository\com\oracle\database\security\oraclepki\oracle.osdt\osdt_cert.jar": no such file or directory
+  [WARNING] No processor claimed any of these annotations: /org.junit.jupiter.api.Test,/org.junit.jupiter.api.extension.ExtendWith,/org.springframework.test.context.ContextConfiguration,/org.springframework.beans.factory.annotation.Autowired
+  ```
+
+  * 위에 파일 없다는 것은 실제로 없긴한데, 디펜던시 트리상으로 다른 경로에 정상적으로 설정이 되어있음. Oracle 쿼리 동작에도 문제가 없는 상태인데... 뭔가 이상하긴 하지만 무시해도 될 경고 같다.
+
+  * No processor claimed any of these annotations 는 어노테이션을 요구한 프로세서가 없다는데, 실제로 mvnw에서 test 골이 잘 동작하고, Spring 도 정상적으로 동작했다. 이것도 무시해도 될 것 같다.
+
+    ```xml
+    <!--
+    	명시적으로 compilerArgs 나, showWarnings를 설정하지 않으면 경고가 안보여서 그동안 잘 몰랐던 것 같다.
+        이 프로젝트의 경우는 아래 설정이 있어서 경고가 노출되었다.
+    -->
+    
+    <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.8.1</version>
+        <configuration>
+            <source>${java-version}</source>
+            <target>${java-version}</target>
+            <compilerArgs>
+                <arg>-Xlint:all</arg>
+                <arg>-Xlint:-processing</arg>  <!-- No processor claimed any of these annotations 경고는 노출되지않게 설정 -->
+            </compilerArgs>
+            <showWarnings>true</showWarnings>  <!-- 오라클 드라이버관련 경고관련해서는 이걸 false로 하면 될태지만, 냅두자 -->
+            <showDeprecation>true</showDeprecation>
+        </configuration>
+    </plugin>
+    ```
+
+  * Spring Legacy 프로젝트 생성시 자동 추가된 jcl-over-slf4j 는 제거 했다. spring-jcl-5.2.17.RELEASE 에 같은 패키지로 포함이 되어있다.
+
+    ```xml
+    <!-- // spring-jcl-5.2.17.RELEASE 에 같은 패키지로 포함이 되어있다.
+    <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>jcl-over-slf4j</artifactId>
+        <version>${org.slf4j-version}</version>
+        <scope>runtime</scope>
+    </dependency>
+    -->	
+    ```
+
+    
 
 
 ### 7.5 Java 설정을 이용하는 경우의 프로젝트 구성
 
+* jex02 프로젝트 생성
+
+* mvnw 추가
+
+  `mvn -N io.takari:maven:wrapper -Dmaven=3.8.2`
+
+* Maven tool chain 설정 적용
+
+  * 명령프롬프트 환경에서 Java 8 환경에서 Maven 을 사용해서 프로젝트 설정이 Java 11로 되어있는 프로젝트 빌드를 할 수 없다. 
+  * 아래 tool chain 설정을 적용뒤에, Java 8 환경의 명령 프롬프트에서 Java 11을 찾아 정상 빌드함을 확인했다.
+    * https://maven.apache.org/guides/mini/guide-using-toolchains.html
+
+* **jetty-maven-plugin**을 사용할 때, tool chain을 쓰더라도, 빌드는 JDK 11로 하지만  Jetty는 toolchain 설정으로 처리되지 않고,  Maven을 구동하는 JDK 버전으로 동작하기 때문에, JDK버전을 맞춰줄 수 밖에 없다.
+
+  * Maven을 구동하는 버전이 JDK 8이고, toolchain으로 설정한 JDK 버전이 11이면, toolchain에 의해 11버전으로 빌드된 Java 클래스파일을 Jetty가 처리할 수 없어 오류가 난다. (Unsupported major.minor version XX.X)
 
 
 ## 08. 영속/비즈니스 계층의 CRUD 구현
+* [ ] **TODO:** MyBatis로 그래도 구현 진행해보고 이후 JPA로 바꿔보자!
 
 ### 8.1 영속 계층의 구현 준비
 
