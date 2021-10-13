@@ -67,11 +67,9 @@
 	  * MyBatis에서 처리해주는 로깅 방식 사용  
 	    test 리소스의 log4j.xml 에다 mapper에 대한 TRACE 로거를 설정하였습니다.
 	    ```xml
-		<logger name="org.fp024.mapper">
-			<level value="trace" />
-  	</logger>
-	    ```
-	    
+		<Logger name="org.fp024.mapper" level="trace"/>
+		```
+  	
 	  * 결과
 	    ```
 	    INFO : org.fp024.persistence.TimeMapperTest - getTime2
@@ -79,13 +77,13 @@
 	    DEBUG: org.fp024.mapper.TimeMapper.getTime2 - ==> Parameters: 
 	    TRACE: org.fp024.mapper.TimeMapper.getTime2 - <==    Columns: SYSDATE
 	    TRACE: org.fp024.mapper.TimeMapper.getTime2 - <==        Row: 2021-03-19 01:02:47
-      DEBUG: org.fp024.mapper.TimeMapper.getTime2 - <==      Total: 1
-      INFO : org.fp024.persistence.TimeMapperTest - 2021-03-19 01:02:47
+	    DEBUG: org.fp024.mapper.TimeMapper.getTime2 - <==      Total: 1
+	    INFO : org.fp024.persistence.TimeMapperTest - 2021-03-19 01:02:47
       ```
       MyBatis 3.2 부터 이렇게 할 수 있다고 합니다.
   
   * Log4j 1이 End of Life 상태이고 보안취약점이 있어, 개정판에는 Log4j2로 변경되야할 것 같습니다.
-    * [Spring MVC Template 생성 프로젝트의 Log4j에서 Log42 전환](./log4j-to-logj2.md)
+    * [Spring MVC Template 생성 프로젝트의 Log4j 1에서 Log4j 2 전환](./migrate-log4j-1-to-log4j-2.md)
 
 
 ## 정오표
