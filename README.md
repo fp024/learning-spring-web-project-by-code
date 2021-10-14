@@ -7,7 +7,7 @@
     * yes24
         * http://www.yes24.com/Product/Goods/64340061
     * 교보문고
-        * https://www.kyobobook.co.kr/product/detailViewKor.laf?barcode=9791189184070
+        * https://www.kyobobook.co.kr/product/detailViewKor.laf?barcode=9791189184018
 
     
 
@@ -82,8 +82,10 @@
       ```
       MyBatis 3.2 부터 이렇게 할 수 있다고 합니다.
   
-  * Log4j 1이 End of Life 상태이고 보안취약점이 있어, 개정판에는 Log4j2로 변경되야할 것 같습니다.
+  * **Log4j 1이 End of Life 상태이고 보안취약점이 있어, 개정판에는 Log4j 2로 변경되야할 것 같습니다.**
+    
     * [Spring MVC Template 생성 프로젝트의 Log4j 1에서 Log4j 2 전환](./migrate-log4j-1-to-log4j-2.md)
 
 
 ## 정오표
+
