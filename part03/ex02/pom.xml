@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.fp024</groupId>
 	<artifactId>ex02</artifactId>
-	<name>ex02</name>
+	<name>${project.artifactId}</name>
 	<packaging>war</packaging>
 	<version>1.0.0-BUILD-SNAPSHOT</version>
     <properties>
@@ -105,7 +105,7 @@
 	 	<dependency>
 	        <groupId>com.zaxxer</groupId>
 	        <artifactId>HikariCP</artifactId>
-	        <version>4.0.3</version>
+	        <version>5.0.0</version>
 	    </dependency>
 		
 		<dependency>
@@ -233,8 +233,6 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.1</version>
                 <configuration>
-                    <source>${java-version}</source>
-                    <target>${java-version}</target>
                     <compilerArgs>
                         <arg>-Xlint:all</arg>
                         <arg>-Xlint:-processing</arg>  <!-- No processor claimed any of these annotations 경고는 노출되지않게 설정 -->
