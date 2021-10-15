@@ -16,6 +16,8 @@
         <org.aspectj-version>1.9.7</org.aspectj-version>
         <log4j2.version>2.14.1</log4j2.version>
         <lombok.version>1.18.22</lombok.version>
+        
+        <jetty.version>9.4.44.v20210927</jetty.version>
     </properties>
 
     <dependencyManagement>
@@ -276,27 +278,41 @@
             
             <!-- Jetty 서버 구동 -->            
             <plugin>
+                <!-- https://www.eclipse.org/jetty/documentation/jetty-9/index.html#jetty-maven-plugin -->
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-maven-plugin</artifactId>
-                <version>9.4.44.v20210927</version>                
-                <configuration>                  
+                <version>${jetty.version}</version>
+                <configuration>
                     <webApp>
-                        <contextPath>/${project.name}</contextPath>
+                        <contextPath>/${project.artifactId}</contextPath>
                         <sessionHandler>
                             <sessionIdPathParameterName>none</sessionIdPathParameterName>
-                        </sessionHandler>                        
-                    </webApp>                    
+                        </sessionHandler>
+                    </webApp>
                     <stopKey>CTRL+C</stopKey>
                     <stopPort>8999</stopPort>
                     <scanIntervalSeconds>10</scanIntervalSeconds>
-                    <!--  web.xml 대신 Java 클래스를 사용해서 별도 지정하지 않아도 된다. -->
+                    <!-- web.xml을 Java 설정으로 전환하여 불필요하다. -->
                     <!-- 
-                    <scanTargets>                                            
+                    <scanTargets>
                         <scanTarget>src/main/webapp/WEB-INF/web.xml</scanTarget>
                     </scanTargets>
-                    -->  
+                    -->
                 </configuration>
-            </plugin>       
+                <dependencies>
+                    <dependency>
+                        <groupId>org.eclipse.jetty</groupId>
+                        <artifactId>apache-jstl</artifactId>
+                        <version>${jetty.version}</version>
+                        <exclusions>
+                            <exclusion>
+                                <groupId>org.apache.taglibs</groupId>
+                                <artifactId>taglibs-standard-impl</artifactId>
+                            </exclusion>
+                        </exclusions>
+                    </dependency>
+                </dependencies>
+            </plugin>
         </plugins>
     </build>
 </project>

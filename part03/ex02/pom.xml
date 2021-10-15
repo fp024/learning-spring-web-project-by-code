@@ -16,6 +16,8 @@
 		<org.aspectj-version>1.9.7</org.aspectj-version>
         <log4j2.version>2.14.1</log4j2.version>
         <lombok.version>1.18.22</lombok.version>
+        
+        <jetty.version>9.4.44.v20210927</jetty.version>
 	</properties>
 
 	<dependencyManagement>
@@ -83,12 +85,14 @@
 		    <version>2.3.3</version>
 		    <scope>provided</scope>
 		</dependency>
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>jstl</artifactId>
-			<version>1.2</version>
+
+        <!-- jetty가 사용하는 apache-jstl에 디펜던시된 taglibs-standard-impl이 Tomcat 8.5에서도 잘 동작한다. -->
+        <dependency>
+            <groupId>org.apache.taglibs</groupId>
+            <artifactId>taglibs-standard-impl</artifactId>
+            <version>1.2.5</version>
             <scope>runtime</scope>
-		</dependency>
+        </dependency>
 		
         <!-- Database -->
         <!-- https://mvnrepository.com/artifact/com.oracle.database.jdbc/ojdbc8/18.3.0.0 -->
@@ -166,7 +170,6 @@
         -->
 	</dependencies>
     <build>
-        <finalName>${project.name}</finalName>
         <pluginManagement>
             <plugins>
                 <!-- JUnit 5 사용을 위해서 maven-surefire-plugin 버전을 올려두자! -->
@@ -272,13 +275,13 @@
             
             <!-- Jetty 서버 구동 -->
             <plugin>
+                <!-- https://www.eclipse.org/jetty/documentation/jetty-9/index.html#jetty-maven-plugin -->
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-maven-plugin</artifactId>
-                <version>9.4.44.v20210927</version>
-                <configuration>                
-                    <javaPath>${java.home}</javaPath>
+                <version>${jetty.version}</version>
+                <configuration>
                     <webApp>
-                        <contextPath>/${project.name}</contextPath>
+                        <contextPath>/${project.artifactId}</contextPath>
                         <sessionHandler>
                             <sessionIdPathParameterName>none</sessionIdPathParameterName>
                         </sessionHandler>
@@ -290,7 +293,20 @@
                         <scanTarget>src/main/webapp/WEB-INF/web.xml</scanTarget>
                     </scanTargets>
                 </configuration>
-            </plugin>                   
+                <dependencies>
+                    <dependency>
+                        <groupId>org.eclipse.jetty</groupId>
+                        <artifactId>apache-jstl</artifactId>
+                        <version>${jetty.version}</version>
+                        <exclusions>
+                            <exclusion>
+                                <groupId>org.apache.taglibs</groupId>
+                                <artifactId>taglibs-standard-impl</artifactId>
+                            </exclusion>
+                        </exclusions>
+                    </dependency>
+                </dependencies>
+            </plugin>                 
         </plugins>
     </build>
 </project>
