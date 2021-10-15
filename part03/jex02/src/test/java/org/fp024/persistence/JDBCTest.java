@@ -13,7 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 class JDBCTest {
 	static {
 		try {
-			Class.forName("oracle.jdbc.driver.OracleDriver");
+			Class.forName("oracle.jdbc.OracleDriver");
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage(), e);
 		}

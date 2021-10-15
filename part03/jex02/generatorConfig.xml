@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+	<context id="myBatis3Simple" >
+		<property name="javaFileEncoding" value="UTF-8"/>
+	
+		<!-- 자동생성 주석 금지  targetRuntime="MyBatis3Simple" -->
+		<commentGenerator>
+			<property name="suppressAllComments" value="true" />
+		</commentGenerator>
+	
+		<jdbcConnection connectionURL="jdbc:oracle:thin:@localvmdb.oracle_xe_18c:1521:XE"
+			driverClass="oracle.jdbc.OracleDriver"
+			password="book_ex"
+			userId="book_ex" 
+		/>
+
+		<!-- Java 도메인 모델 생성 --> 
+		<javaModelGenerator
+			targetPackage="org.fp024.domain" 
+			targetProject="jex02/src/main/java"	
+		>
+		</javaModelGenerator>
+		
+
+		<!-- 메퍼 XML 생성 -->
+		<sqlMapGenerator 
+			targetPackage="org.fp024.mapper"
+			targetProject="jex02/src/main/resources" 
+		/>
+
+		<!-- 메퍼 인터페이스 (레파지토리 인터페이스 )-->
+		<javaClientGenerator type="XMLMAPPER" 
+			targetPackage="org.fp024.mapper" 
+			targetProject="jex02/src/main/java"
+		/>
+
+		<!-- 타켓 테이블  -->
+		<table 
+			tableName="tbl_board"
+			domainObjectName="BoardVO"
+			mapperName="BoardMapper"  
+		>
+             <!-- 키생성 컬럼과 쿼리를 정의한다. -->
+            <generatedKey column="bno" sqlStatement="SELECT seq_board.nextval FROM DUAL"/>
+            <!-- Oracle에서 bno 컬럼을 NUMBER(10,0)으로 설정했는데, 일단은 BIGINT로 써본다.  -->
+			<columnOverride column="bno" property="bno" jdbcType='BIGINT' javaType='java.lang.Long'/>
+			<columnOverride column="regdate" property="regdate" jdbcType='DATE' javaType='java.time.LocalDateTime'/>
+            <columnOverride column="updatedate" property="updateDate" jdbcType='DATE' javaType='java.time.LocalDateTime'/>
+            
+            
+		</table>
+	</context>
+	
+	
+</generatorConfiguration>

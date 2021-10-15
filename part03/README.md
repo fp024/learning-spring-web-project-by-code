@@ -193,13 +193,24 @@
 
 
 ## 08. 영속/비즈니스 계층의 CRUD 구현
-* [ ] **TODO:** MyBatis로 그래도 구현 진행해보고 이후 JPA로 바꿔보자!
+* 영속 계층의 작업 순서
+  1. 테이블 컬럼 구조를 반영하는 VO(Value Object) 클래스의 생성
+  2. MyBatis의 Mapper 인터페이스의 작성/XML 처리
+  3. 작성한 Mapper 인터페이스 테스트
 
 ### 8.1 영속 계층의 구현 준비
 
 ### 8.2 영속 영역의 CRUD 구현
 
+ex02 프로젝트는 책의 설명 그대로 따라가고 jex02 프로젝트는 `MyBatis Dynamic SQL` 모듈을 사용해서 매퍼를 자동으로 만들고, QueryDSL 처럼 메서드를 연이어 호출해가며 실행하는 방식으로 해봤다.
 
+* https://mybatis.org/mybatis-dynamic-sql/docs/introduction.html
+* jex02에서 주목해야할 코드들..
+  * generatorConfig.xml
+  * BoardMapper
+  * BoardVODynamicSqlSupport
+  * BoardMapperTest
+  * BoardVO (DB 테이블명과 generatorConfig.xml에 오버라이드 설정 참고해서 POJO 클래스를 만들어준다. 주석이 많긴한데, lombok으로 줄여서 써도 된다.)
 
 ## 09. 비즈니스 계층
 
