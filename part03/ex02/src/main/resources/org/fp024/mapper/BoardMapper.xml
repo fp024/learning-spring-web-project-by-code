@@ -20,7 +20,7 @@
         </selectKey>
 
         INSERT INTO tbl_board (bno, title, content, writer)
-        VALUES (seq_board.nextval, #{title}, #{content}, #{writer})    
+        VALUES (#{bno}, #{title}, #{content}, #{writer})    
     </insert>
     
     <select id="read" resultType="org.fp024.domain.BoardVO">

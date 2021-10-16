@@ -218,7 +218,16 @@ ex02 프로젝트는 책의 설명 그대로 따라가고 jex02 프로젝트는 
 
 ### 9.2 비즈니스 계층의 구현과 테스트
 
+* jex02의경우 MyBatis Dynamic SQL 라이브러리로 진행하고 ex02는 책내용대로 진행
 
+  * https://mybatis.org/mybatis-dynamic-sql/docs/delete.html
+  * 특별한 문제가 없는한 jexXX 프로젝트는 이 라이브러리 기반으로 구현할 것 같다.
+
+* google-java-format을 적용했다.
+
+  * 탭사이즈는 공백 2
+
+    
 
 ## 10. 프리젠테이션(웹) 계층의 CRUD 구현
 

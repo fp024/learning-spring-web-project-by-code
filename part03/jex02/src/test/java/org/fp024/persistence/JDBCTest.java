@@ -11,21 +11,21 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 class JDBCTest {
-	static {
-		try {
-			Class.forName("oracle.jdbc.OracleDriver");
-		} catch (Exception e) {
-			LOGGER.error(e.getMessage(), e);
-		}
-	}
+  static {
+    try {
+      Class.forName("oracle.jdbc.OracleDriver");
+    } catch (Exception e) {
+      LOGGER.error(e.getMessage(), e);
+    }
+  }
 
-	@Test
-	void testConnection() {
-		String url = "jdbc:oracle:thin:@localvmdb.oracle_xe_18c:1521:XE";
-		try (Connection con = DriverManager.getConnection(url, "book_ex", "book_ex")) {
-			LOGGER.info("{}", con);
-		} catch (Exception e) {
-			fail(e.getMessage());
-		}
-	}
+  @Test
+  void testConnection() {
+    String url = "jdbc:oracle:thin:@localvmdb.oracle_xe_18c:1521:XE";
+    try (Connection con = DriverManager.getConnection(url, "book_ex", "book_ex")) {
+      LOGGER.info("{}", con);
+    } catch (Exception e) {
+      fail(e.getMessage());
+    }
+  }
 }
