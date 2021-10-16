@@ -17,6 +17,8 @@
         <log4j2.version>2.14.1</log4j2.version>
         <lombok.version>1.18.22</lombok.version>
         
+        <ojdbc8.version>18.3.0.0</ojdbc8.version>
+        
         <jetty.version>9.4.44.v20210927</jetty.version>
     </properties>
 
@@ -99,7 +101,7 @@
         <dependency>
             <groupId>com.oracle.database.jdbc</groupId>
             <artifactId>ojdbc8</artifactId>
-            <version>18.3.0.0</version>
+            <version>${ojdbc8.version}</version>
         </dependency>
 
         <dependency>
@@ -217,6 +219,25 @@
                                         <ignore></ignore> <!-- Eclipse m2e 동작에서는 무시 처리 -->
                                     </action>
                                 </pluginExecution>
+                                <pluginExecution>
+                                    <pluginExecutionFilter>
+                                        <groupId>
+                                            org.mybatis.generator
+                                        </groupId>
+                                        <artifactId>
+                                            mybatis-generator-maven-plugin
+                                        </artifactId>
+                                        <versionRange>
+                                            [1.4.0,)
+                                        </versionRange>
+                                        <goals>
+                                            <goal>generate</goal>
+                                        </goals>
+                                    </pluginExecutionFilter>
+                                    <action>
+                                        <ignore></ignore>  <!-- Eclipse m2e 동작에서는 무시 처리 -->
+                                    </action>
+                                </pluginExecution>
                             </pluginExecutions>
                         </lifecycleMappingMetadata>
                     </configuration>
@@ -224,6 +245,35 @@
             </plugins>
         </pluginManagement>
         <plugins>
+            <plugin>
+                <groupId>org.mybatis.generator</groupId>
+                <artifactId>mybatis-generator-maven-plugin</artifactId>
+                <version>1.4.0</version>
+                <executions>
+                    <execution>
+                        <id>Generate MyBatis Artifacts</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <!-- https://mybatis.org/generator/running/runningWithMaven.html -->                                           
+                    <!-- Maven Goal 실행: mvn mybatis-generator:generate -->
+                    <!-- <configurationFile>${project.basedir}/src/test/resources/generatorConfig.xml</configurationFile> -->
+                    <configurationFile>${project.basedir}/generatorConfig.xml</configurationFile>
+                    <detail>true</detail>
+                    <overwrite>true</overwrite>                                        
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>com.oracle.database.jdbc</groupId>
+                        <artifactId>ojdbc8</artifactId>
+                        <version>${ojdbc8.version}</version>
+                    </dependency>                
+                </dependencies>
+            </plugin>
+                       
             <plugin>
                 <artifactId>maven-eclipse-plugin</artifactId>
                 <version>2.10</version>

@@ -17,6 +17,8 @@
         <log4j2.version>2.14.1</log4j2.version>
         <lombok.version>1.18.22</lombok.version>
         
+        <ojdbc8.version>18.3.0.0</ojdbc8.version>
+        
         <jetty.version>9.4.44.v20210927</jetty.version>
 	</properties>
 
@@ -99,7 +101,7 @@
         <dependency>
             <groupId>com.oracle.database.jdbc</groupId>
             <artifactId>ojdbc8</artifactId>
-            <version>18.3.0.0</version>
+            <version>${ojdbc8.version}</version>
         </dependency>
 
 	 	<dependency>
