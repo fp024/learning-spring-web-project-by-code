@@ -7,6 +7,7 @@ import org.fp024.domain.BoardVO;
 import org.fp024.mapper.BoardMapper;
 import org.fp024.mapper.BoardVODynamicSqlSupport;
 import org.mybatis.dynamic.sql.SqlBuilder;
+import org.mybatis.dynamic.sql.insert.render.GeneralInsertStatementProvider;
 import org.mybatis.dynamic.sql.render.RenderingStrategies;
 import org.springframework.stereotype.Service;
 
@@ -17,9 +18,14 @@ import lombok.extern.slf4j.Slf4j;
  * 쿼리 DSL 작성 참조 링크
  *
  * <p>SELECT https://mybatis.org/mybatis-dynamic-sql/docs/select.html UPDATE
- * https://mybatis.org/mybatis-dynamic-sql/docs/select.html INSERT
- * https://mybatis.org/mybatis-dynamic-sql/docs/insert.html DELETE
- * https://mybatis.org/mybatis-dynamic-sql/docs/delete.html
+ *
+ * <p>Update: https://mybatis.org/mybatis-dynamic-sql/docs/update.html
+ *
+ * <p>INSERT: https://mybatis.org/mybatis-dynamic-sql/docs/insert.html
+ *
+ * <p>DELETE: https://mybatis.org/mybatis-dynamic-sql/docs/delete.html
+ *
+ * <p>예제:https://github.com/mybatis/mybatis-dynamic-sql/tree/master/src/test/java/examples
  *
  * @author fp024
  */
@@ -39,19 +45,25 @@ public class BoardServiceImpl implements BoardService {
     // 테이블 생성시 SYSDATE 기본값이 동작하도록 명시적으로 지정해줄 필요가 있었다.
     //
     // bno도 시퀀스로 얻은 값이 insert에 포함되도록 지정해줘야한다.
+    /*
     mapper.insert(
         SqlBuilder.insert(board)
             .into(BoardVODynamicSqlSupport.boardVO)
             .map(BoardVODynamicSqlSupport.bno)
-            .toProperty("bno")
+            .toProperty(BoardVODynamicSqlSupport.bno.name())
             .map(BoardVODynamicSqlSupport.title)
-            .toProperty("title")
+            .toProperty(BoardVODynamicSqlSupport.title.name())
             .map(BoardVODynamicSqlSupport.content)
-            .toProperty("content")
+            .toProperty(BoardVODynamicSqlSupport.content.name())
             .map(BoardVODynamicSqlSupport.writer)
-            .toProperty("writer")
+            .toProperty(BoardVODynamicSqlSupport.writer.name())
             .build()
             .render(RenderingStrategies.MYBATIS3));
+    */
+    // 위의 코드보다 INSERT 직전 입력하지 않을 값을 명확하게하고 선택적 INSERT하는게 더 관리에 나을 수 있어보인다.
+    board.setRegdate(null);
+    board.setUpdateDate(null);
+    mapper.insertSelective(board);
   }
 
   @Override
@@ -65,16 +77,14 @@ public class BoardServiceImpl implements BoardService {
     LOGGER.info("modify..... {}", board);
 
     return mapper.update(
-            SqlBuilder.update(BoardVODynamicSqlSupport.boardVO)
-                .set(BoardVODynamicSqlSupport.title)
-                .equalTo(board.getTitle())
-                .set(BoardVODynamicSqlSupport.content)
-                .equalTo(board.getContent())
-                .set(BoardVODynamicSqlSupport.updateDate)
-                .equalTo(LocalDateTime.now())
-                .where(BoardVODynamicSqlSupport.bno, SqlBuilder.isEqualTo(board.getBno()))
-                .build()
-                .render(RenderingStrategies.MYBATIS3))
+            c ->
+                c.set(BoardVODynamicSqlSupport.title)
+                    .equalTo(board.getTitle())
+                    .set(BoardVODynamicSqlSupport.content)
+                    .equalTo(board.getContent())
+                    .set(BoardVODynamicSqlSupport.updateDate)
+                    .equalTo(LocalDateTime.now())
+                    .where(BoardVODynamicSqlSupport.bno, SqlBuilder.isEqualTo(board.getBno())))
         == 1;
   }
 
@@ -87,11 +97,9 @@ public class BoardServiceImpl implements BoardService {
   @Override
   public List<BoardVO> getList() {
     LOGGER.info("getList..........");
-    return mapper.selectMany(
-        SqlBuilder.select(BoardMapper.selectList)
-            .from(BoardVODynamicSqlSupport.boardVO)
-            .where(BoardVODynamicSqlSupport.bno, SqlBuilder.isGreaterThan(0L))
-            .build()
-            .render(RenderingStrategies.MYBATIS3));
+    return mapper.select(
+        c ->
+            c.applyWhere(d -> d.where(BoardVODynamicSqlSupport.bno, SqlBuilder.isGreaterThan(0L)))
+                .orderBy(BoardVODynamicSqlSupport.bno.descending()));
   }
 }
