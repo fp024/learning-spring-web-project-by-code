@@ -7,8 +7,6 @@ import org.fp024.domain.BoardVO;
 import org.fp024.mapper.BoardMapper;
 import org.fp024.mapper.BoardVODynamicSqlSupport;
 import org.mybatis.dynamic.sql.SqlBuilder;
-import org.mybatis.dynamic.sql.insert.render.GeneralInsertStatementProvider;
-import org.mybatis.dynamic.sql.render.RenderingStrategies;
 import org.springframework.stereotype.Service;
 
 import lombok.AllArgsConstructor;

@@ -227,11 +227,26 @@ ex02 프로젝트는 책의 설명 그대로 따라가고 jex02 프로젝트는 
 
   * 탭사이즈는 공백 2
 
-    
+
+
 
 ## 10. 프리젠테이션(웹) 계층의 CRUD 구현
 
 ### 10.1 Controller의 작성
+
+* 기능 호출 테이블
+
+  |   Task    |       URL       | Method | Parameter | Form          | URL 이동 |
+  | :-------: | :-------------: | :----: | :-------: | ------------- | :------: |
+  | 전체 목록 |   /board/list   |  GET   |           |               |          |
+  | 등록처리  | /board/register |  POST  | 모든 항목 | 입력화면 필요 |   이동   |
+  |   조회    |   /board/read   |  GET   |  bno=123  |               |          |
+  | 삭제 처리 |  /board/remove  |  POST  |    bno    | 입력화면 필요 |   이동   |
+  | 수정 처리 |  /board/modify  |  POST  | 모든 항목 | 입력화면 필요 |   이동   |
+
+  
+
+
 
 ### 10.2 BoardController의 작성
 
@@ -334,4 +349,100 @@ ex02 프로젝트는 책의 설명 그대로 따라가고 jex02 프로젝트는 
 
   * 참고
     * [Tomcat 6, 7, 8, 9, 10 의 예제 페이지의 web.xml 스키마 헤더 선언부](https://github.com/fp024/etc/blob/main/tomcat/Tomcat_6%EC%97%90%EC%84%9C_10%EA%B9%8C%EC%A7%80%EC%9D%98_%EC%98%88%EC%A0%9C_web.xml_%EC%8A%A4%ED%82%A4%EB%A7%88_%ED%97%A4%EB%8D%94.md)
+
+
+
+
+
+---
+
+## Jetty의 Scan을 통한 재시작시 문제
+
+Jetty의 리소스 변경시 자동 재배포 하는 기능(`<scan>`)을 사용해서 재시작 하면 ContextLoaderListener 관련해서 재대로 실행이 안되는지, 컨텍스트가 제대로 로딩되지 않은 상태 처럼 되어서, 컨트롤러에 접근할 수 없었다.
+
+그런데, Eclipse 내에서 Tomcat 8.5의 `Automatically  publish after a build event` 또는 `Automatically publish when resources change` 설정을 통해서 자동재시작을 설정했을 때는 문제가 없었다.
+
+일단은 Jetty 메이븐 플러그인 설정에서 `<scan>` 기능을 사용하지 않도록 하자! 
+
+그런데 아무리 Jetty가 변경감지 자동재시작이 안된다하더라도 eclipse에서 문제 발생시 이것저것 clean후 실행하는 것으로 시간이 소비될떈, Jetty 사용하는게 나을 수 있을 것 같다.
+
+
+
+### 문제 상세
+
+#### 1. web.xml 설정 기반 프로젝트에서 jetty-maven-plugin의  webapp 변경시 자동 재시작을 시켜주는 `<scan>` 기능을 사용하여, 자동재시작시 ContextLoaderListener를 로드 할 수 없는 문제
+
+* webapps에 변경을 감지하고 Jetty가 재시작 될 때, ContextLoaderListener 를 로드하지 않는 문제가 있다. 
+    ```
+    [WARNING] Unable to load class org.springframework.web.context.ContextLoaderListener
+    java.lang.ClassNotFoundException: org.springframework.web.context.ContextLoaderListener
+        at org.codehaus.plexus.classworlds.strategy.SelfFirstStrategy.loadClass (SelfFirstStrategy.java:50)
+        ...
+    [WARNING] Failed startup of context o.e.j.m.p.MavenWebAppContext@36ef1d65{/프로젝트_이름,[file:///C:/프로젝트_베이스_경로/src/main/webapp/],UNAVAILABLE}{file:///C:/프로젝트_베이스_경로/src/main/webapp/}
+    javax.servlet.UnavailableException: Class loading error for holder org.springframework.web.context.ContextLoaderListener@4b3c01ee{src=DESCRIPTOR:file:///C:/프로젝트_베이스_경로/src/main/webapp/WEB-INF/web.xml}
+        at org.eclipse.jetty.servlet.BaseHolder.doStart (BaseHolder.java:104)
+        ...
+    ```
+
+    * Jetty로 최초 시작시는 문제가 없는데, 자동 재시작 설정에의해 재시작 될 때는 위의 문제가 발생함.
+
+    * BaseHolder.doStart() 에서는 ContextLoaderListener를 그냥 클래스 로드만 한 것 같은데...
+
+      * https://github.com/eclipse/jetty.project/blob/jetty-10.0.x/jetty-servlet/src/main/java/org/eclipse/jetty/servlet/BaseHolder.java
+
+        ```java
+         //try to load class
+        if (_class == null)
+        {
+            try
+            {
+                _class = Loader.loadClass(_className);
+                if (LOG.isDebugEnabled())
+                    LOG.debug("Holding {} from {}", _class, _class.getClassLoader());
+            }
+            catch (Exception e)
+            {
+                LOG.warn("Unable to load class {}", _className, e);
+                throw new UnavailableException("Class loading error for holder " + toString());
+            }
+        }
+        ```
+
+      * Loader.loadClass(String name)
+
+        * https://github.com/eclipse/jetty.project/blob/jetty-10.0.x/jetty-util/src/main/java/org/eclipse/jetty/util/Loader.java
+
+          ```java
+           @SuppressWarnings("rawtypes")
+          public static Class loadClass(String name)
+              throws ClassNotFoundException
+          {
+              ClassLoader loader = Thread.currentThread().getContextClassLoader();
+              return (loader == null) ? Class.forName(name) : loader.loadClass(name);
+          }
+          ```
+
+    * 당장 문제를 해결할 수 없으니  web.xml 기반 프로젝트에는 `<scan>-1</scan>` 으로 설정해서 자동 재시작이 되지 않도록하자! 
+
+    
+
+#### 2. JavaConfig 설정 기반 프로젝트에서 jetty-maven-plugin의  webapp 변경시 자동 재시작을 시켜주는 `<scan>` 기능을 사용하여, 자동재시작시 ContextLoaderListener를 로드는 되는 것 처럼 보이나 실제로 제대로 실행안되는 문제.
+
+* log4j 관련 오류가 발생하는데...
+
+    ```
+    org.springframework.web.context.support.AnnotationConfigWebApplicationContext - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanDefinitionStoreException: Failed to parse configuration class [org.fp024.config.RootConfig]; nested exception is java.lang.NoClassDefFoundError: org/apache/logging/log4j/core/impl/ThrowableProxy
+    ```
+
+* 아래 라이브러리를  추가하면, 로그상으로는 재시작이 성공한 것 처럼 보이지만., 제대로 재시작되지 않은 상태이다.
+
+    ```xml
+    <!-- https://stackoverflow.com/questions/21935447/log4j2-xml-configuration-in-web-xml-illegalargumentexception-uri-is-not-absol -->
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-web</artifactId>
+        </dependency>
+    ```
+    
+    * Java Config 프로젝트도 web.xml 설정 프로젝트와 마찬가지로 `<scan>-1</scan>` 으로 설정해두고 mvnw 명령으로 처음부터 재시작 하는게 나아보인다.
 
