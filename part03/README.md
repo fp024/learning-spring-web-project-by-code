@@ -244,11 +244,27 @@ ex02 프로젝트는 책의 설명 그대로 따라가고 jex02 프로젝트는 
   | 삭제 처리 |  /board/remove  |  POST  |    bno    | 입력화면 필요 |   이동   |
   | 수정 처리 |  /board/modify  |  POST  | 모든 항목 | 입력화면 필요 |   이동   |
 
-  
-
-
 
 ### 10.2 BoardController의 작성
+
+* Spring 5에서는 @SpringJUnitWebConfig 에 @ExtendWith(SpringExtension.class), @WebAppConfiguration, @ContextConfiguration 을 포함함.
+
+  * https://www.baeldung.com/spring-5-junit-config
+
+* 하나의 컨트롤러를 테스트 할때는 아래와 같은 방식이 더 낫다고 하여 적용해봄.
+
+  ```java
+  @Autowired private BoardService service;
+  ...
+  @BeforeEach
+  void setUp() {
+      // this.mockMvc = MockMvcBuilders.webAppContextSetup(ctx).build();
+      this.mockMvc = MockMvcBuilders.standaloneSetup(new BoardController(service)).build();
+  }
+  ...
+  ```
+
+
 
 
 
@@ -358,7 +374,7 @@ ex02 프로젝트는 책의 설명 그대로 따라가고 jex02 프로젝트는 
 
 ## Jetty의 Scan을 통한 재시작시 문제
 
-Jetty의 리소스 변경시 자동 재배포 하는 기능(`<scan>`)을 사용해서 재시작 하면 ContextLoaderListener 관련해서 재대로 실행이 안되는지, 컨텍스트가 제대로 로딩되지 않은 상태 처럼 되어서, 컨트롤러에 접근할 수 없었다.
+Jetty에서 타겟 리소스 변경(소스코드 변경등..)시 자동 재배포 하는 기능(`<scan>`)을 사용해서 재시작 하면 ContextLoaderListener 관련해서 재대로 실행이 안되는지, 컨텍스트가 제대로 로딩되지 않은 상태 처럼 되어서, 컨트롤러에 접근할 수 없었다.
 
 그런데, Eclipse 내에서 Tomcat 8.5의 `Automatically  publish after a build event` 또는 `Automatically publish when resources change` 설정을 통해서 자동재시작을 설정했을 때는 문제가 없었다.
 
