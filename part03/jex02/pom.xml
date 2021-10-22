@@ -126,6 +126,13 @@
       <version>1.2</version>
       <scope>runtime</scope>
     </dependency>
+    
+    <!-- https://github.com/sargue/java-time-jsptags -->
+    <dependency>
+      <groupId>net.sargue</groupId>
+      <artifactId>java-time-jsptags</artifactId>
+      <version>1.1.4</version>
+    </dependency>
 
     <!-- Database -->
     <!-- https://mvnrepository.com/artifact/com.oracle.database.jdbc/ojdbc8/18.3.0.0 -->
@@ -384,7 +391,7 @@
         <version>${jetty.version}</version>
         <configuration>
           <webApp>
-            <contextPath>/${project.artifactId}</contextPath>
+            <contextPath>/</contextPath>
             <sessionHandler>
               <sessionIdPathParameterName>none</sessionIdPathParameterName>
             </sessionHandler>

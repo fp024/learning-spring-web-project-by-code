@@ -1,5 +1,9 @@
 # Part 3. 기본적인 웹 게시물 관리
 
+> **뷰 템플릿으로 SB Admin 2를 사용했습니다.**
+>
+> * https://github.com/StartBootstrap/startbootstrap-sb-admin-2
+
 ## 07. 스프링 MVC 프로젝트의 기본 구성
 
 ### 7.1 각 영역의 Naming Convention(명명 규칙)
@@ -270,17 +274,85 @@ ex02 프로젝트는 책의 설명 그대로 따라가고 jex02 프로젝트는 
 
 ## 11. 화면 처리
 
+* SB Admin 2
+
+  * https://github.com/StartBootstrap/startbootstrap-sb-admin-2
+
+  * 깃허브에서 체크아웃 후에 `v4.1.4` 태그 버전 브랜치 생성
+
+    ```bash
+    git clonehttps://github.com/StartBootstrap/startbootstrap-sb-admin-2.git
+    cd startbootstrap-sb-admin-2
+    git checkout tags/v4.1.4 -b v4.1.4
+    ```
+
+  * package-lock.json을 보았을 때, 부트스트랩버전은 `4.6.0` 이다.
+
 ### 11.1 목록 페이지 작업과 includes
+
+* jQuery는 그대로 사용, 포함된 버전이  `3.6.0` 버전인데, 책의 버전인 `3.3.1`보다 최신이여서, 일부러 버전을 올릴필요가 없음.
+
+* p235의 반응형 문제를 해결하기 위한 추가 코드를 입력할 필요없음.
+
 
 ### 11.2 목록 화면 처리
 
+* LocalDateTime 을 JSP에서 사용하기 위해.. 라이브러리 추가
+  * https://github.com/sargue/java-time-jsptags
+
+  * 사용법
+
+      ```jsp
+      <%@ taglib prefix="javatime" uri="http://sargue.net/jsptags/time" %>
+      ...
+      <td><javatime:format value="${board.regdate}" pattern="yyyy-MM-dd"></javatime:format></td>
+      <td><javatime:format value="${board.updateDate}" pattern="yyyy-MM-dd"></javatime:format></td>
+      ```
+
+
 ### 11.3 등록 입력 페이지와 등록 처리
+
+* 테이블 div기준으로 본문 내용만 등록페이지에 맞게 변경 : register.jsp
+* 버튼은 아래 페이지에서 모양 보고 클래스 값 바꿔서 확인하자
+  * https://getbootstrap.com/docs/4.0/components/buttons/
+
+* 한글입력처리는 이전 1장에서 소개된대로, web.xml 설정 또는  WebConfig 설정에서 UTF-8 설정을 진행했다.
 
 ### 11.4 조회 페이지와 이동
 
+* 뒤로 가기 문제..
+
+* Firefox,에서는 재현되지 않음
+
+  * `등록` > `모달창` > `목록 페이지` > `조회 페이지` 까지 간 후 뒤로가기 할 때, 모달창이 다시 뜨진 않음. 
+
+* **그러나 Chrome, Edge, IE 11에서는 재현됨**...
+
+* history.replaceState 와 history.state의 설정 상태로 개선할 수 있음.
+
+  ```javascript
+  ...
+  history.replaceState({}, null, null);
+  if (history.state) {
+  	return;
+  }
+  ```
+
+  * https://developer.mozilla.org/ko/docs/Web/API/History/state
+  * https://developer.mozilla.org/ko/docs/Web/API/History/replaceState
+
 ### 11.5 게시물의 수정/삭제 처리
 
+* **TODO:** ~p260 코드가 좀 이상한 것 같다. 등록일시, 수정일시를 수정 폼에서 받아 왜? 다시 서버로 처리되게 하는지?
 
+  * 등록일시가 SYSDATE로 자동처리되고 있고, 수정일시도 서버에서 UPDATE할 때 SYSDATE로 처리하는데, 왜이렇게 하셨을까? 
+  * 이부분은 추가하지 말고 추후 필요시 추가하자..
+
+* `jquery.min.js` 라이브러리는 `bootstap.bundle.min.js` 보다 위에 있어야한다.
+
+* 스크립트를 전부 footer 아래의 dialogAndScript.jsp로 다 내려서 현시점에 문제가 없는 상태여서, `jquery.min.js`도 헤더에 두지 않고 footer이하에 두었다.
+
+  
 
 ## 12. 오라클 데이터베이스 페이징 처리
 
@@ -461,4 +533,16 @@ Jetty에서 타겟 리소스 변경(소스코드 변경등..)시 자동 재배�
     ```
     
     * Java Config 프로젝트도 web.xml 설정 프로젝트와 마찬가지로 `<scan>-1</scan>` 으로 설정해두고 mvnw 명령으로 처음부터 재시작 하는게 나아보인다.
+
+---
+
+## SB Admin 2 템플릿을 붙이고나서 프로젝트사이즈가 대폭 늘어서 정리...
+
+* 프로젝트에서는 테이블(table.html) 관련만 쓰는데, 다른 것들이 너무 많은 용량을 차지해서 (`19MB`) 테이블과 우상단 로그인 네비게이션만 빼고 정리했다.
+
+* 정리후 `900KB`정도로 줄었다.
+
+  * 코드 참조가 필요할 경우 https://github.com/StartBootstrap/startbootstrap-sb-admin-2  의 `v4.1.4` 테그를 확인하자!
+  
+  ![simple_sb_admin_2.png](doc-resources/simple_sb_admin_2.png)
 
