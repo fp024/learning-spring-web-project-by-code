@@ -39,8 +39,10 @@
 ## 의견
 
 * Oracle JDK는 개인 용도 사용이 아닌 경우라면 라이선스 문제가 있을 수 있어, OpenJDK 설치로
-소개해주시면 좋을 것 같습니다.
+  소개해주시면 좋을 것 같습니다.
     * https://adoptium.net/?variant=openjdk11&jvmVariant=hotspot
+    * Oracle의 Java SE TCK 테스트 통과
+        * https://blog.adoptopenjdk.net/2021/08/goodbye-adoptopenjdk-hello-adoptium/
 
 * Part1에서 lombok의 @Setter를 통해 @Autowired를 붙이는 것을 가이드 해주셨는데,
   클래스의 멤버 변수에 직접 @Autowired를 붙일 수 있으므로 반드시 필요한 부분이 아닐 것 같습니다.
