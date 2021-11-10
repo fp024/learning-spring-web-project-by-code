@@ -359,24 +359,268 @@ ex02 프로젝트는 책의 설명 그대로 따라가고 jex02 프로젝트는 
 * 페이징 방식에는 페이지 번호를 이용하거나 `계속 보기` 형태로 구현함
   * Ajax와 앱이 등장한 이후로 계속 보기 (더 보기, 무한 스크롤) 형태 구현도 많아짐
 
-### 12.1 order by의 문제
+### 12.1 ORDER BY의 문제
 
 * DB를 이용하면서 신경써야할 부분
   1. 빠르게 처리될 것
   2. 필요한 양 만큼 데이터 가져올 것
-
 * 정렬 작업에 많은 DB 부하가 생기므로, 가능한 ORDER BY를 피하자!
   * 사용할 경우
     1. 정렬 대상 데이터가 적을 경우
     2. 정렬을 빠르게 할 수 있는 방법이 있는 경우 (인덱스 말하는 것 같다.)
 
+#### 12.1.1 실행계확과 ORDER BY
 
+* DB에서 SQL 문 처리 순서
+
+  1. SQL 파싱
+  2. SQL 최적화
+  3. SQL 실행
+
+* 테스트 데이터 입력
+
+  * 책에서는 INSERT - SELECT문 여러번 실행해서 데이터를 입력하는데..  시퀀스와 테이블을 지우고 PL-SQL로 데이터를 넣어보았다. 
+
+      ```sql
+      -- 실제환경에서는 시퀀스를 초기화를 권장하던데, 
+      -- 여기서는 지웠다 다시만들자!
+      DROP SEQUENCE seq_board;
+      
+      CREATE SEQUENCE seq_board;
+      
+      -- 테이블도 다시 지웠다 새로 만들자!
+      DROP TABLE tbl_board;
+      
+      CREATE TABLE tbl_board (
+          bno         NUMBER(10,0),
+          title       VARCHAR2(200)   NOT NULL,
+          content     VARCHAR2(2000)  NOT NULL,
+          writer      VARCHAR2(50)    NOT NULL,
+          regdate     DATE            DEFAULT SYSDATE,
+          updatedate  DATE            DEFAULT SYSDATE
+      );
+      
+      ALTER TABLE tbl_board ADD CONSTRAINT pk_board PRIMARY KEY (bno);
+      
+      -- 1천만건 게시물 입력
+      DECLARE
+      i NUMBER := 1;
+      
+      BEGIN
+          WHILE(i <= 10000000)
+          LOOP    
+          INSERT INTO tbl_board (bno, title, content, writer) VALUES (SEQ_BOARD.nextval, '제목' || i, '내용' || i ,'작성자' || i);
+          i := i + 1; 
+          END LOOP;
+      END;
+      
+      ```
+
+  
+
+* 고의로 기본키 (bno) 인덱스를 타지 않고 정렬하게 하기 위해서 bno에 + 1을 해서 정렬
+
+  ```sql
+  SELECT * 
+    FROM tbl_board
+   ORDER BY bno + 1 DESC;
+  ```
+
+  * 이 때의 실행 분석 결과 화면
+
+    ![기본키 인덱스를 활용하지 않은 쿼리의 실행계획 분석 결과](./doc-resources/order_by_no_using_index.png)
+
+    * **ORDER BY 부분의 COST가 가장 높다.**
+
+      * 디스크 사용량 모니터 화면에서도, 쿼리가 실행되는 동안 DB가 디스크를 읽는 부하가 있는 것을 알 수 있다.
+        ![DB의 디스크 사용량이 높음](doc-resources/disk-scan.png) 
+
+* 기본 키 인덱스를 활용하도록 bno를 그대로 씀.
+
+  ```sql
+  SELECT * 
+    FROM tbl_board
+   ORDER BY bno DESC;
+  ```
+
+  * 이때의 실행 분석 결과 화면
+
+    ![기본키 인덱스를 활용한 쿼리의 실행계획 분석 결과](doc-resources/order_by_using_index.png)
+
+      * ORDER BY 가 일어나지 않고 기본 키 인덱스를 역순 스캔해서 사용했기 때문에 굳이 ROW를 정렬할 필요가 없었던 것 같다. 먼저 쿼리보다 비용이 확실히 적게듬.
+        * 이때는 디스크 사용량도 거의 없었다.
+
+    
 
 ### 12.2 order by 보다는 인덱스
 
+* 인덱스를 활용하는 쿼리
+    ```sql
+    SELECT 
+      /*+ INDEX_DESC(tbl_board pk_board) */
+      * 
+      FROM tbl_board
+     WHERE bno > 0;  
+    ```
+    
+* 실행 분석 
+
+    ![주석으로 인덱스 사용정의](doc-resources/order_by_using_index_with_description.png)
+
+     * 기본키 인덱스를 암묵적으로 사용한 것과 차이는 크게 없는 것 같다.
+
+#### 12.2.1 PK_BOARD라는 인덱스
+
+* PK를 생성할 때도 인덱스가 만들어짐
+* ROWID
+  * 인덱스와 테이블의 데이터를 연결해주는 키 역활
+
+
+
 ### 12.3 인덱스를 이용하는 정렬
 
-### 12.3 ROWNUM과 인라인뷰
+* 인덱스의 가장 중요한 개념: 정렬이 되어있다는 점
+
+#### 12.3.1 오라클 힌트(hint)
+
+* SQL 문을 이러이러한 식으로 실행해줬으면 좋겠다고 DB에 알리는 주석
+
+#### 12.3.2 힌트 사용 문법
+
+```sql
+SELECT
+  /*+ Hint name(param...)*/ column name, ...
+FROM
+  table name
+...
+```
+
+#### 12.3.3 FULL 힌트
+
+* 테이블 전체 스캔을 명시
+
+  ```sql
+  SELECT 
+    /*+ FULL(tbl_board) */
+    * 
+    FROM tbl_board
+   ORDER BY bno DESC;  
+  ```
+
+  * PK 인덱스를 활용하지 않는 쿼리와 동일하게 실행 분석에 ORDER BY 가 나타났다.
+
+#### 12.3.4 INDEX_ASC, INDEX_DESC 힌트
+
+* 인덱스를 순서대로 이용할 것인지 역순으로 이용할 것인지 지정
+
+### 12.4 ROWNUM과 인라인뷰
+
+* ROWNUM
+
+  * 실행된 SQL 결과에 넘버링을 해줌
+
+  * 실제 데이터가 아닌 테이블 추출후 처리되는 변수, 상황에 따라 값이 바뀔 수 있음.
+
+    ```sql
+    SELECT rownum AS rn, bno, title 
+      FROM tbl_board;
+    ```
+
+    * 실행 결과
+
+      ![rownum-select](doc-resources/rownum-select.png)
+
+      * 테이블에서 가장 먼저 가져올 수 있는 데이터를 이용해서 번호를 매겨주고 있음.
+
+  * FULL 힌트를 이용해 전체 데이터 조회 후 다시 정렬
+
+    ```sql
+    SELECT /*+ FULL(tbl_board) */ 
+           rownum AS rn, bno, title
+      FROM tbl_board
+     WHERE bno > 0
+     ORDER BY bno;
+    ```
+
+    * 실행 결과
+
+      ![rownum-select-after-order-by](doc-resources/rownum-select-after-order-by.png)
+
+      * bno 정렬 기준 오름차순 정렬로 인해 순서는 바뀌였지만 383, 382 번 bno의 ROWNUM을 보면 같음
+        * ROWNUM은 데이터를 가져올 때 적용되는 것이고, 이후 정렬되는 과정에서는 ROWNUM이 변경되지 않음을 확인할 수 있음.
+
+      
+
+#### 12.4.1 인덱스를 이용한 접근 시 ROWNUM
+
+* PK_BOARD 인덱스를 통해 접근시 접근 순서
+
+  1. PK_BOARD 인덱스를 통해서 접근
+  2. 접근한 데이터에 ROWNUM 부여
+
+* 쿼리 예시
+
+  ```sql
+  SELECT /*+ INDEX_ASC(tbl_board pk_board) */ 
+         rownum AS rn, bno, title, content
+    FROM tbl_board;
+  ```
+
+  * 실행 결과 
+
+    ![rownum-select-using-pk-board](doc-resources/rownum-select-using-pk-board.png)
+    * PK_BOARD 인덱스로부터 가져온 순서대로 ROWNUM이 매겨졌다.
+
+* INDEX_DESC를 써서 역순 정렬을 했을 때의 경우
+
+  ```sql
+  SELECT /*+ INDEX_DESC(tbl_board pk_board) */ 
+         rownum AS rn, bno, title, content
+    FROM tbl_board;
+  ```
+
+  * 실행 결과
+
+    ![rownum-select-using-pk-board-desc](doc-resources/rownum-select-using-pk-board-desc.png)
+    * bno 값이 가장 큰 ROW의 ROWNUM 값이 1이 되었다.
+
+#### 12.4.2 페이지 번호 1, 2의 데이터
+
+* 한 페이지당 10개 데이터를 출력할 때의 쿼리
+
+  ```sql
+  SELECT /*+ INDEX_DESC(tbl_board pk_board) */ 
+         rownum AS rn, bno, title, content
+    FROM tbl_board
+   WHERE rownum <= 10;
+  ```
+
+* 2페이지가 데이터를 얻을 것으로 예상되는 아래 쿼리지만, 결과를 구할 수 없다.
+
+  ```sql
+  SELECT /*+ INDEX_DESC(tbl_board pk_board) */ 
+         rownum AS rn, bno, title, content
+    FROM tbl_board
+   WHERE rownum > 10 AND rownum <= 20;
+  ```
+
+  1. ROWNUM > 10 데이터를 찾음
+  2. TBL_BOARD에 처음으로 나오는 ROWNUM은 값이 1임
+  3. WHERE 조건에 의해 1인 데이터는 무효화됨
+  4. 이후 다른 데이터를 가져오면 또 1이여서 무효화됨
+     * 이것이 반복되어 테이블의 모든 데이터를 풀스캔하지만 결과는 아무것도 없는 상태가 됨
+
+#### 12.4.3 인라인 뷰(In-line View) 처리
+
+* 인라인 뷰를 활용해서, 2페이지 부터의 데이터 구하는 쿼리
+    ```sql
+    SELECT bno, title, content
+      FROM (SELECT /*+ INDEX_DESC(tbl_board pk_board) */ 
+                   rownum AS rn, bno, title, content
+              FROM tbl_board
+             WHERE rownum <= 20)
+       WHERE rn > 10;
+    ```
 
 
 
@@ -560,3 +804,25 @@ Jetty에서 타겟 리소스 변경(소스코드 변경등..)시 자동 재배�
   
   ![simple_sb_admin_2.png](doc-resources/simple_sb_admin_2.png)
 
+---
+
+## TODO: SQL Developer에서 실행 계획 보기
+
+실행계획을 볼때, 안쪽에서 바깥쪽으로, 위에서 아래로 란 언급이 있는데..
+
+아래 예시에서 가장 깊게 들어간 부분을 먼저보고 같은 레벨일 경우 위에서 아래로 보라는 말인지? 이부분이 좀 해깔린다.
+
+* 쿼리
+
+  ```sql
+  SELECT bno, title, content
+    FROM (SELECT /*+ INDEX_DESC(tbl_board pk_board) */ 
+                 rownum AS rn, bno, title, content
+            FROM tbl_board
+           WHERE rownum <= 20)
+     WHERE rn > 10;
+  ```
+
+* 계획 설명 (F10)
+
+  ![execute-plan](doc-resources/execute-plan.png)
