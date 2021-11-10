@@ -7,13 +7,11 @@ import java.util.Optional;
 import org.fp024.config.RootConfig;
 import org.fp024.domain.BoardVO;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mybatis.dynamic.sql.SqlBuilder;
 import org.mybatis.dynamic.sql.render.RenderingStrategies;
 import org.mybatis.dynamic.sql.update.render.UpdateStatementProvider;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import lombok.extern.slf4j.Slf4j;
 /**
@@ -28,8 +26,7 @@ import lombok.extern.slf4j.Slf4j;
  *
  * @author fp024
  */
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {RootConfig.class})
+@SpringJUnitConfig(classes = {RootConfig.class})
 @Slf4j
 class BoardMapperTest {
 
@@ -73,7 +70,7 @@ class BoardMapperTest {
   @Test
   void testRead() {
     // 존재하는 게시물 번호로 테스트
-    Optional<BoardVO> board = mapper.selectByPrimaryKey(5L);
+    Optional<BoardVO> board = mapper.selectByPrimaryKey(1L);
     LOGGER.info(board.get().toString());
   }
 

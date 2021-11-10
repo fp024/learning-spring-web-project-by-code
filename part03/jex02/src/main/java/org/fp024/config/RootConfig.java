@@ -5,9 +5,11 @@ import javax.sql.DataSource;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.annotation.MapperScan;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
@@ -15,15 +17,27 @@ import com.zaxxer.hikari.HikariDataSource;
 @Configuration
 @ComponentScan(basePackages = {"org.fp024.service"})
 @MapperScan(basePackages = {"org.fp024.mapper"})
+@PropertySource({"classpath:database.properties"})
 public class RootConfig {
-  @Bean
+  @Value("${jdbc.driver}")
+  private String driverClassName;
+
+  @Value("${jdbc.url}")
+  private String url;
+
+  @Value("${jdbc.username}")
+  private String userName;
+
+  @Value("${jdbc.password}")
+  private String password;
+
+  @Bean(destroyMethod = "close")
   public DataSource dataSource() {
     HikariConfig hikariConfig = new HikariConfig();
-    hikariConfig.setDriverClassName("oracle.jdbc.OracleDriver");
-    hikariConfig.setJdbcUrl("jdbc:oracle:thin:@localvmdb.oracle_xe_18c:1521:XE");
-
-    hikariConfig.setUsername("book_ex");
-    hikariConfig.setPassword("book_ex");
+    hikariConfig.setDriverClassName(driverClassName);
+    hikariConfig.setJdbcUrl(url);
+    hikariConfig.setUsername(userName);
+    hikariConfig.setPassword(password);
 
     return new HikariDataSource(hikariConfig);
   }
