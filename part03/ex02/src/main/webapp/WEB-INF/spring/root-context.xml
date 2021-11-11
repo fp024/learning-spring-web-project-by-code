@@ -30,8 +30,10 @@
 
   <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
     <property name="dataSource" ref="dataSource" />
+    <property name="typeAliasesPackage" value="org.fp024.domain"/>
   </bean>
 
   <mybatis-spring:scan base-package="org.fp024.mapper" />
 
+  
 </beans>

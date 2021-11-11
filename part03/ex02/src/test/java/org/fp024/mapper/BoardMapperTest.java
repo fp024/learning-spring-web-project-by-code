@@ -1,6 +1,8 @@
 package org.fp024.mapper;
 
 import org.fp024.domain.BoardVO;
+import org.fp024.domain.Criteria;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,10 +18,10 @@ class BoardMapperTest {
   @Autowired private BoardMapper mapper;
 
   @Test
-  void testGetList() {
-    mapper.getList().forEach(board -> LOGGER.info(board.toString()));
+  void testGetListWithPaging() {
+    mapper.getListWithPaging(new Criteria(1)).forEach(board -> LOGGER.info(board.toString()));
   }
-
+  
   @Test
   void testInsert() {
     BoardVO board = new BoardVO();

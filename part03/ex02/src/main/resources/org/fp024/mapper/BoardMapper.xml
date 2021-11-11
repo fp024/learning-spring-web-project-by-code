@@ -8,6 +8,22 @@
          WHERE bno > 0
     ]]>    
     </select>
+
+    <select id="getListWithPaging" parameterType="criteria" resultType="boardVO">
+    <![CDATA[
+      SELECT bno
+           , title
+           , content
+           , writer
+           , regdate AS regDate
+           , updatedate AS updateDate
+        FROM (SELECT /*+ INDEX_DESC(tbl_board pk_board) */ 
+                     rownum AS rn, bno, title, content, writer, regdate, updatedate
+                FROM tbl_board
+               WHERE rownum <= #{pageNum} * #{amount})
+       WHERE rn > (#{pageNum} - 1) * #{amount}
+    ]]>
+    </select>
     
     <insert id="insert">
         INSERT INTO tbl_board (bno, title, content, writer)
@@ -23,7 +39,7 @@
         VALUES (#{bno}, #{title}, #{content}, #{writer})    
     </insert>
     
-    <select id="read" resultType="org.fp024.domain.BoardVO">
+    <select id="read" resultType="boardVO">
         SELECT * FROM tbl_board WHERE bno = #{bno}
     </select>
     

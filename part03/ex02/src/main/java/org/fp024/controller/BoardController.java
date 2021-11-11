@@ -1,6 +1,7 @@
 package org.fp024.controller;
 
 import org.fp024.domain.BoardVO;
+import org.fp024.domain.Criteria;
 import org.fp024.service.BoardService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,9 +23,9 @@ public class BoardController {
   private BoardService service;
 
   @GetMapping("/list")
-  public void list(Model model) {
+  public void list(Criteria criteria,Model model) {
     LOGGER.info("list");
-    model.addAttribute("list", service.getList());
+    model.addAttribute("list", service.getList(criteria));
   }
 
   @GetMapping("/register")

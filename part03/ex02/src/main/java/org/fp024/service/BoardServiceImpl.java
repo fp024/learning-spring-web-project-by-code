@@ -3,6 +3,7 @@ package org.fp024.service;
 import java.util.List;
 
 import org.fp024.domain.BoardVO;
+import org.fp024.domain.Criteria;
 import org.fp024.mapper.BoardMapper;
 import org.springframework.stereotype.Service;
 
@@ -42,8 +43,8 @@ public class BoardServiceImpl implements BoardService {
   }
 
   @Override
-  public List<BoardVO> getList() {
-    LOGGER.info("getList..........");
-    return mapper.getList();
+  public List<BoardVO> getList(Criteria criteria) {
+    LOGGER.info("get List with criteria: {}", criteria);
+    return mapper.getListWithPaging(criteria);
   }
 }

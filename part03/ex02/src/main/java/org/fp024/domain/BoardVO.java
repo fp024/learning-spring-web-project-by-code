@@ -2,6 +2,8 @@ package org.fp024.domain;
 
 import java.time.LocalDateTime;
 
+import org.apache.ibatis.type.Alias;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -9,6 +11,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
+@Alias("boardVO")
 public class BoardVO {
   private Long bno;
   private String title;
