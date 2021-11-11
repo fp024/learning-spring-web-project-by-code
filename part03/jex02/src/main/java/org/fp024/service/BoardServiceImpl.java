@@ -1,12 +1,23 @@
 package org.fp024.service;
 
+import static org.fp024.mapper.BoardVODynamicSqlSupport.bno;
+import static org.fp024.mapper.BoardVODynamicSqlSupport.content;
+import static org.fp024.mapper.BoardVODynamicSqlSupport.regdate;
+import static org.fp024.mapper.BoardVODynamicSqlSupport.title;
+import static org.fp024.mapper.BoardVODynamicSqlSupport.updateDate;
+import static org.fp024.mapper.BoardVODynamicSqlSupport.writer;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
 import org.fp024.domain.BoardVO;
+import org.fp024.domain.Criteria;
 import org.fp024.mapper.BoardMapper;
 import org.fp024.mapper.BoardVODynamicSqlSupport;
+import org.mybatis.dynamic.sql.Constant;
+import org.mybatis.dynamic.sql.DerivedColumn;
 import org.mybatis.dynamic.sql.SqlBuilder;
+import org.mybatis.dynamic.sql.render.RenderingStrategies;
 import org.springframework.stereotype.Service;
 
 import lombok.AllArgsConstructor;
@@ -92,12 +103,32 @@ public class BoardServiceImpl implements BoardService {
     return mapper.deleteByPrimaryKey(bno) == 1;
   }
 
+  /**
+   * ORDER BY는 메서드를 지원해서 그것을 사용해도 되는데, <br>
+   * 어떻게든 Hint를 포함해보았다. 자세한 참고는 BoardMapperTest를 확인해볼 것!
+   *
+   * @see org.fp024.mapper.BoardMapperTest
+   */
   @Override
-  public List<BoardVO> getList() {
-    LOGGER.info("getList..........");
-    return mapper.select(
-        c ->
-            c.applyWhere(d -> d.where(BoardVODynamicSqlSupport.bno, SqlBuilder.isGreaterThan(0L)))
-                .orderBy(BoardVODynamicSqlSupport.bno.descending()));
+  public List<BoardVO> getList(Criteria criteria) {
+    LOGGER.info("get List with criteria: {}", criteria);
+    DerivedColumn<Long> rownum = DerivedColumn.of("ROWNUM");
+    DerivedColumn<Long> rn = rownum.as("rn");
+
+    Constant<String> hint = Constant.of("/*+ INDEX_DESC(tbl_board pk_board) */ 'dummy'");
+
+    return mapper.selectMany(
+        SqlBuilder.select(BoardMapper.selectList)
+            .from(
+                SqlBuilder.select(hint, rn, bno, title, content, writer, regdate, updateDate)
+                    .from(BoardVODynamicSqlSupport.boardVO)
+                    .where(rn, SqlBuilder.isLessThanOrEqualTo(criteria.getPageNum() * criteria.getAmount()))
+              )
+            .where(
+                DerivedColumn.of("rn"),
+                SqlBuilder.isGreaterThan((criteria.getPageNum() - 1) * criteria.getAmount()))
+            .orderBy(bno.descending())
+            .build()
+            .render(RenderingStrategies.MYBATIS3));
   }
 }

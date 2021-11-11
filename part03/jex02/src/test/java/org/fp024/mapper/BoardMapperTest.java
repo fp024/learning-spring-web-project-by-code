@@ -1,13 +1,25 @@
 package org.fp024.mapper;
 
+import static org.fp024.mapper.BoardVODynamicSqlSupport.bno;
+import static org.fp024.mapper.BoardVODynamicSqlSupport.content;
+import static org.fp024.mapper.BoardVODynamicSqlSupport.regdate;
+import static org.fp024.mapper.BoardVODynamicSqlSupport.title;
+import static org.fp024.mapper.BoardVODynamicSqlSupport.updateDate;
+import static org.fp024.mapper.BoardVODynamicSqlSupport.writer;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 import org.fp024.config.RootConfig;
 import org.fp024.domain.BoardVO;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.mybatis.dynamic.sql.Constant;
+import org.mybatis.dynamic.sql.DerivedColumn;
 import org.mybatis.dynamic.sql.SqlBuilder;
+import org.mybatis.dynamic.sql.SqlColumn;
+import org.mybatis.dynamic.sql.StringConstant;
 import org.mybatis.dynamic.sql.render.RenderingStrategies;
 import org.mybatis.dynamic.sql.update.render.UpdateStatementProvider;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,17 +44,90 @@ class BoardMapperTest {
 
   @Autowired private BoardMapper mapper;
 
+  // order by를 사용한 페이지 쿼리의 코드화
+  //     SELECT bno
+  //          , title
+  //          , content
+  //          , writer
+  //          , regdate AS regDate
+  //          , updatedate AS updateDate
+  //       FROM (SELECT rownum AS rn, bno, title, content, writer, regdate, updatedate
+  //               FROM tbl_board
+  //              WHERE rownum <= #{pageNum} * #{amount}
+  //              ORDER BY bno DESC
+  //              )
+  //      WHERE rn > (#{pageNum} - 1) * #{amount}
   @Test
-  void testGetList() {
+  void testGetListWithPaging() {
+    DerivedColumn<Long> ROWNUM = DerivedColumn.of("ROWNUM");
+    DerivedColumn<Long> rn = ROWNUM.as("rn");
+
     List<BoardVO> boardList =
         mapper.selectMany(
             SqlBuilder.select(BoardMapper.selectList)
-                .from(BoardVODynamicSqlSupport.boardVO)
-                .where(BoardVODynamicSqlSupport.bno, SqlBuilder.isGreaterThan(0L))
+                .from(
+                    SqlBuilder.select(rn, bno, title, content, writer, regdate, updateDate)
+                        .from(BoardVODynamicSqlSupport.boardVO)
+                        .where(rn, SqlBuilder.isLessThanOrEqualTo(10L))
+                        .orderBy(bno.descending()))
+                // 여기에 위에서 만든 rn을 넣으면 ROWNOM으로 쿼리가 만들어진다.
+                // 쿼리 모양을 완전히 동일하게 하려면 DerivedColumn.of("rn")으로 넣어야한다.
+                .where(DerivedColumn.of("rn"), SqlBuilder.isGreaterThan(0L))
+                .orderBy(bno.descending())
                 .build()
                 .render(RenderingStrategies.MYBATIS3));
 
-    boardList.forEach(board -> LOGGER.debug(board.toString()));
+    boardList.forEach(b -> LOGGER.info("{}", b.toString()));
+  }
+
+  /*
+   * 어떻게든 Hint를 쿼리문에 집어넣을 수는 있는데... 쉼표(,)를 무조건 붙이기 때문에
+   * dummy 컬럼을 노출해줘야하는 문제가 있다.
+   */
+  // 만들고 싶은 쿼리
+  //     SELECT bno
+  //          , title
+  //          , content
+  //          , writer
+  //          , regdate AS regDate
+  //          , updatedate AS updateDate
+  //       FROM (SELECT /*+ INDEX_DESC(tbl_board pk_board) */
+  //                    rownum AS rn, bno, title, content, writer, regdate, updatedate
+  //               FROM tbl_board
+  //              WHERE rownum <= #{pageNum} * #{amount})
+  //      WHERE rn > (#{pageNum} - 1) * #{amount}
+  // 어쩔 수 없이 dummy가 붙은  쿼리 (select()에 Constant를 넣을 때, 쉼표를 자동으로 붙여서 어쩔 수 없다.)
+  //     SELECT bno
+  //          , title
+  //          , content
+  //          , writer
+  //          , regdate AS regDate
+  //          , updatedate AS updateDate
+  //       FROM (SELECT /*+ INDEX_DESC(tbl_board pk_board) */ 'dummy',
+  //               rownum AS rn, bno, title, content, writer, regdate, updatedate
+  //               FROM tbl_board
+  //              WHERE rownum <= #{pageNum} * #{amount})
+  //      WHERE rn > (#{pageNum} - 1) * #{amount}
+  @Test
+  void testGetListWithPaging_Hint() {
+    DerivedColumn<Long> ROWNUM = DerivedColumn.of("ROWNUM");
+    DerivedColumn<Long> rn = ROWNUM.as("rn");
+
+    Constant<String> hint = Constant.of("/*+ INDEX_DESC(tbl_board pk_board) */ 'dummy'");
+
+    List<BoardVO> boardList =
+        mapper.selectMany(
+            SqlBuilder.select(BoardMapper.selectList)
+                .from(
+                    SqlBuilder.select(hint, rn, bno, title, content, writer, regdate, updateDate)
+                        .from(BoardVODynamicSqlSupport.boardVO)
+                        .where(rn, SqlBuilder.isLessThanOrEqualTo(10L)))
+                .where(DerivedColumn.of("rn"), SqlBuilder.isGreaterThan(0L))
+                .orderBy(bno.descending())
+                .build()
+                .render(RenderingStrategies.MYBATIS3));
+
+    boardList.forEach(b -> LOGGER.info("{}", b.toString()));
   }
 
   /**

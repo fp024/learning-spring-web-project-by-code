@@ -630,6 +630,93 @@ FROM
 
 ### 13.2 BoardController와 BoardService 수정
 
+### jex02 프로젝트의 MyBatis Dynamic SQL  라이브러리 기능으로 페이징 쿼리 적용내용
+
+* rownum 도 활용할 수 있고, 서브 쿼리도 잘 입력 할 수 있었다.
+* 단 hint에 대한 입력을 라이브러리가 지원하진 않아, Constant 로 넣고 dummy 컬럼을 노출하게 하여 의도된 쿼리가 잘 입력되도록 하였다.
+
+```java
+  // order by를 사용한 페이지 쿼리의 코드화
+  //     SELECT bno
+  //          , title
+  //          , content
+  //          , writer
+  //          , regdate AS regDate
+  //          , updatedate AS updateDate
+  //       FROM (SELECT rownum AS rn, bno, title, content, writer, regdate, updatedate
+  //               FROM tbl_board
+  //              WHERE rownum <= #{pageNum} * #{amount}
+  //              ORDER BY bno DESC
+  //              )
+  //      WHERE rn > (#{pageNum} - 1) * #{amount}
+  @Test
+  void testGetListWithPaging() {
+    DerivedColumn<Long> ROWNUM = DerivedColumn.of("ROWNUM");
+    DerivedColumn<Long> rn = ROWNUM.as("rn");
+
+    mapper.selectMany(
+        SqlBuilder.select(BoardMapper.selectList)
+            .from(
+                SqlBuilder.select(rn, bno, title, content, writer, regdate, updateDate)
+                    .from(BoardVODynamicSqlSupport.boardVO)
+                    .where(rn, SqlBuilder.isLessThanOrEqualTo(10L))
+                    .orderBy(bno.descending()))
+            // 여기에 위에서 만든 rn을 넣으면 ROWNOM으로 쿼리가 만들어진다.
+            // 쿼리 모양을 완전히 동일하게 하려면 DerivedColumn.of("rn")으로 넣어야한다.
+            .where(DerivedColumn.of("rn"), SqlBuilder.isGreaterThan(0L))
+            .orderBy(bno.descending())
+            .build()
+            .render(RenderingStrategies.MYBATIS3));
+  }
+
+  /*
+   * 어떻게든 Hint를 쿼리문에 집어넣을 수는 있는데... 쉼표(,)를 무조건 붙이기 때문에
+   * dummy 컬럼을 노출해줘야하는 문제가 있다.
+   */
+  // 만들고 싶은 쿼리
+  //     SELECT bno
+  //          , title
+  //          , content
+  //          , writer
+  //          , regdate AS regDate
+  //          , updatedate AS updateDate
+  //       FROM (SELECT /*+ INDEX_DESC(tbl_board pk_board) */
+  //                    rownum AS rn, bno, title, content, writer, regdate, updatedate
+  //               FROM tbl_board
+  //              WHERE rownum <= #{pageNum} * #{amount})
+  //      WHERE rn > (#{pageNum} - 1) * #{amount}
+  // 어쩔 수 없이 dummy가 붙은  쿼리 (select()에 Constant를 넣을 때, 쉼표를 자동으로 붙여서 어쩔 수 없다.)
+  //     SELECT bno
+  //          , title
+  //          , content
+  //          , writer
+  //          , regdate AS regDate
+  //          , updatedate AS updateDate
+  //       FROM (SELECT /*+ INDEX_DESC(tbl_board pk_board) */ 'dummy',
+  //               rownum AS rn, bno, title, content, writer, regdate, updatedate
+  //               FROM tbl_board
+  //              WHERE rownum <= #{pageNum} * #{amount})
+  //      WHERE rn > (#{pageNum} - 1) * #{amount}
+  @Test
+  void testGetListWithPaging_Hint() {
+    DerivedColumn<Long> ROWNUM = DerivedColumn.of("ROWNUM");
+    DerivedColumn<Long> rn = ROWNUM.as("rn");
+
+    Constant<String> hint = Constant.of("/*+ INDEX_DESC(tbl_board pk_board) */ 'dummy'");
+
+    mapper.selectMany(
+        SqlBuilder.select(BoardMapper.selectList)
+            .from(
+                SqlBuilder.select(hint, rn, bno, title, content, writer, regdate, updateDate)
+                    .from(BoardVODynamicSqlSupport.boardVO)
+                    .where(rn, SqlBuilder.isLessThanOrEqualTo(10L)))
+            .where(DerivedColumn.of("rn"), SqlBuilder.isGreaterThan(0L))
+            .orderBy(bno.descending())
+            .build()
+            .render(RenderingStrategies.MYBATIS3));
+  }
+```
+
 
 
 ## 14. 페이징 화면 처리

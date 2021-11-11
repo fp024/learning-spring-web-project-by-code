@@ -3,6 +3,7 @@ package org.fp024.config;
 import javax.sql.DataSource;
 
 import org.apache.ibatis.session.SqlSessionFactory;
+import org.fp024.domain.BoardVO;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,20 +20,13 @@ import com.zaxxer.hikari.HikariDataSource;
 @MapperScan(basePackages = {"org.fp024.mapper"})
 @PropertySource({"classpath:database.properties"})
 public class RootConfig {
-  @Value("${jdbc.driver}")
-  private String driverClassName;
-
-  @Value("${jdbc.url}")
-  private String url;
-
-  @Value("${jdbc.username}")
-  private String userName;
-
-  @Value("${jdbc.password}")
-  private String password;
 
   @Bean(destroyMethod = "close")
-  public DataSource dataSource() {
+  public DataSource dataSource(
+      @Value("${jdbc.driver}") String driverClassName,
+      @Value("${jdbc.url}") String url,
+      @Value("${jdbc.username}") String userName,
+      @Value("${jdbc.password}") String password) {
     HikariConfig hikariConfig = new HikariConfig();
     hikariConfig.setDriverClassName(driverClassName);
     hikariConfig.setJdbcUrl(url);
@@ -43,9 +37,10 @@ public class RootConfig {
   }
 
   @Bean
-  public SqlSessionFactory sqlSessionFactory() throws Exception {
+  public SqlSessionFactory sqlSessionFactory(DataSource dataSource) throws Exception {
     SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
-    sqlSessionFactoryBean.setDataSource(dataSource());
+    sqlSessionFactoryBean.setDataSource(dataSource);
+    sqlSessionFactoryBean.setTypeAliasesPackage("org.fp024.domain");
     return sqlSessionFactoryBean.getObject();
   }
 }

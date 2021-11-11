@@ -3,6 +3,7 @@ package org.fp024.service;
 import java.util.List;
 
 import org.fp024.domain.BoardVO;
+import org.fp024.domain.Criteria;
 
 public interface BoardService {
   void register(BoardVO board);
@@ -13,5 +14,5 @@ public interface BoardService {
 
   boolean remove(Long bno);
 
-  List<BoardVO> getList();
+  List<BoardVO> getList(Criteria criteria);
 }

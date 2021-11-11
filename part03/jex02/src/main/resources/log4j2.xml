@@ -18,7 +18,7 @@
     <Logger name="org.springframework.web" level="debug" />
 
     <!-- Root Logger -->
-    <Root level="info">
+    <Root level="debug">
       <Appender-Ref ref="STDOUT" />
     </Root>
   </Loggers>

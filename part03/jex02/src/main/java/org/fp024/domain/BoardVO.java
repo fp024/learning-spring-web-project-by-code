@@ -3,6 +3,9 @@ package org.fp024.domain;
 import java.time.LocalDateTime;
 import javax.annotation.Generated;
 
+import org.apache.ibatis.type.Alias;
+
+@Alias("boardVO")
 public class BoardVO {
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
     private Long bno;
