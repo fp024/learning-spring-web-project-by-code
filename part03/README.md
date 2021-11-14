@@ -721,15 +721,98 @@ FROM
 
 ## 14. 페이징 화면 처리
 
+페이지를 보여주는 작업단계
+
+* 브라우저 주소창에서 페이지 번호를 전달해서 결과를 확인
+* JSP에서 페이지 번호를 출력
+* 각 페이지 번호에 클릭 이벤트 처리
+* 전체 데이터 개수를 반영해서 페이지 번호 조절
+
 ### 14.1 페이징 처리할 때 필요한 정보들
+
+화면 페이지에 필요한 정보
+
+* 현재 페이지번호(page)
+* 이전과 다음으로 이동가능한 링크의 표시 여부(prev, next)
+* 화면에서 보여지는 페이지의 시작번호와 끝번호(startPage, endPage)
+
+#### 14.1.1 끝 페이지 번호와 시작번호
+
+* 페이징의 끝 번호(endPage) 계산
+
+  ```java
+  this.endPage =
+    (long) Math.ceil(((double) criteria.getPageNum()) / Criteria.PAGE_SIZE) * Criteria.PAGE_SIZE;
+  // Math.ceil() 은 소수점을 올림으로 처리함
+  // 정수 나눗셈이 되지 않도록 페이지 번호를 double로 형변환한 후에 나눗셈 수행
+  ```
+
+  
+
+* 페이징의 시작 번호(startPage) 계산
+
+  ```java
+  this.startPage = this.endPage - (Criteria.PAGE_SIZE  - 1);
+  ```
+
+  
+
+* total을 통한 endPage의 재계산
+
+  ```java
+  long realEnd = (long) (Math.ceil(((double) total) / Criteria.PAGE_SIZE));
+  
+  if (realEnd < this.endPage) {
+    this.endPage = realEnd;
+  }
+  ```
+
+* 이전(prev) 계산
+
+  ```java
+  this.prev = this.startPage > 1;
+  ```
+
+* 다음(next) 계산
+
+  ```java
+  this.next = this.endPage < realEnd;
+  ```
+
+  
 
 ### 14.2 페이징 처리를 위한 클래스 설계
 
+* PageDTO 클래스
+
 ### 14.3 JSP에서 페이지 번호 출력
+
+* Bootstrap 버전이 달라서 교제와 마크업이 다르다, 아래 공식 페이지의 내용을 참조해서 넣도록 하자!
+  * https://getbootstrap.com/docs/4.0/components/pagination/
+
+* 특이한점이.. 회사에서 레거시 프로젝트 다룰 때는, boolean 타입을 JSP 상에서 Getter로 읽기 위해서 Getter 메서드를 별도로 지정해줬는데, 지금은 is메서드만 있는 상태에서도 JSP에서 잘 읽힌다.  
+  * 현재 프로젝트에 설정한 `javax.servlet.jsp-api` 라이브러리 버전이 `2.3.3` 버전으로 회사서 사용한 것 보단 최신인데.. 이것 때문인지?
 
 ### 14.4 조회 페이지로 이동
 
+* 게시물 클릭시 bno를 actionForm에 추가해서 submit하는데, 게시물을 보고 뒤로가고 왔다갔다면 bno파라미터가 계속 붙으므로 제거해주고 추가하자!
+  * `$actionForm.find("input[name='bno']").remove();`
+
+#### 14.4.1 조회 페이지에서 다시 목록 페이지로 이동 - 페이지 번호 유지
+
+* @ModelAttribute는 자동으로 Model에 데이터를 지정한 이름으로 담아줌
+* @ModelAttribute를 사용하지 않아도 Controller에서 화면으로 파라미터가 된 객체는 전달이됨
+
+#### 14.4.2 조회 페이지에서 수정/삭제 페이지로 이동
+
 ### 14.5 수정과 삭제 처리
+
+#### 14.5.1 수정/삭제 처리 후 이동
+
+* RedirectAttribute에서 addAttribute VS addFlashAttribute
+  * https://stackoverflow.com/questions/14470111/spring-redirectattributes-addattribute-vs-addflashattribute
+
+#### 14.5.2 수정/삭제 페이지에서 목록 페이지로 이동
 
 ### 14.6 MyBatis에서 전체 데이터의 개수 처리
 

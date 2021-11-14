@@ -2,7 +2,6 @@ package org.fp024.mapper;
 
 import org.fp024.domain.BoardVO;
 import org.fp024.domain.Criteria;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +20,7 @@ class BoardMapperTest {
   void testGetListWithPaging() {
     mapper.getListWithPaging(new Criteria(1)).forEach(board -> LOGGER.info(board.toString()));
   }
-  
+
   @Test
   void testInsert() {
     BoardVO board = new BoardVO();
@@ -70,5 +69,13 @@ class BoardMapperTest {
 
     int count = mapper.update(board);
     LOGGER.info("UPDATE COUNT: {}", count);
+  }
+
+  @Test
+  void testGetTotalCount() {
+    // 아직 Criteria를 활용하진 않는다.
+    // COUNT()의 결과는 항상 존재하므로, resultMap이 null인 경우는 없다.
+    long totalCount = mapper.getTotalCount(new Criteria()).get("count");    
+    LOGGER.info("total count: {}", totalCount);
   }
 }

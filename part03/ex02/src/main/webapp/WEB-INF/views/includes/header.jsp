@@ -17,5 +17,6 @@
 <link href="/resources/css/sb-admin-2.min.css" rel="stylesheet">
 
 <!-- Custom styles for this page -->
-<link href="/resources/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+<!-- // 페이징 지원 플러그인은 제거한다. -->
+<!-- <link href="/resources/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet"> -->
 </head>

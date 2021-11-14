@@ -1,15 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.fp024.mapper.BoardMapper">
-    <select id="getList" resultType="org.fp024.domain.BoardVO">
-    <![CDATA[
-        SELECT * 
-          FROM tbl_board
-         WHERE bno > 0
-    ]]>    
-    </select>
-
-    <select id="getListWithPaging" parameterType="criteria" resultType="boardVO">
+  <select id="getListWithPaging" parameterType="criteria" resultType="boardVO">
     <![CDATA[
       SELECT bno
            , title
@@ -23,39 +15,53 @@
                WHERE rownum <= #{pageNum} * #{amount})
        WHERE rn > (#{pageNum} - 1) * #{amount}
     ]]>
-    </select>
+  </select>
     
-    <insert id="insert">
-        INSERT INTO tbl_board (bno, title, content, writer)
-        VALUES (seq_board.nextval, #{title}, #{content}, #{writer}) 
-    </insert>
-    
-    <insert id="insertSelectKey">
-        <selectKey keyProperty="bno" order="BEFORE" resultType="long">
-            SELECT seq_board.nextval FROM DUAL
-        </selectKey>
+  <!-- 
+    MyBatis의 COUNT(*)결과를 resultMap없이 받을 경우 int로만 치환이된다. 
+    그런데 mybatis-dynamic-sql 라이브러리에서는 자동으로 만들어주는 
+    count() 메서드의 반환형을 long으로 만들어준다. 
+  -->
+  <resultMap type="map" id="CountResultMap">
+    <result property="count" column="count" javaType="long" jdbcType="BIGINT" />
+  </resultMap>
+  <select id="getTotalCount" parameterType="criteria" resultMap="CountResultMap">
+    SELECT COUNT(*) AS count
+    FROM tbl_board
+    WHERE bno > 0
+  </select>
 
-        INSERT INTO tbl_board (bno, title, content, writer)
-        VALUES (#{bno}, #{title}, #{content}, #{writer})    
-    </insert>
-    
-    <select id="read" resultType="boardVO">
-        SELECT * FROM tbl_board WHERE bno = #{bno}
-    </select>
-    
-    <delete id="delete">
-        DELETE
-          FROM tbl_board 
-         WHERE bno = #{bno}         
-    </delete>
-    
-    <update id="update">
-        UPDATE tbl_board
-           SET title = #{title}
-             , content = #{content}
-             , writer = #{writer}
-             , updateDate = SYSDATE
-         WHERE bno = #{bno}
-    </update>
+  <insert id="insert">
+    INSERT INTO tbl_board (bno, title, content, writer)
+    VALUES (seq_board.nextval, #{title}, #{content}, #{writer})
+  </insert>
+
+  <insert id="insertSelectKey">
+    <selectKey keyProperty="bno" order="BEFORE" resultType="long">
+      SELECT seq_board.nextval FROM DUAL
+    </selectKey>
+
+    INSERT INTO tbl_board (bno, title, content, writer)
+    VALUES (#{bno}, #{title}, #{content}, #{writer})
+  </insert>
+
+  <select id="read" resultType="boardVO">
+    SELECT * FROM tbl_board WHERE bno = #{bno}
+  </select>
+
+  <delete id="delete">
+    DELETE
+    FROM tbl_board
+    WHERE bno = #{bno}
+  </delete>
+
+  <update id="update">
+    UPDATE tbl_board
+    SET title = #{title}
+    , content = #{content}
+    , writer = #{writer}
+    , updateDate = SYSDATE
+    WHERE bno = #{bno}
+  </update>
 
 </mapper>

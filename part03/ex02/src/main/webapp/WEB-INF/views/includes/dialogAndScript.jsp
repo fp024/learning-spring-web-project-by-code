@@ -53,13 +53,15 @@
 <script src="/resources/js/sb-admin-2.min.js"></script>
 
 <!-- Page level plugins -->
+<!-- // 페이징 지원 플러그인은 제거한다.
 <script src="/resources/vendor/datatables/jquery.dataTables.min.js"></script>
 <script src="/resources/vendor/datatables/dataTables.bootstrap4.min.js"></script>
-
+ -->
 <script type="text/javascript">
-  $(document).ready(function() {
-    $('#dataTable').DataTable();
-  });
+  
+  //$(document).ready(function() {
+  //  $('#dataTable').DataTable();
+  //});
 
   $(document).ready(function() {
     var result = '<c:out value="${result}" />';
@@ -84,6 +86,31 @@
     $("#regBtn").on("click", function() {
       self.location = "/board/register";
     });
+    
+    var $actionForm = $("#actionForm");
+    
+    $(".page-item a").on("click", function(e) {
+      e.preventDefault();
+      
+      console.log('click');
+      
+      $actionForm.find("input[name='pageNum']").val($(this).attr("href"));
+      $actionForm.submit();
+    });
+    
+    $(".move").on("click", function(e) {
+      e.preventDefault();
+    
+      console.log('click - move');
+      
+      $actionForm.find("input[name='bno']").remove();
+      $actionForm.append("<input type='hidden' name='bno' value='" + $(this).attr("href") + "'>");
+      $actionForm.attr("action", "/board/get");
+      $actionForm.submit();
+    });
+    
+    
+    
   });
 </script>
 

@@ -65,4 +65,12 @@ class BoardServiceTest {
     board.setTitle("제목 수정합니다. - " + LocalDateTime.now().getSecond());
     LOGGER.info("MODIFY RESULT: {}", service.modify(board));
   }
+  
+  
+  @Test
+  void testGetTotal() {
+    long totalCount = service.getTotal(new Criteria());    
+    LOGGER.info("total count: {}", totalCount);    
+  }
+  
 }

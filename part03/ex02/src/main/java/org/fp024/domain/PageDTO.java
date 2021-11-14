@@ -1,0 +1,43 @@
+package org.fp024.domain;
+
+import lombok.Getter;
+import lombok.ToString;
+
+/** 필드들을 불변으로 만들어도 괜찮을 것 같아서 약간 수정했다. */
+@Getter
+@ToString
+public class PageDTO {
+  /** 한 페이지의 게시물 노출 수 */
+  public static final int PAGE_SIZE = 10;
+  /** 페이지 네비게이터에 표시할 페이지 인덱스 수 */
+  public static final int PAGE_NAVIGATION_SIZE = 10;
+
+  private final long pageNum;
+  private final long startPage;
+  private final long endPage;
+  private final boolean prev;
+  private final boolean next;
+  private final long total;
+
+  public PageDTO(Criteria criteria, long total) {
+    this.pageNum = criteria.getPageNum();
+    this.total = total;
+
+    long endPageNum =
+        (long) Math.ceil(((double) criteria.getPageNum()) / PAGE_NAVIGATION_SIZE)
+            * PAGE_NAVIGATION_SIZE;
+    this.startPage = endPageNum - (PAGE_NAVIGATION_SIZE - 1);
+
+    long realEnd = (long) (Math.ceil(((double) total) / criteria.getAmount()));
+
+    if (realEnd < endPageNum) {
+      this.endPage = realEnd;
+    } else {
+      this.endPage = endPageNum;
+    }
+
+    this.prev = this.startPage > 1;
+
+    this.next = endPageNum < realEnd;
+  }
+}
