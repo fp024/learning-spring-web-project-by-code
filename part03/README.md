@@ -816,7 +816,45 @@ FROM
 
 ### 14.6 MyBatis에서 전체 데이터의 개수 처리
 
-* jex02 프로젝트의 mybatis-dynamic-sql 모듈 사용시 메서드 구현
+* ex02 프로젝트에서 COUNT() 값을 long으로 받아오기
+
+  * COUNT()쿼리의 resutType을 long으로 할 경우 형변환 예외가 발생해서 resultMap으로 명시적으로 지정하니 문제가 해결되었다.
+
+  * BoardMapper.xml
+
+      ```xml
+        <!-- 
+          MyBatis의 COUNT(*)결과를 resultMap없이 결과를 가져올 경우 int로만 치환이된다. 
+          그런데 mybatis-dynamic-sql 라이브러리에서는 자동으로 만들어주는 
+          count() 메서드의 반환형을 long으로 만들어준다. 
+        -->
+        <resultMap type="map" id="CountResultMap">
+          <result property="count" column="count" javaType="long" jdbcType="BIGINT" />
+        </resultMap>
+        <select id="getTotalCount" parameterType="criteria" resultMap="CountResultMap">
+          SELECT COUNT(*) AS count
+          FROM tbl_board
+          WHERE bno > 0
+        </select>
+      ```
+
+  * BoardMapper 클래스, Board ServiceImpl 클래스
+
+    ```java
+    // BoardMapper 클래스
+    Map<String, Long> getTotalCount(Criteria criteria);
+    
+    // BoardServiceImpl 클래스
+    @Override
+      public long getTotal(Criteria criteria) {
+        LOGGER.info("get total count");
+        return mapper.getTotalCount(criteria).get("count");
+      }
+    ```
+
+    
+
+* jex02 프로젝트의 mybatis-dynamic-sql 모듈 사용시 BoardServiceImpl.getTotal() 메서드 구현
 
   ```java
     @Override
