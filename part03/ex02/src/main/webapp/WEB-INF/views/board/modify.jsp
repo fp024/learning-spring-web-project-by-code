@@ -34,7 +34,8 @@
             </div>
             <div class="card-body">
               <form role="form" action="/board/modify" method="post">
-                <input type="hidden" name="pageNum" value="<c:out value="${criteria.pageNum}"/>">
+                <input type="hidden" name="pageNum" value="<c:out value="${criteria.pageNum}"/>"> <input type="hidden" name="amount"
+                  value="<c:out value="${criteria.amount}"/>">
 
                 <div class="form-group">
                   <label>Bno</label> <input class="form-control" name="bno" value="<c:out value='${board.bno}'/>" readonly="readonly">
@@ -91,9 +92,11 @@
           } else if (operation === "list") {
             $formObj.attr("action", "/board/list").attr("method", "get");
             var pageNumTag = $("input[name='pageNum']").clone();
-            
+            var amountTag = $("input[name='amount']").clone();
+
             $formObj.empty();
             $formObj.append(pageNumTag);
+            $formObj.append(amountTag);
           }
           $formObj.submit();
         });

@@ -45,7 +45,7 @@ class BoardControllerTest {
             .perform(
                 MockMvcRequestBuilders.get("/board/list")
                     .param("pageNum", "1")
-                    .param("amount", "10")) // 페이지 사이즈를 전달하게 되면, 범위를 몇가지로 고정해야할 것 같다.
+                    .param("amount", "10")) // 페이지 사이즈를 전달하게 되면, 범위를 몇가지로 고정해야할 것 같다. => PageSize enum을 적용했다.
             .andReturn()
             .getModelAndView()
             .getModelMap();

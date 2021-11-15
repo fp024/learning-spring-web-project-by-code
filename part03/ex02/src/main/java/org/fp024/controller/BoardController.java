@@ -64,6 +64,7 @@ public class BoardController {
       rttr.addFlashAttribute("result", "success");
     }
     rttr.addAttribute("pageNum", criteria.getPageNum());
+    rttr.addAttribute("amount", criteria.getAmount());
     return "redirect:/board/list";
   }
 
@@ -77,6 +78,7 @@ public class BoardController {
       rttr.addFlashAttribute("result", "success");
     }
     rttr.addAttribute("pageNum", criteria.getPageNum());
+    rttr.addAttribute("amount", criteria.getAmount());
     return "redirect:/board/list";
   }
 }

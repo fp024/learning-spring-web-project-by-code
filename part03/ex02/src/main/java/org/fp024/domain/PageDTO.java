@@ -18,17 +18,19 @@ public class PageDTO {
   private final boolean prev;
   private final boolean next;
   private final long total;
+  private final int amount;
 
   public PageDTO(Criteria criteria, long total) {
     this.pageNum = criteria.getPageNum();
     this.total = total;
+    this.amount = criteria.getAmount();
 
     long endPageNum =
-        (long) Math.ceil(((double) criteria.getPageNum()) / PAGE_NAVIGATION_SIZE)
+        (long) Math.ceil(((double) pageNum) / PAGE_NAVIGATION_SIZE)
             * PAGE_NAVIGATION_SIZE;
     this.startPage = endPageNum - (PAGE_NAVIGATION_SIZE - 1);
 
-    long realEnd = (long) (Math.ceil(((double) total) / criteria.getAmount()));
+    long realEnd = (long) (Math.ceil(((double) total) / amount));
 
     if (realEnd < endPageNum) {
       this.endPage = realEnd;

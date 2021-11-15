@@ -79,6 +79,7 @@
 
                 <form id="actionForm" action="/board/list" method="get">
                   <input type="hidden" name="pageNum" value="${pageMaker.pageNum}">
+                  <input type="hidden" name="amount" value="${pageMaker.amount}">
                 </form>
               </div>
             </div>
