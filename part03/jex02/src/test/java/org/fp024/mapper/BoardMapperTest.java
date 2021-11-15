@@ -35,6 +35,8 @@ import lombok.extern.slf4j.Slf4j;
  * <p>WHERE 절 지원 https://mybatis.org/mybatis-dynamic-sql/docs/whereClauses.html
  *
  * <p>SELECT 문장 https://mybatis.org/mybatis-dynamic-sql/docs/select.html
+ * 
+ * <p> 테스트 코드 참고: https://github.com/mybatis/mybatis-dynamic-sql/blob/b1fa3a6562c3ccf6798a64651def0e5019d5ac8d/src/test/java/examples/groupby/GroupByTest.java
  *
  * @author fp024
  */
@@ -206,5 +208,31 @@ class BoardMapperTest {
     // Selective로 끝나는 메서드를 사용하면, null로 설정된 값은 업데이트하지 않는다.
     int count = mapper.update(updateStatement);
     LOGGER.info("UPDATE COUNT: {}", count);
+  }
+
+  /*
+    아래에 대응되는 쿼리를 만든다., 아직 검색 조건을 넣지 않았기 때문에, criteria를 실제 쿼리에서 활용하지 않는다.
+     <resultMap type="map" id="CountResultMap">
+       <result property="count" column="count" javaType="long" jdbcType="BIGINT" />
+     </resultMap>
+     <select id="getTotalCount" parameterType="criteria" resultMap="CountResultMap">
+       SELECT COUNT(*) AS count
+         FROM tbl_board
+        WHERE bno > 0
+     </select>
+
+     mybatis-dymanic-sql 모듈 사용할 때는 count의 반환형이 long으로 되어있어 resultMap으로 바꿔줘야하는 고려가 없어도 된다.
+  */
+  @Test
+  void testBoardCount() {
+    long totalCount =
+        mapper.count(
+            SqlBuilder.select(SqlBuilder.count())
+                .from(BoardVODynamicSqlSupport.boardVO)
+                .where(bno, SqlBuilder.isGreaterThan(0L))
+                .build()
+                .render(RenderingStrategies.MYBATIS3));
+
+    LOGGER.info("totalCount: {}", totalCount);
   }
 }

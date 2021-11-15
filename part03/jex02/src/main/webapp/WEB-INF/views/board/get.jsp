@@ -59,6 +59,8 @@
 
               <form id="operForm" action="/board/modify" method="get">
                 <input type="hidden" id="bno" name="bno" value="<c:out value="${board.bno}"/>">
+                <input type="hidden" name="pageNum" value="<c:out value="${criteria.pageNum}"/>">
+                <input type="hidden" name="amount" value="<c:out value="${criteria.amount}"/>">
               </form>
             </div>
           </div>

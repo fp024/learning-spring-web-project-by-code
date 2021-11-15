@@ -816,7 +816,21 @@ FROM
 
 ### 14.6 MyBatis에서 전체 데이터의 개수 처리
 
+* jex02 프로젝트의 mybatis-dynamic-sql 모듈 사용시 메서드 구현
 
+  ```java
+    @Override
+    public long getTotal(Criteria criteria) {
+      return mapper.count(
+          select(count())
+              .from(BoardVODynamicSqlSupport.boardVO)
+              .where(bno, isGreaterThan(0L))
+              .build()
+              .render(RenderingStrategies.MYBATIS3));
+    }
+  ```
+
+  * mybatis-dynamic-sql 모듈 사용시에는 count 쿼리의 결과를 long으로 처리하는지? Mapper XML 사용할 때처럼 ResultMap으로 타입을 정확하게 명시해야하는 문제가 없었다.
 
 ## 15.  검색처리
 
@@ -976,7 +990,9 @@ Jetty에서 타겟 리소스 변경(소스코드 변경등..)시 자동 재배�
 
 ---
 
-## TODO: SQL Developer에서 실행 계획 보기
+## TODO LIST
+
+- [ ] **TODO: SQL Developer에서 F10눌러서 나오는 실행 계획 보기**
 
 실행계획을 볼때, 안쪽에서 바깥쪽으로, 위에서 아래로 란 언급이 있는데..
 
@@ -996,3 +1012,9 @@ Jetty에서 타겟 리소스 변경(소스코드 변경등..)시 자동 재배�
 * 계획 설명 (F10)
 
   ![execute-plan](doc-resources/execute-plan.png)
+
+
+
+- [ ] **TODO:  RedirectAttribute에서 addAttribute VS addFlashAttribute**
+
+  

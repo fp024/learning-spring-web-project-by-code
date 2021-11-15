@@ -5,7 +5,7 @@ import javax.annotation.Generated;
 
 import org.apache.ibatis.type.Alias;
 
-@Alias("boardVO")
+@Alias("boardVO") // mapper xml을 사용하지 않기 때문에 별칭을 지정해도 의미가 없다., 현재 프로젝트는 클래스로 직접 접근하고 있음.
 public class BoardVO {
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
     private Long bno;

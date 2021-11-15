@@ -6,6 +6,7 @@ import static org.fp024.mapper.BoardVODynamicSqlSupport.regdate;
 import static org.fp024.mapper.BoardVODynamicSqlSupport.title;
 import static org.fp024.mapper.BoardVODynamicSqlSupport.updateDate;
 import static org.fp024.mapper.BoardVODynamicSqlSupport.writer;
+import static org.mybatis.dynamic.sql.SqlBuilder.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -16,7 +17,7 @@ import org.fp024.mapper.BoardMapper;
 import org.fp024.mapper.BoardVODynamicSqlSupport;
 import org.mybatis.dynamic.sql.Constant;
 import org.mybatis.dynamic.sql.DerivedColumn;
-import org.mybatis.dynamic.sql.SqlBuilder;
+
 import org.mybatis.dynamic.sql.render.RenderingStrategies;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +36,8 @@ import lombok.extern.slf4j.Slf4j;
  * <p>DELETE: https://mybatis.org/mybatis-dynamic-sql/docs/delete.html
  *
  * <p>예제:https://github.com/mybatis/mybatis-dynamic-sql/tree/master/src/test/java/examples
+ *
+ * <p>SqlBuilder 클래스는 import static 해주는게 낫겠다. 이래야 보기가 편함.
  *
  * @author fp024
  */
@@ -93,7 +96,7 @@ public class BoardServiceImpl implements BoardService {
                     .equalTo(board.getContent())
                     .set(BoardVODynamicSqlSupport.updateDate)
                     .equalTo(LocalDateTime.now())
-                    .where(BoardVODynamicSqlSupport.bno, SqlBuilder.isEqualTo(board.getBno())))
+                    .where(BoardVODynamicSqlSupport.bno, isEqualTo(board.getBno())))
         == 1;
   }
 
@@ -118,16 +121,25 @@ public class BoardServiceImpl implements BoardService {
     Constant<String> hint = Constant.of("/*+ INDEX_DESC(tbl_board pk_board) */ 'dummy'");
 
     return mapper.selectMany(
-        SqlBuilder.select(BoardMapper.selectList)
+        select(BoardMapper.selectList)
             .from(
-                SqlBuilder.select(hint, rn, bno, title, content, writer, regdate, updateDate)
+                select(hint, rn, bno, title, content, writer, regdate, updateDate)
                     .from(BoardVODynamicSqlSupport.boardVO)
-                    .where(rn, SqlBuilder.isLessThanOrEqualTo(criteria.getPageNum() * criteria.getAmount()))
-              )
+                    .where(rn, isLessThanOrEqualTo(criteria.getPageNum() * criteria.getAmount())))
             .where(
                 DerivedColumn.of("rn"),
-                SqlBuilder.isGreaterThan((criteria.getPageNum() - 1) * criteria.getAmount()))
+                isGreaterThan((criteria.getPageNum() - 1) * criteria.getAmount()))
             .orderBy(bno.descending())
+            .build()
+            .render(RenderingStrategies.MYBATIS3));
+  }
+
+  @Override
+  public long getTotal(Criteria criteria) {
+    return mapper.count(
+        select(count())
+            .from(BoardVODynamicSqlSupport.boardVO)
+            .where(bno, isGreaterThan(0L))
             .build()
             .render(RenderingStrategies.MYBATIS3));
   }

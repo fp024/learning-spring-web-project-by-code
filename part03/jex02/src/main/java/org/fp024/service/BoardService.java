@@ -15,4 +15,6 @@ public interface BoardService {
   boolean remove(Long bno);
 
   List<BoardVO> getList(Criteria criteria);
+
+  long getTotal(Criteria criteria);
 }

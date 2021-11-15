@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import org.fp024.config.RootConfig;
 import org.fp024.domain.BoardVO;
 import org.fp024.domain.Criteria;
+import org.fp024.domain.PageSize;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +42,9 @@ class BoardServiceTest {
 
   @Test
   void testGetList() {
-    service.getList(new Criteria(1, 5)).forEach(board -> LOGGER.info(board.toString()));
+    service
+        .getList(new Criteria(1, PageSize.SIZE_10))
+        .forEach(board -> LOGGER.info(board.toString()));
   }
 
   @Test

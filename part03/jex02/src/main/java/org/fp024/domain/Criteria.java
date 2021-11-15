@@ -6,25 +6,37 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-@Getter
-@Setter
 @ToString
 @Alias("criteria")
 public class Criteria {
-  public static final int PAGE_SIZE = 10;
-  private long pageNum;
-  private long amount;
+  @Getter private long pageNum;
+  private PageSize pageSize;
 
   public Criteria() {
-    this(1, PAGE_SIZE);
+    this(1, PageSize.SIZE_10);
   }
 
   public Criteria(long pageNum) {
-    this(pageNum, PAGE_SIZE);
+    this(pageNum, PageSize.SIZE_10);
   }
 
-  public Criteria(long pageNum, long amount) {
+  public Criteria(long pageNum, PageSize pageSize) {
     this.pageNum = pageNum;
-    this.amount = amount;
+    this.pageSize = pageSize;
+  }
+
+  public void setPageNum(long pageNum) {
+    if (pageNum < 1) {
+      pageNum = 1;
+    }
+    this.pageNum = pageNum;
+  }
+
+  public void setAmount(int amount) {
+    this.pageSize = PageSize.valueOfAmount(amount);
+  }
+
+  public int getAmount() {
+    return pageSize.getSize();
   }
 }
