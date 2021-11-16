@@ -1,5 +1,7 @@
 package org.fp024.domain;
 
+import java.util.List;
+
 import lombok.Getter;
 import lombok.ToString;
 
@@ -19,15 +21,20 @@ public class PageDTO {
   private final boolean next;
   private final long total;
   private final int amount;
+  private final String keyword;
+  private final List<String> searchCodes;
+  private final String searchCodesWithJoined;
 
   public PageDTO(Criteria criteria, long total) {
     this.pageNum = criteria.getPageNum();
     this.total = total;
     this.amount = criteria.getAmount();
+    this.keyword = criteria.getKeyword();
+    this.searchCodes = criteria.getSearchCodes();
+    this.searchCodesWithJoined = criteria.getSearchCodesWithJoined();
 
     long endPageNum =
-        (long) Math.ceil(((double) pageNum) / PAGE_NAVIGATION_SIZE)
-            * PAGE_NAVIGATION_SIZE;
+        (long) Math.ceil(((double) pageNum) / PAGE_NAVIGATION_SIZE) * PAGE_NAVIGATION_SIZE;
     this.startPage = endPageNum - (PAGE_NAVIGATION_SIZE - 1);
 
     long realEnd = (long) (Math.ceil(((double) total) / amount));

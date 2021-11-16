@@ -1,5 +1,7 @@
 package org.fp024.mapper;
 
+import java.util.Arrays;
+
 import org.fp024.domain.BoardVO;
 import org.fp024.domain.Criteria;
 import org.junit.jupiter.api.Test;
@@ -19,6 +21,14 @@ class BoardMapperTest {
   @Test
   void testGetListWithPaging() {
     mapper.getListWithPaging(new Criteria(1)).forEach(board -> LOGGER.info(board.toString()));
+  }
+
+  @Test
+  void testGetListWithPagingWithSearchCondition() {
+    Criteria c = new Criteria(1);
+    c.setKeyword("새로");
+    c.setSearchCodes(Arrays.asList("T", "C", "W"));
+    mapper.getListWithPaging(c).forEach(board -> LOGGER.info(board.toString()));
   }
 
   @Test
@@ -73,9 +83,17 @@ class BoardMapperTest {
 
   @Test
   void testGetTotalCount() {
-    // 아직 Criteria를 활용하진 않는다.
-    // COUNT()의 결과는 항상 존재하므로, resultMap이 null인 경우는 없다.
-    long totalCount = mapper.getTotalCount(new Criteria()).get("count");    
+    long totalCount = mapper.getTotalCount(new Criteria()).get("count");
+    LOGGER.info("total count: {}", totalCount);
+  }
+
+  @Test
+  void testGetTotalCountWithSearchCondition() {
+    Criteria c = new Criteria();
+    c.setKeyword("새로");
+    c.setSearchCodes(Arrays.asList("T", "C", "W"));
+
+    long totalCount = mapper.getTotalCount(c).get("count");
     LOGGER.info("total count: {}", totalCount);
   }
 }

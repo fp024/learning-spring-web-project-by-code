@@ -19,7 +19,7 @@
     * Oracle 18c Express Edition
         * 책 환경: Oracle 11c Express Edition
     * Tomcat 8.5.x
-    * Jetty 9.4.x
+    * Jetty 10.x
     * Maven 3.8.x
 
 ## 목차

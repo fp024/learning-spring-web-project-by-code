@@ -874,6 +874,52 @@ FROM
 
 ### 15.1 검색 기능과 SQL
 
+* 검식 기능 분류
+
+  * 제목/내용/작성자와 같은 단일 항목 검색
+  * 제목 or 내용, 제목 or 작성자, 내용 or 작성자, 제목 or 작성자와 같은 다중항목 검색
+
+* 단일항목 검색 (제목 검색 예시)
+
+  ```sql
+        SELECT bno
+             , title
+             , content
+             , writer
+             , regdate AS regDate
+             , updatedate AS updateDate
+          FROM (SELECT /*+ INDEX_DESC(tbl_board pk_board) */ 
+                       rownum AS rn, bno, title, content, writer, regdate, updatedate
+                  FROM tbl_board
+                 WHERE title LIKE '%select%'
+                   AND rownum <= 20)
+         WHERE rn > 10;
+  ```
+
+  
+
+#### 15.1.1 다중 항목 검색
+
+* AND, OR 우선순위를 고려하여 ( ) 괄호를 사용하여 의도대로 동작하도록 SQL 문장을 작성할 것! 
+
+  * 제목과 내용 검색 예시
+
+    ```sql
+          SELECT bno
+               , title
+               , content
+               , writer
+               , regdate AS regDate
+               , updatedate AS updateDate
+            FROM (SELECT /*+ INDEX_DESC(tbl_board pk_board) */ 
+                         rownum AS rn, bno, title, content, writer, regdate, updatedate
+                    FROM tbl_board
+                   WHERE  
+                     ( title LIKE '%ewbi%' OR content LIKE '%작성하는%' )
+                     AND rownum <= 20)
+           WHERE rn > 10;
+    ```
+
 ### 15.2 MyBatis의 동적 SQL
 
 ### 15.3 검색 조건 처리를 위한 Criteria의 변화
