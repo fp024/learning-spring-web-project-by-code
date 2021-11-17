@@ -6,19 +6,30 @@ import static org.fp024.mapper.BoardVODynamicSqlSupport.regdate;
 import static org.fp024.mapper.BoardVODynamicSqlSupport.title;
 import static org.fp024.mapper.BoardVODynamicSqlSupport.updateDate;
 import static org.fp024.mapper.BoardVODynamicSqlSupport.writer;
-import static org.mybatis.dynamic.sql.SqlBuilder.*;
+import static org.mybatis.dynamic.sql.SqlBuilder.count;
+import static org.mybatis.dynamic.sql.SqlBuilder.isEqualTo;
+import static org.mybatis.dynamic.sql.SqlBuilder.isGreaterThan;
+import static org.mybatis.dynamic.sql.SqlBuilder.isLessThanOrEqualTo;
+import static org.mybatis.dynamic.sql.SqlBuilder.isLikeWhenPresent;
+import static org.mybatis.dynamic.sql.SqlBuilder.or;
+import static org.mybatis.dynamic.sql.SqlBuilder.select;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.fp024.domain.BoardVO;
 import org.fp024.domain.Criteria;
+import org.fp024.domain.SearchType;
 import org.fp024.mapper.BoardMapper;
 import org.fp024.mapper.BoardVODynamicSqlSupport;
 import org.mybatis.dynamic.sql.Constant;
 import org.mybatis.dynamic.sql.DerivedColumn;
-
+import org.mybatis.dynamic.sql.SqlCriterion;
 import org.mybatis.dynamic.sql.render.RenderingStrategies;
+import org.mybatis.dynamic.sql.select.QueryExpressionDSL;
+import org.mybatis.dynamic.sql.select.SelectModel;
 import org.springframework.stereotype.Service;
 
 import lombok.AllArgsConstructor;
@@ -27,9 +38,9 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * 쿼리 DSL 작성 참조 링크
  *
- * <p>SELECT https://mybatis.org/mybatis-dynamic-sql/docs/select.html UPDATE
+ * <p>SELECT: https://mybatis.org/mybatis-dynamic-sql/docs/select.html
  *
- * <p>Update: https://mybatis.org/mybatis-dynamic-sql/docs/update.html
+ * <p>UPDATE: https://mybatis.org/mybatis-dynamic-sql/docs/update.html
  *
  * <p>INSERT: https://mybatis.org/mybatis-dynamic-sql/docs/insert.html
  *
@@ -120,12 +131,17 @@ public class BoardServiceImpl implements BoardService {
 
     Constant<String> hint = Constant.of("/*+ INDEX_DESC(tbl_board pk_board) */ 'dummy'");
 
+    QueryExpressionDSL<SelectModel>.QueryExpressionWhereBuilder seletDSL =
+        addSearchWhereClause(
+                select(hint, rn, bno, title, content, writer, regdate, updateDate)
+                    .from(BoardVODynamicSqlSupport.boardVO),
+                criteria)
+            .where()
+            .and(rn, isLessThanOrEqualTo(criteria.getPageNum() * criteria.getAmount()));
+
     return mapper.selectMany(
         select(BoardMapper.selectList)
-            .from(
-                select(hint, rn, bno, title, content, writer, regdate, updateDate)
-                    .from(BoardVODynamicSqlSupport.boardVO)
-                    .where(rn, isLessThanOrEqualTo(criteria.getPageNum() * criteria.getAmount())))
+            .from(seletDSL)
             .where(
                 DerivedColumn.of("rn"),
                 isGreaterThan((criteria.getPageNum() - 1) * criteria.getAmount()))
@@ -136,11 +152,49 @@ public class BoardServiceImpl implements BoardService {
 
   @Override
   public long getTotal(Criteria criteria) {
+    QueryExpressionDSL<SelectModel> selectDSL =
+        select(count()).from(BoardVODynamicSqlSupport.boardVO);
+
+    QueryExpressionDSL<SelectModel> addedSearchWhereClause =
+        addSearchWhereClause(selectDSL, criteria);
+
     return mapper.count(
-        select(count())
-            .from(BoardVODynamicSqlSupport.boardVO)
-            .where(bno, isGreaterThan(0L))
+        addedSearchWhereClause
+            .where()
+            .and(bno, isGreaterThan(0L))
             .build()
             .render(RenderingStrategies.MYBATIS3));
+  }
+
+  private QueryExpressionDSL<SelectModel> addSearchWhereClause(
+      QueryExpressionDSL<SelectModel> selectDSL, Criteria criteria) {
+    List<SearchType> searchTypeList =
+        criteria.getSearchTypeSet().stream().collect(Collectors.toList());
+    List<SqlCriterion> subCriteriaList = new ArrayList<>();
+
+    for (int i = 0; i < searchTypeList.size(); i++) {
+      if (i > 0) {
+        subCriteriaList.add(
+            or(
+                searchTypeList.get(i).getColumn(),
+                isLikeWhenPresent(criteria.getKeyword()).map(this::addWildcards)));
+      }
+    }
+    if (subCriteriaList.isEmpty() && !searchTypeList.isEmpty()) {
+      selectDSL.where(
+          searchTypeList.get(0).getColumn(),
+          isLikeWhenPresent(criteria.getKeyword()).map(this::addWildcards));
+    } else if (!subCriteriaList.isEmpty()) {
+      selectDSL.where(
+          searchTypeList.get(0).getColumn(),
+          isLikeWhenPresent(criteria.getKeyword()).map(this::addWildcards),
+          subCriteriaList);
+    }
+
+    return selectDSL;
+  }
+
+  private String addWildcards(String keyword) {
+    return "%" + keyword + "%";
   }
 }

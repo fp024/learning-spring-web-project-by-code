@@ -3,6 +3,7 @@ package org.fp024.service;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 
 import org.fp024.config.RootConfig;
 import org.fp024.domain.BoardVO;
@@ -40,11 +41,21 @@ class BoardServiceTest {
     LOGGER.info("생성된 게시물 번호: {}", board.getBno());
   }
 
+  // 쿼리에 INDEX 힌트가 있어서 한줄 주석을 사용했다.
+  //   select BNO, TITLE, CONTENT, WRITER, REGDATE, UPDATEDATE
+  //     from
+  //           (select /*+ INDEX_DESC(tbl_board pk_board) */ 'dummy'
+  //                , ROWNUM as rn, BNO, TITLE, CONTENT, WRITER, REGDATE, UPDATEDATE from TBL_BOARD
+  //            where (TITLE like ? or CONTENT like ? or WRITER like ?)
+  //              and ROWNUM <= ?
+  //           )
+  //    where rn > ? order by BNO DESC
   @Test
   void testGetList() {
-    service
-        .getList(new Criteria(1, PageSize.SIZE_10))
-        .forEach(board -> LOGGER.info(board.toString()));
+    Criteria criteria = new Criteria(1, PageSize.SIZE_10);
+    criteria.setSearchCodes(Arrays.asList("T", "C", "W"));
+    criteria.setKeyword("newbie");
+    service.getList(criteria).forEach(board -> LOGGER.info(board.toString()));
   }
 
   @Test
@@ -68,5 +79,19 @@ class BoardServiceTest {
 
     board.setTitle("제목 수정합니다. - " + LocalDateTime.now().getSecond());
     LOGGER.info("MODIFY RESULT: {}", service.modify(board));
+  }
+
+  /*
+    select count(*)
+      from TBL_BOARD
+     where (TITLE like ? or CONTENT like ? or WRITER like ?)
+       and BNO > ?
+  */
+  @Test
+  void testGetCount() {
+    Criteria criteria = new Criteria();
+    criteria.setSearchCodes(Arrays.asList("T", "W"));
+    criteria.setKeyword("검색어");
+    service.getTotal(criteria);
   }
 }

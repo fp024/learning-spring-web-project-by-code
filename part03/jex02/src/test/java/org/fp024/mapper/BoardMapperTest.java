@@ -6,37 +6,52 @@ import static org.fp024.mapper.BoardVODynamicSqlSupport.regdate;
 import static org.fp024.mapper.BoardVODynamicSqlSupport.title;
 import static org.fp024.mapper.BoardVODynamicSqlSupport.updateDate;
 import static org.fp024.mapper.BoardVODynamicSqlSupport.writer;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mybatis.dynamic.sql.SqlBuilder.count;
+import static org.mybatis.dynamic.sql.SqlBuilder.isEqualTo;
+import static org.mybatis.dynamic.sql.SqlBuilder.isGreaterThan;
+import static org.mybatis.dynamic.sql.SqlBuilder.isLessThanOrEqualTo;
+import static org.mybatis.dynamic.sql.SqlBuilder.isLikeWhenPresent;
+import static org.mybatis.dynamic.sql.SqlBuilder.or;
+import static org.mybatis.dynamic.sql.SqlBuilder.select;
+import static org.mybatis.dynamic.sql.SqlBuilder.update;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.fp024.config.RootConfig;
 import org.fp024.domain.BoardVO;
-import org.junit.jupiter.api.Disabled;
+import org.fp024.domain.Criteria;
+import org.fp024.domain.SearchType;
 import org.junit.jupiter.api.Test;
 import org.mybatis.dynamic.sql.Constant;
 import org.mybatis.dynamic.sql.DerivedColumn;
-import org.mybatis.dynamic.sql.SqlBuilder;
-import org.mybatis.dynamic.sql.SqlColumn;
-import org.mybatis.dynamic.sql.StringConstant;
+import org.mybatis.dynamic.sql.SqlCriterion;
 import org.mybatis.dynamic.sql.render.RenderingStrategies;
+import org.mybatis.dynamic.sql.select.QueryExpressionDSL;
+import org.mybatis.dynamic.sql.select.SelectModel;
+import org.mybatis.dynamic.sql.select.render.SelectStatementProvider;
 import org.mybatis.dynamic.sql.update.render.UpdateStatementProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import lombok.extern.slf4j.Slf4j;
 /**
- * mybatis-dynamic-sql 으로 만들어진 mapper를 쓸 때, QueryDSL 같이 사용한 부분은 별도 클래스로 분리해서 그것이 mapper클래스를 사용하게 해야할
- * 것 같다.
+ * mybatis-dynamic-sql 으로 만들어진 mapper를 쓸 때,<br>
+ * QueryDSL 같이 사용한 부분은 별도 클래스로 분리해서 그것이 mapper클래스를 사용하게 해야할 것 같다.
  *
  * <p>참조:
  *
  * <p>WHERE 절 지원 https://mybatis.org/mybatis-dynamic-sql/docs/whereClauses.html
  *
  * <p>SELECT 문장 https://mybatis.org/mybatis-dynamic-sql/docs/select.html
- * 
- * <p> 테스트 코드 참고: https://github.com/mybatis/mybatis-dynamic-sql/blob/b1fa3a6562c3ccf6798a64651def0e5019d5ac8d/src/test/java/examples/groupby/GroupByTest.java
+ *
+ * <p>테스트 코드 참고:
+ * https://github.com/mybatis/mybatis-dynamic-sql/blob/b1fa3a6562c3ccf6798a64651def0e5019d5ac8d/src/test/java/examples/groupby/GroupByTest.java
  *
  * @author fp024
  */
@@ -66,15 +81,15 @@ class BoardMapperTest {
 
     List<BoardVO> boardList =
         mapper.selectMany(
-            SqlBuilder.select(BoardMapper.selectList)
+            select(BoardMapper.selectList)
                 .from(
-                    SqlBuilder.select(rn, bno, title, content, writer, regdate, updateDate)
+                    select(rn, bno, title, content, writer, regdate, updateDate)
                         .from(BoardVODynamicSqlSupport.boardVO)
-                        .where(rn, SqlBuilder.isLessThanOrEqualTo(10L))
+                        .where(rn, isLessThanOrEqualTo(10L))
                         .orderBy(bno.descending()))
                 // 여기에 위에서 만든 rn을 넣으면 ROWNOM으로 쿼리가 만들어진다.
                 // 쿼리 모양을 완전히 동일하게 하려면 DerivedColumn.of("rn")으로 넣어야한다.
-                .where(DerivedColumn.of("rn"), SqlBuilder.isGreaterThan(0L))
+                .where(DerivedColumn.of("rn"), isGreaterThan(0L))
                 .orderBy(bno.descending())
                 .build()
                 .render(RenderingStrategies.MYBATIS3));
@@ -119,17 +134,293 @@ class BoardMapperTest {
 
     List<BoardVO> boardList =
         mapper.selectMany(
-            SqlBuilder.select(BoardMapper.selectList)
+            select(BoardMapper.selectList)
                 .from(
-                    SqlBuilder.select(hint, rn, bno, title, content, writer, regdate, updateDate)
+                    select(hint, rn, bno, title, content, writer, regdate, updateDate)
                         .from(BoardVODynamicSqlSupport.boardVO)
-                        .where(rn, SqlBuilder.isLessThanOrEqualTo(10L)))
-                .where(DerivedColumn.of("rn"), SqlBuilder.isGreaterThan(0L))
+                        .where(rn, isLessThanOrEqualTo(10L)))
+                .where(DerivedColumn.of("rn"), isGreaterThan(0L))
                 .orderBy(bno.descending())
                 .build()
                 .render(RenderingStrategies.MYBATIS3));
 
     boardList.forEach(b -> LOGGER.info("{}", b.toString()));
+  }
+
+  /** 검색조건 처리를 위해 where 절을 동적으로 만드는 부분을 별도 메서드로 빼야할 것 같다. */
+  @Test
+  void testGetListWithPaging_Hint_with_SearchCondition() {
+    DerivedColumn<Long> ROWNUM = DerivedColumn.of("ROWNUM");
+    DerivedColumn<Long> rn = ROWNUM.as("rn");
+
+    Constant<String> hint = Constant.of("/*+ INDEX_DESC(tbl_board pk_board) */ 'dummy'");
+
+    List<BoardVO> boardList =
+        mapper.selectMany(
+            select(BoardMapper.selectList)
+                .from(
+                    select(hint, rn, bno, title, content, writer, regdate, updateDate)
+                        .from(BoardVODynamicSqlSupport.boardVO)
+                        .where(rn, isLessThanOrEqualTo(10L)))
+                .where(DerivedColumn.of("rn"), isGreaterThan(0L))
+                .orderBy(bno.descending())
+                .build()
+                .render(RenderingStrategies.MYBATIS3));
+
+    boardList.forEach(b -> LOGGER.info("{}", b.toString()));
+  }
+
+  @Test
+  void testCreateSearchWhereClause_T_C_W() {
+    Criteria criteria = new Criteria();
+    criteria.setSearchCodes(Arrays.asList("T", "C", "W"));
+    criteria.setKeyword("검색어");
+
+    DerivedColumn<Long> rownum = DerivedColumn.of("ROWNUM");
+    DerivedColumn<Long> rn = rownum.as("rn");
+
+    QueryExpressionDSL<SelectModel> innerSql =
+        select(rn, bno, title, content, writer, regdate, updateDate)
+            .from(BoardVODynamicSqlSupport.boardVO);
+
+    SelectStatementProvider selectStatement =
+        addSearchWhereClause(innerSql, criteria).build().render(RenderingStrategies.MYBATIS3);
+
+    assertEquals(
+        "select ROWNUM as rn, BNO, TITLE, CONTENT, WRITER, REGDATE, UPDATEDATE"
+            + " from TBL_BOARD"
+            + " where (TITLE like #{parameters.p1,jdbcType=VARCHAR}"
+            + " or CONTENT like #{parameters.p2,jdbcType=VARCHAR}"
+            + " or WRITER like #{parameters.p3,jdbcType=VARCHAR})"
+            + " and ROWNUM <= #{parameters.p4}",
+        selectStatement.getSelectStatement());
+
+    assertEquals(
+        "{p1=%검색어%" + ", p2=%검색어%" + ", p3=%검색어%" + ", p4=10}",
+        selectStatement.getParameters().toString());
+  }
+
+  @Test
+  void testCreateSearchWhereClause_T_C() {
+    Criteria criteria = new Criteria();
+    criteria.setSearchCodes(Arrays.asList("T", "C"));
+    criteria.setKeyword("검색어");
+
+    DerivedColumn<Long> rownum = DerivedColumn.of("ROWNUM");
+    DerivedColumn<Long> rn = rownum.as("rn");
+
+    QueryExpressionDSL<SelectModel> innerSql =
+        select(rn, bno, title, content, writer, regdate, updateDate)
+            .from(BoardVODynamicSqlSupport.boardVO);
+
+    SelectStatementProvider selectStatement =
+        addSearchWhereClause(innerSql, criteria).build().render(RenderingStrategies.MYBATIS3);
+
+    assertEquals(
+        "select ROWNUM as rn, BNO, TITLE, CONTENT, WRITER, REGDATE, UPDATEDATE"
+            + " from TBL_BOARD"
+            + " where (TITLE like #{parameters.p1,jdbcType=VARCHAR}"
+            + " or CONTENT like #{parameters.p2,jdbcType=VARCHAR})"
+            + " and ROWNUM <= #{parameters.p3}",
+        selectStatement.getSelectStatement());
+
+    assertEquals(
+        "{p1=%검색어%" + ", p2=%검색어%" + ", p3=10}", selectStatement.getParameters().toString());
+  }
+  
+  @Test
+  void testCreateSearchWhereClause_T_W() {
+    Criteria criteria = new Criteria();
+    criteria.setSearchCodes(Arrays.asList("T", "W"));
+    criteria.setKeyword("검색어");
+
+    DerivedColumn<Long> rownum = DerivedColumn.of("ROWNUM");
+    DerivedColumn<Long> rn = rownum.as("rn");
+
+    QueryExpressionDSL<SelectModel> innerSql =
+        select(rn, bno, title, content, writer, regdate, updateDate)
+            .from(BoardVODynamicSqlSupport.boardVO);
+
+    SelectStatementProvider selectStatement =
+        addSearchWhereClause(innerSql, criteria).build().render(RenderingStrategies.MYBATIS3);
+
+    assertEquals(
+        "select ROWNUM as rn, BNO, TITLE, CONTENT, WRITER, REGDATE, UPDATEDATE"
+            + " from TBL_BOARD"
+            + " where (TITLE like #{parameters.p1,jdbcType=VARCHAR}"
+            + " or WRITER like #{parameters.p2,jdbcType=VARCHAR})"
+            + " and ROWNUM <= #{parameters.p3}",
+        selectStatement.getSelectStatement());
+
+    assertEquals(
+        "{p1=%검색어%" + ", p2=%검색어%" + ", p3=10}", selectStatement.getParameters().toString());
+  }
+  
+
+  @Test
+  void testCreateSearchWhereClause_C() {
+    Criteria criteria = new Criteria();
+    criteria.setSearchCodes(Arrays.asList("C"));
+    criteria.setKeyword("검색어");
+
+    DerivedColumn<Long> rownum = DerivedColumn.of("ROWNUM");
+    DerivedColumn<Long> rn = rownum.as("rn");
+
+    QueryExpressionDSL<SelectModel> innerSql =
+        select(rn, bno, title, content, writer, regdate, updateDate)
+            .from(BoardVODynamicSqlSupport.boardVO);
+
+    SelectStatementProvider selectStatement =
+        addSearchWhereClause(innerSql, criteria).build().render(RenderingStrategies.MYBATIS3);
+
+    assertEquals(
+        "select ROWNUM as rn, BNO, TITLE, CONTENT, WRITER, REGDATE, UPDATEDATE"
+            + " from TBL_BOARD"
+            + " where CONTENT like #{parameters.p1,jdbcType=VARCHAR}"
+            + " and ROWNUM <= #{parameters.p2}",
+        selectStatement.getSelectStatement());
+
+    assertEquals("{p1=%검색어%" + ", p2=10}", selectStatement.getParameters().toString());
+  }
+  
+  
+  @Test
+  void testCreateSearchWhereClause_W() {
+    Criteria criteria = new Criteria();
+    criteria.setSearchCodes(Arrays.asList("W"));
+    criteria.setKeyword("검색어");
+    
+    DerivedColumn<Long> rownum = DerivedColumn.of("ROWNUM");
+    DerivedColumn<Long> rn = rownum.as("rn");
+
+    QueryExpressionDSL<SelectModel> innerSql =
+        select(rn, bno, title, content, writer, regdate, updateDate)
+            .from(BoardVODynamicSqlSupport.boardVO);
+
+    SelectStatementProvider selectStatement =
+        addSearchWhereClause(innerSql, criteria).build().render(RenderingStrategies.MYBATIS3);
+
+    assertEquals(
+        "select ROWNUM as rn, BNO, TITLE, CONTENT, WRITER, REGDATE, UPDATEDATE"
+            + " from TBL_BOARD"
+            + " where WRITER like #{parameters.p1,jdbcType=VARCHAR}"
+            + " and ROWNUM <= #{parameters.p2}",
+        selectStatement.getSelectStatement());
+
+    assertEquals("{p1=%검색어%" + ", p2=10}", selectStatement.getParameters().toString());
+  }
+  
+  
+  /**
+   * 쿼리문에 검색 조건 WHERE 절 붙임
+   */
+  QueryExpressionDSL<SelectModel> addSearchWhereClause(QueryExpressionDSL<SelectModel> innerSql, Criteria criteria) {    
+    List<SearchType> searchTypeList =
+        criteria.getSearchTypeSet().stream().collect(Collectors.toList());
+    List<SqlCriterion> subCriteriaList = new ArrayList<>();
+
+    for (int i = 0; i < searchTypeList.size(); i++) {
+      if (i > 0) {
+        subCriteriaList.add(
+            or(
+                searchTypeList.get(i).getColumn(),
+                isLikeWhenPresent(criteria.getKeyword()).map(this::addWildcards)));
+      }
+    }
+    if (subCriteriaList.isEmpty() && !searchTypeList.isEmpty()) {
+      innerSql
+          .where(
+              searchTypeList.get(0).getColumn(),
+              isLikeWhenPresent(criteria.getKeyword()).map(this::addWildcards))
+          .and(DerivedColumn.of("ROWNUM"), isLessThanOrEqualTo(criteria.getPageNum() * criteria.getAmount()));
+    } else if (!subCriteriaList.isEmpty()) {
+      innerSql
+          .where(
+              searchTypeList.get(0).getColumn(),
+              isLikeWhenPresent(criteria.getKeyword()).map(this::addWildcards),
+              subCriteriaList)
+          .and(DerivedColumn.of("ROWNUM"), isLessThanOrEqualTo(criteria.getPageNum() * criteria.getAmount()));
+    }
+    return innerSql;
+  }
+
+  /**
+   * OR우선순위 지정을 위해 소괄호를 어떻게 넣어야할지 모르겠어서, 라이브러리 깃 허브에 질문글 올림.ㅠㅠ<br>
+   * https://github.com/mybatis/mybatis-dynamic-sql/issues/415
+   */
+  @Test
+  void testWhere() {
+    DerivedColumn<Long> rownum = DerivedColumn.of("ROWNUM");
+    DerivedColumn<Long> rn = rownum.as("rn");
+
+    QueryExpressionDSL<SelectModel> innerSql =
+        select(rn, bno, title, content, writer, regdate, updateDate)
+            .from(BoardVODynamicSqlSupport.boardVO);
+
+    innerSql
+        .where(title, isLikeWhenPresent("keyword").map(this::addWildcards))
+        .or(content, isLikeWhenPresent("keyword").map(this::addWildcards))
+        .or(writer, isLikeWhenPresent("keyword").map(this::addWildcards))
+        .and(rn, isLessThanOrEqualTo(10L));
+
+    SelectStatementProvider selectStatement = innerSql.build().render(RenderingStrategies.MYBATIS3);
+
+    assertEquals(
+        "select ROWNUM as rn, BNO, TITLE, CONTENT, WRITER, REGDATE, UPDATEDATE"
+            + " from TBL_BOARD"
+            + " where TITLE like #{parameters.p1,jdbcType=VARCHAR}"
+            + " or CONTENT like #{parameters.p2,jdbcType=VARCHAR}"
+            + " or WRITER like #{parameters.p3,jdbcType=VARCHAR}"
+            + " and ROWNUM <= #{parameters.p4}",
+        selectStatement.getSelectStatement());
+
+    assertEquals(
+        "{p1=%keyword%" + ", p2=%keyword%" + ", p3=%keyword%" + ", p4=10}",
+        selectStatement.getParameters().toString());
+  }
+
+  /**
+   * 소괄호로 감싸는 것에 대한 답변 받음<br>
+   * https://github.com/mybatis/mybatis-dynamic-sql/issues/415<br>
+   * org.mybatis.dynamic.sql.SqlBuilder.or 를 사용해서 아래와 같이 쓸 수 있음<br>
+   * import static을 사용하지 않다보니까? 메서드를 찾기 힘들때가 있다. 왠만하면 추가해두자!
+   */
+  @Test
+  void testWhereWithParentheses() {
+    DerivedColumn<Long> rownum = DerivedColumn.of("ROWNUM");
+    DerivedColumn<Long> rn = rownum.as("rn");
+
+    QueryExpressionDSL<SelectModel> innerSql =
+        select(rn, bno, title, content, writer, regdate, updateDate)
+            .from(BoardVODynamicSqlSupport.boardVO);
+
+    innerSql
+        .where()
+        .or(
+            title,
+            isLikeWhenPresent("keyword").map(this::addWildcards),
+            or(content, isLikeWhenPresent("keyword").map(this::addWildcards)),
+            or(writer, isLikeWhenPresent("keyword").map(this::addWildcards)))
+        .and(rn, isLessThanOrEqualTo(10L));
+
+    SelectStatementProvider selectStatement = innerSql.build().render(RenderingStrategies.MYBATIS3);
+
+    assertEquals(
+        "select ROWNUM as rn, BNO, TITLE, CONTENT, WRITER, REGDATE, UPDATEDATE"
+            + " from TBL_BOARD"
+            + " where (TITLE like #{parameters.p1,jdbcType=VARCHAR}"
+            + " or CONTENT like #{parameters.p2,jdbcType=VARCHAR}"
+            + " or WRITER like #{parameters.p3,jdbcType=VARCHAR})"
+            + " and ROWNUM <= #{parameters.p4}",
+        selectStatement.getSelectStatement());
+
+    assertEquals(
+        "{p1=%keyword%" + ", p2=%keyword%" + ", p3=%keyword%" + ", p4=10}",
+        selectStatement.getParameters().toString());
+  }
+
+  String addWildcards(String keyword) {
+    return "%" + keyword + "%";
   }
 
   /**
@@ -192,7 +483,7 @@ class BoardMapperTest {
     board.setUpdateDate(LocalDateTime.now());
 
     UpdateStatementProvider updateStatement =
-        SqlBuilder.update(BoardVODynamicSqlSupport.boardVO)
+        update(BoardVODynamicSqlSupport.boardVO)
             .set(BoardVODynamicSqlSupport.title)
             .equalTo(board.getTitle())
             .set(BoardVODynamicSqlSupport.content)
@@ -201,7 +492,7 @@ class BoardMapperTest {
             .equalTo(board.getWriter())
             .set(BoardVODynamicSqlSupport.updateDate)
             .equalTo(board.getUpdateDate())
-            .where(BoardVODynamicSqlSupport.bno, SqlBuilder.isEqualTo(board.getBno()))
+            .where(BoardVODynamicSqlSupport.bno, isEqualTo(board.getBno()))
             .build()
             .render(RenderingStrategies.MYBATIS3);
 
@@ -227,9 +518,9 @@ class BoardMapperTest {
   void testBoardCount() {
     long totalCount =
         mapper.count(
-            SqlBuilder.select(SqlBuilder.count())
+            select(count())
                 .from(BoardVODynamicSqlSupport.boardVO)
-                .where(bno, SqlBuilder.isGreaterThan(0L))
+                .where(bno, isGreaterThan(0L))
                 .build()
                 .render(RenderingStrategies.MYBATIS3));
 
