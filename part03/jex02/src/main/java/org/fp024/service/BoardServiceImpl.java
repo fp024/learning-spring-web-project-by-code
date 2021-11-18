@@ -131,7 +131,7 @@ public class BoardServiceImpl implements BoardService {
 
     Constant<String> hint = Constant.of("/*+ INDEX_DESC(tbl_board pk_board) */ 'dummy'");
 
-    QueryExpressionDSL<SelectModel>.QueryExpressionWhereBuilder seletDSL =
+    QueryExpressionDSL<SelectModel>.QueryExpressionWhereBuilder select =
         addSearchWhereClause(
                 select(hint, rn, bno, title, content, writer, regdate, updateDate)
                     .from(BoardVODynamicSqlSupport.boardVO),
@@ -141,7 +141,7 @@ public class BoardServiceImpl implements BoardService {
 
     return mapper.selectMany(
         select(BoardMapper.selectList)
-            .from(seletDSL)
+            .from(select)
             .where(
                 DerivedColumn.of("rn"),
                 isGreaterThan((criteria.getPageNum() - 1) * criteria.getAmount()))
@@ -180,11 +180,11 @@ public class BoardServiceImpl implements BoardService {
                 isLikeWhenPresent(criteria.getKeyword()).map(this::addWildcards)));
       }
     }
-    if (subCriteriaList.isEmpty() && !searchTypeList.isEmpty()) {
+    if (searchTypeList.size() == 1) {
       selectDSL.where(
           searchTypeList.get(0).getColumn(),
           isLikeWhenPresent(criteria.getKeyword()).map(this::addWildcards));
-    } else if (!subCriteriaList.isEmpty()) {
+    } else if (searchTypeList.size() > 1) {
       selectDSL.where(
           searchTypeList.get(0).getColumn(),
           isLikeWhenPresent(criteria.getKeyword()).map(this::addWildcards),

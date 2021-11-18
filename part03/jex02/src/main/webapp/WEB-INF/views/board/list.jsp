@@ -2,6 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="javatime" uri="http://sargue.net/jsptags/time"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html lang="ko">
 
@@ -62,6 +63,23 @@
                   </tbody>
                 </table>
 
+                <div class="col-lg-12">
+                  <form id="searchForm" action="/board/list" method="get">
+                    <input type="hidden" name="searchCodes" value="${pageMaker.searchCodesWithJoined}">
+                    <c:forEach var="searchType" items="${allSearchTypeSet}">                                                      
+                    <div class="form-check form-check-inline">                    
+                      <input class="form-check-input" type="checkbox" id="SEARCH_TYPE_${searchType.name}" value="${searchType.code}" 
+                          <c:if test="${fn:contains(pageMaker.searchCodes,searchType.code)}">checked="checked"</c:if>>
+                      <label class="form-check-label" for="SEARCH_TYPE_${searchType.name}">${searchType.description}</label>
+                    </div>
+                    </c:forEach>
+                    <input type="text" name="keyword" value="${pageMaker.keyword}">                  
+                    <input type="hidden" name="pageNum" value="${pageMaker.pageNum}">
+                    <input type="hidden" name="amount" value="${pageMaker.amount}">
+                    <button type="button" class="btn btn-outline-primary">Search</button>
+                  </form>
+                </div>
+
                 <!-- 
                   BootStrap 버전이 달라서 교제와 마크업이 다르다, 아래 공식 페이지의 내용을 참조해서 넣도록 하자!
                   https://getbootstrap.com/docs/4.0/components/pagination/
@@ -81,6 +99,8 @@
                 <form id="actionForm" action="/board/list" method="get">
                   <input type="hidden" name="pageNum" value="${pageMaker.pageNum}">
                   <input type="hidden" name="amount" value="${pageMaker.amount}">
+                  <input type="hidden" name="searchCodes" value="<c:out value="${pageMaker.searchCodesWithJoined}"/>">
+                  <input type="hidden" name="keyword" value="<c:out value="${pageMaker.keyword}"/>">
                 </form>
               </div>
             </div>
@@ -103,6 +123,45 @@
   </div>
   <!-- End of Page Wrapper -->
   <%@include file="../includes/dialogAndScript.jsp"%>
+  <script type="text/javascript">
+  $(document).ready(function() {
+    var submitProcess = function(e) {
+      // 검색조건 체크 박스에서 체크된 코드를 ,로 join하여 하나의 문자열로 만든다.
+      var selectedSearchCodes = $searchForm.find("input[id^='SEARCH_TYPE_']:checked").map(function() {
+        return $(this).val();  
+      }).get().join();
+    
+      if (!selectedSearchCodes) {
+        alert("검색 체크 박스를 하나 이상 선택해주세요!");
+        return;
+      }
+    
+      if (!$searchForm.find("input[name='keyword']").val()) {
+        alert("검색 키워드를 입력해주세요!");
+        return;
+      }
+
+      $searchForm.find("input[name='searchCodes']").val(selectedSearchCodes);
+      $searchForm.find("input[name='pageNum']").val(1);
+
+      e.preventDefault();
+      $searchForm.submit();
+    }; 
+        
+    var $searchForm = $('#searchForm');
+    
+    // form에 input box가 한개이면 엔터를 누르면 submit이 일어난다. 이와 관련해서 처리부분을 함수로 분리하여 실행되게한다.
+    $('input[name="keyword"]').keydown(function(e) {
+        if (event.keyCode === 13) {
+          submitProcess(e);
+        }
+    });
+    
+    $("#searchForm button").on("click", function(e){
+      submitProcess(e);
+    });
+  });
+  </script>
 </body>
 
 </html>

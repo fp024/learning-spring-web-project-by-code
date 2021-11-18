@@ -58,7 +58,6 @@ import lombok.extern.slf4j.Slf4j;
 @SpringJUnitConfig(classes = {RootConfig.class})
 @Slf4j
 class BoardMapperTest {
-
   @Autowired private BoardMapper mapper;
 
   // order by를 사용한 페이지 쿼리의 코드화
@@ -327,13 +326,13 @@ class BoardMapperTest {
                 isLikeWhenPresent(criteria.getKeyword()).map(this::addWildcards)));
       }
     }
-    if (subCriteriaList.isEmpty() && !searchTypeList.isEmpty()) {
+    if (searchTypeList.size() == 1) {
       innerSql
           .where(
               searchTypeList.get(0).getColumn(),
               isLikeWhenPresent(criteria.getKeyword()).map(this::addWildcards))
           .and(DerivedColumn.of("ROWNUM"), isLessThanOrEqualTo(criteria.getPageNum() * criteria.getAmount()));
-    } else if (!subCriteriaList.isEmpty()) {
+    } else if (searchTypeList.size() > 1) {
       innerSql
           .where(
               searchTypeList.get(0).getColumn(),

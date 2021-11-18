@@ -926,11 +926,49 @@ FROM
 
 ### 15.4 화면에서 검색 조건 처리
 
+* jex02 프로젝트에서는 ex02프로젝트에서 XML에서 동적 처리하는 것보다 코드가 복잡해지긴 했다.
 
+  * 처음에 OR에 우선순위를 주기위해 소괄호 속으로 OR을 묶는 방법을 잘 몰라서 mybatis-dynamic-sql 깃레파지토리에 질문올렸는데, 개발자님이 그 방법에 대해  엄청 빨리 답변 주셔서 도움이 되었다.
 
+    * https://github.com/mybatis/mybatis-dynamic-sql/issues/415
 
+  * 답변 받은대로 OR을 동적으로 처리하기 위해 진행을 해봤는데, OR을 연결할 때.. 처음 나타나는 컬럼을 고정적으로 써줘야해서, 이부분 처리가 까다로웠다. 
 
+    * SelectDSL과 검색조건을 받아써 검색 Where절을 만드는 메서드를 따로 빼서 만들었는데... 확실히 복잡해졌다. ㅠㅠ
 
+    ```java
+     private QueryExpressionDSL<SelectModel> addSearchWhereClause(
+          QueryExpressionDSL<SelectModel> selectDSL, Criteria criteria) {
+        List<SearchType> searchTypeList =
+            criteria.getSearchTypeSet().stream().collect(Collectors.toList());
+        List<SqlCriterion> subCriteriaList = new ArrayList<>();
+    
+        for (int i = 0; i < searchTypeList.size(); i++) {
+          if (i > 0) {
+            subCriteriaList.add(
+                or(
+                    searchTypeList.get(i).getColumn(),
+                    isLikeWhenPresent(criteria.getKeyword()).map(this::addWildcards)));
+          }
+        }
+        if (searchTypeList.size() == 1) {
+          selectDSL.where(
+              searchTypeList.get(0).getColumn(),
+              isLikeWhenPresent(criteria.getKeyword()).map(this::addWildcards));
+        } else if (searchTypeList.size() > 1) {
+          selectDSL.where(
+              searchTypeList.get(0).getColumn(),
+              isLikeWhenPresent(criteria.getKeyword()).map(this::addWildcards),
+              subCriteriaList);
+        }
+    
+        return selectDSL;
+      }
+    ```
+
+    * 동작 테스트 코드는 BoardServiceImplTest의 `testAddSearchWhereClause_getListQuery`, `testAddSearchWhereClause_getTotalCountQuery ` 메서드에 작성하였다. 
+
+  
 
 ---
 
@@ -1101,4 +1139,12 @@ Jetty에서 타겟 리소스 변경(소스코드 변경등..)시 자동 재배�
 
 - [ ] **TODO:  RedirectAttribute에서 addAttribute VS addFlashAttribute**
 
+- [ ] **TODO: encodeURIComponent**
+
+  * 검색조건 코드 문자열 조합(T,C,W)을 별도 처리가 없더라도 문제는 없었지만 인코딩을 해서 보내는것이 좋을 것 같아서 잠깐 넣었는데, 도리어 문제가 생겼다. encodeURIComponent() 사용부분은 다시 제거해 둠.
+  
+    `$searchForm.find("input[name='searchCodes']").val(encodeURIComponent(selectedSearchCodes);`
+  
+  - https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/encodeURIComponent
+  
   

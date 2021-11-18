@@ -1,8 +1,11 @@
 package org.fp024.controller;
 
+import java.util.List;
+
 import org.fp024.domain.BoardVO;
 import org.fp024.domain.Criteria;
 import org.fp024.domain.PageDTO;
+import org.fp024.domain.SearchType;
 import org.fp024.service.BoardService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,12 +28,25 @@ public class BoardController {
   private BoardService service;
 
   @GetMapping("/list")
-  public void list(Criteria criteria, Model model) {
+  public String list(Criteria criteria, Model model) {
     LOGGER.info("list");
-    model.addAttribute("list", service.getList(criteria));
+    List<BoardVO> pagedList = service.getList(criteria);
+
+    // 드문 상황이지만, 한 페이지에서 한 게시물만 삭제된 상태에서, 그 페이지에 그대로 남는 문제가 있어서,
+    // 일단은 그럴 경우 직전 페이지로 리다이렉트 되도록 하려다가, 페이지 번호를 임의로 크게 입력했을 떄,
+    // 연달아 없는 경우 그만큼 반복적인 리다이렉트가 일어날 문제가 보여 일단은 1페이지로 보내기로 했다.
+    if (pagedList.isEmpty() && criteria.getPageNum() > 1) {
+      criteria.setPageNum(1);
+      return "redirect:/board/list" + criteria.getLink();
+    }
+
+    model.addAttribute("list", pagedList);
     PageDTO pageDTO = new PageDTO(criteria, service.getTotal(criteria));
     LOGGER.info("criteria: {}, pageDTO: {}", criteria, pageDTO);
     model.addAttribute("pageMaker", pageDTO);
+    model.addAttribute("allSearchTypeSet", SearchType.allSearchTypeSet());
+
+    return "board/list";
   }
 
   @GetMapping("/register")
@@ -63,9 +79,7 @@ public class BoardController {
     if (service.modify(board)) {
       rttr.addFlashAttribute("result", "success");
     }
-    rttr.addAttribute("pageNum", criteria.getPageNum());
-    rttr.addAttribute("amount", criteria.getAmount());
-    return "redirect:/board/list";
+    return "redirect:/board/list" + criteria.getLink();
   }
 
   @PostMapping("/remove")
@@ -77,8 +91,6 @@ public class BoardController {
     if (service.remove(bno)) {
       rttr.addFlashAttribute("result", "success");
     }
-    rttr.addAttribute("pageNum", criteria.getPageNum());
-    rttr.addAttribute("amount", criteria.getAmount());
-    return "redirect:/board/list";
+    return "redirect:/board/list" + criteria.getLink();
   }
 }

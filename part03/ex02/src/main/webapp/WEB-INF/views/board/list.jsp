@@ -142,7 +142,7 @@
         alert("검색 키워드를 입력해주세요!");
         return;
       }
-    
+
       $searchForm.find("input[name='searchCodes']").val(selectedSearchCodes);    
       $searchForm.find("input[name='pageNum']").val(1);
 

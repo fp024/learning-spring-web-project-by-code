@@ -2,8 +2,12 @@ package org.fp024.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.util.EnumSet;
+
 import org.fp024.config.RootConfig;
 import org.fp024.config.ServletConfig;
+import org.fp024.domain.Criteria;
+import org.fp024.domain.SearchType;
 import org.fp024.service.BoardService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -43,12 +47,22 @@ class BoardControllerTest {
             .perform(
                 MockMvcRequestBuilders.get("/board/list")
                     .param("pageNum", "1")
-                    .param("amount", "5"))
+                    .param(
+                        "amount",
+                        "10") // // 페이지 사이즈를 전달하게 되면, 범위를 몇가지로 고정해야할 것 같다. => PageSize enum을 적용했다.
+                    .param("searchCodes", "T", "C", "W")
+                    .param("keyword", "검색어"))
             .andReturn()
             .getModelAndView()
             .getModelMap();
-
     LOGGER.info("result: {}", result);
+
+    Criteria criteria = (Criteria) result.get("criteria");
+    assertEquals(
+        EnumSet.of(SearchType.TITLE, SearchType.CONTENT, SearchType.WRITER),
+        criteria.getSearchTypeSet());
+
+    assertEquals("검색어", criteria.getKeyword());
   }
 
   @Test
@@ -83,6 +97,7 @@ class BoardControllerTest {
 
   @Test
   void testModify() throws Exception {
+    Criteria criteria = new Criteria();
     String resultPage =
         mockMvc
             .perform(
@@ -96,11 +111,12 @@ class BoardControllerTest {
             .getViewName();
 
     LOGGER.info("resultPage: {}", resultPage);
-    assertEquals("redirect:/board/list", resultPage);
+    assertEquals("redirect:/board/list" + criteria.getLink(), resultPage);
   }
 
   @Test
   void testRemove() throws Exception {
+    Criteria criteria = new Criteria();
     // 삭제전 데이터 베이스에서 게시물 번호 확인해보기
     String resultPage =
         mockMvc
@@ -110,6 +126,6 @@ class BoardControllerTest {
             .getViewName();
 
     LOGGER.info("resultPage: {}", resultPage);
-    assertEquals("redirect:/board/list", resultPage);
+    assertEquals("redirect:/board/list" + criteria.getLink(), resultPage);
   }
 }

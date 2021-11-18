@@ -1,6 +1,17 @@
 package org.fp024.service;
 
+import static org.fp024.mapper.BoardVODynamicSqlSupport.bno;
+import static org.fp024.mapper.BoardVODynamicSqlSupport.content;
+import static org.fp024.mapper.BoardVODynamicSqlSupport.regdate;
+import static org.fp024.mapper.BoardVODynamicSqlSupport.title;
+import static org.fp024.mapper.BoardVODynamicSqlSupport.updateDate;
+import static org.fp024.mapper.BoardVODynamicSqlSupport.writer;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mybatis.dynamic.sql.SqlBuilder.count;
+import static org.mybatis.dynamic.sql.SqlBuilder.isGreaterThan;
+import static org.mybatis.dynamic.sql.SqlBuilder.isLessThanOrEqualTo;
+import static org.mybatis.dynamic.sql.SqlBuilder.select;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -9,11 +20,20 @@ import org.fp024.config.RootConfig;
 import org.fp024.domain.BoardVO;
 import org.fp024.domain.Criteria;
 import org.fp024.domain.PageSize;
+import org.fp024.mapper.BoardMapper;
+import org.fp024.mapper.BoardVODynamicSqlSupport;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mybatis.dynamic.sql.Constant;
+import org.mybatis.dynamic.sql.DerivedColumn;
+import org.mybatis.dynamic.sql.render.RenderingStrategies;
+import org.mybatis.dynamic.sql.select.QueryExpressionDSL;
+import org.mybatis.dynamic.sql.select.SelectModel;
+import org.mybatis.dynamic.sql.select.render.SelectStatementProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -93,5 +113,89 @@ class BoardServiceTest {
     criteria.setSearchCodes(Arrays.asList("T", "W"));
     criteria.setKeyword("검색어");
     service.getTotal(criteria);
+  }
+
+  @Test
+  void testAddSearchWhereClause_getListQuery() {
+    Criteria criteria = new Criteria(1, PageSize.SIZE_10);
+    criteria.setSearchCodes(Arrays.asList("T", "C", "W"));
+    criteria.setKeyword("newbie");
+
+    SelectStatementProvider selectStatementProvider = getListSqlDSL(criteria);
+    assertEquals(
+        "select BNO, TITLE, CONTENT, WRITER, REGDATE, UPDATEDATE"
+      + " from (select /*+ INDEX_DESC(tbl_board pk_board) */ 'dummy', ROWNUM as rn, BNO, TITLE, CONTENT, WRITER, REGDATE, UPDATEDATE"
+              + " from TBL_BOARD where ("
+                                + "TITLE like #{parameters.p1,jdbcType=VARCHAR}"
+                                + " or CONTENT like #{parameters.p2,jdbcType=VARCHAR}"
+                                + " or WRITER like #{parameters.p3,jdbcType=VARCHAR}"
+                                + ")"
+                               + " and ROWNUM <= #{parameters.p4})"
+     + " where rn > #{parameters.p5} order by BNO DESC",
+        selectStatementProvider.getSelectStatement());
+    assertEquals(
+        "{p1=%newbie%, p2=%newbie%, p3=%newbie%, p4=10, p5=0}",
+        selectStatementProvider.getParameters().toString());
+  }
+
+  @SuppressWarnings("unchecked")
+  private SelectStatementProvider getListSqlDSL(Criteria criteria) {
+    DerivedColumn<Long> rownum = DerivedColumn.of("ROWNUM");
+    DerivedColumn<Long> rn = rownum.as("rn");
+
+    Constant<String> hint = Constant.of("/*+ INDEX_DESC(tbl_board pk_board) */ 'dummy'");
+
+    QueryExpressionDSL<SelectModel>.QueryExpressionWhereBuilder selectDSL;
+
+    selectDSL =
+        ((QueryExpressionDSL<SelectModel>)
+                ReflectionTestUtils.invokeMethod(
+                    service,
+                    "addSearchWhereClause",
+                    select(hint, rn, bno, title, content, writer, regdate, updateDate)
+                        .from(BoardVODynamicSqlSupport.boardVO),
+                    criteria))
+            .where()
+            .and(rn, isLessThanOrEqualTo(criteria.getPageNum() * criteria.getAmount()));
+
+    return select(BoardMapper.selectList)
+        .from(selectDSL)
+        .where(
+            DerivedColumn.of("rn"),
+            isGreaterThan((criteria.getPageNum() - 1) * criteria.getAmount()))
+        .orderBy(bno.descending())
+        .build()
+        .render(RenderingStrategies.MYBATIS3);
+  }
+
+  @Test
+  void testAddSearchWhereClause_getTotalCountQuery() {
+    Criteria criteria = new Criteria();
+    criteria.setSearchCodes(Arrays.asList("T", "W"));
+    criteria.setKeyword("검색어");
+    SelectStatementProvider selectStatementProvider = getTotalCountSqlDSL(criteria);
+
+    assertEquals(
+        "select count(*)"
+            + " from TBL_BOARD"
+            + " where (TITLE like #{parameters.p1,jdbcType=VARCHAR} or WRITER like #{parameters.p2,jdbcType=VARCHAR})"
+            + " and BNO > #{parameters.p3,jdbcType=BIGINT}",
+        selectStatementProvider.getSelectStatement());
+    assertEquals("{p1=%검색어%, p2=%검색어%, p3=0}", selectStatementProvider.getParameters().toString());
+  }
+
+  private SelectStatementProvider getTotalCountSqlDSL(Criteria criteria) {
+    QueryExpressionDSL<SelectModel> selectDSL =
+        select(count()).from(BoardVODynamicSqlSupport.boardVO);
+
+    @SuppressWarnings("unchecked")
+    QueryExpressionDSL<SelectModel> addedSearchWhereClause =
+        (QueryExpressionDSL<SelectModel>)
+            ReflectionTestUtils.invokeMethod(service, "addSearchWhereClause", selectDSL, criteria);
+    return addedSearchWhereClause
+        .where()
+        .and(bno, isGreaterThan(0L))
+        .build()
+        .render(RenderingStrategies.MYBATIS3);
   }
 }
