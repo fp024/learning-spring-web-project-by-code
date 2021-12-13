@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+    <!-- MyBatis Dynamic SQL Library를 사용. XML매퍼는 생성하지 않음. -->
+    <!-- 참조: https://mybatis.org/generator/quickstart.html -->
+    <context id="MyBatis3DynamicSqlTest" targetRuntime="MyBatis3DynamicSql">
+        <property name="javaFileEncoding" value="UTF-8" />
+
+        <!-- https://mybatis.org/generator/reference/plugins.html -->
+        <plugin type="org.mybatis.generator.plugins.ToStringPlugin" />
+
+        <!-- 자동생성 주석 금지 -->
+        <commentGenerator>
+            <property name="suppressAllComments" value="true" />
+        </commentGenerator>
+
+        <jdbcConnection
+            connectionURL="jdbc:oracle:thin:@localvmdb.oracle_xe_18c:1521:XE"
+            driverClass="oracle.jdbc.OracleDriver" 
+            password="book_ex"
+            userId="book_ex" 
+        />
+
+        <!-- Java 도메인 모델 생성 -->        
+        <javaModelGenerator
+            targetPackage="org.fp024.domain"
+            targetProject="src/main/java"> <!-- eclipse의 generator에서는 프로젝트 폴더명부터 시작해야하지만, Maven 플러그인으로 실행시는 src부터 시작한다. -->
+            <property name="enableSubPackages" value="true" />
+            <property name="trimStrings" value="true" />
+        </javaModelGenerator>
+
+        <!-- 메퍼 인터페이스 (레파지토리 인터페이스 ) -->
+        <javaClientGenerator
+            targetPackage="org.fp024.mapper"
+            targetProject="src/main/java" >            
+            <property name="enableSubPackages" value="true" />
+        </javaClientGenerator>
+       
+
+        <!-- 타켓 테이블 -->
+        <table tableName="tbl_board" domainObjectName="BoardVO"
+            mapperName="BoardMapper">
+            <!-- 키생성 컬럼과 쿼리를 정의한다. -->
+            <!-- 시퀀스를 호출해서 값을 넣기 때문에, identity를 false로 둔다. MySQL AutoIncreatement였다면 true로 두고, sqlStatemen="MySql" 로 설정할 필요가 있다. -->
+            <generatedKey column="bno" identity="false" sqlStatement="SELECT seq_board.nextval FROM DUAL" />
+            
+            <!-- Oracle에서 bno 컬럼을 NUMBER(10,0)으로 설정했는데, 일단은 BIGINT로 써본다. -->
+            <columnOverride column="bno" property="bno" jdbcType='BIGINT' javaType='java.lang.Long' />
+            <columnOverride column="regdate" property="regdate" jdbcType='DATE' javaType='java.time.LocalDateTime' />
+            <columnOverride column="updatedate" property="updateDate" jdbcType='DATE' javaType='java.time.LocalDateTime' />
+        </table>
+    </context>
+</generatorConfiguration>
