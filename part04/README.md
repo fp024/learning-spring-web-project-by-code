@@ -79,6 +79,7 @@
       as of 5.2 in favor of APPLICATION_JSON_VALUE since major browsers like Chrome now comply with the specification  and interpret correctly UTF-8 special characters without requiring a charset=UTF-8 parameter.
       ```
 
+      * 
       * 괜히 Deprecated 경고 나오니, APPLICATION_JSON_VALUE 으로 사용하자!
 
 * getSample 테스트주소
@@ -91,17 +92,111 @@
     * `http://localhost:8080/sample/getSample.json`  
 
 
+##### 16.2.3 컬렉션 타입의 객체 반환
 
+* List
+
+  * SampleController의 getList() 메서드 참조
+
+* Map
+
+  * SampleController의 getMap() 메서드 참조
+
+    * json
+
+      ```json
+      {"First":{"mno":111,"firstName":"그루트","lastName":"주니어"}}
+      ```
+    * xml
+      ```xml
+      <Map>
+        <First>
+          <mno>111</mno>
+          <firstName>그루트</firstName>
+          <lastName>주니어</lastName>
+        </First>
+      </Map>
+      ```
+    
+
+##### 16.2.4 ResponseEntity 타입
+
+* 데이터를 요청한 쪽에서 서버로 부터 받은 메시지가 정상적인 데이터인지 알 수 있는 수단이 필요함
+* ResponseEntity는 데이터와 함께 HTTP 헤더의 상태 메시지등을 같이 전달하는 용도로 사용함.
+* SampleController 의 check() 메서드 참조
+
+* 기타 내용
+  * String.valueOf() 입력으로 null을 주면 결과는 "null" 문자열을 반환함. NPE가 발생되지 않음
+  * @GetMapping의 params와 관련된 내용
+    * height, height 파라미터 전달이 모두 포함되지 않으면 400 상태코드로 에러 반환
 
 
 
 ### 16.3 @RestController에서 파라미터
 
+* `@PathVariable`: 일반 컨트롤러에서도 사용이 가능하지만, REST 방식에서 자주사용됨, URL 경로 일부를 파라미터로 사용할 때 이용
+* `@RequestBody`: JSON 데이터를 원하는 타입의 객체로 변환해야 하는 경우에 주로 사용.
 
 
 
+##### 16.3.1 @PathVariable
+
+* REST 방식에서는 URL 자체에 데이터를 식별할 수 있는 정보들을 펴현하는 경우가 많아 다양한 방식으로 `@PathVariable`이 사용됨.
+* SampleController의 getPath() 메서드 참조
+
+* xml 결과
+  * `http://localhost:8080/sample/product/bags/1234`
+  * `http://localhost:8080/sample/product/bags/1234.xml`
+* json 결과
+  * `http://localhost:8080/sample/product/bags/1234.json`
+
+
+
+##### 16.3.2 @RequestBody
+
+* `@RequestBody`는 전달된 요청(request)의 내용(body)를 이용해서 해당 파라미터의 타입으로 변환을 요구함.
+
+* 대부분의 경우 JSON 데이터를 서버에 보내서 원하는 타입의 객체로 변환하는 용도로 사용됨.
+
+* SampleController의 ticket() 메서드 참조
+
+* IntelliJ 에서 직접 POST 요청을 보내 테스트 해볼 수 있다.
+
+  ```bash
+  ### p368 /sample/ticket 테스트
+  POST http://localhost:8080/sample/ticket.json
+  Content-Type: application/json
+  
+  {"tno": "1", "owner": "apache", "grade": "100"}
+  ```
+
+  ![intellij-http-request-test](doc-resources/intellij-http-request-test.png)
+
+  
+
+  
 
 ### 16.4 REST 방식의 테스트
+
+##### 16.4.1 JUnit 기반의 테스트
+
+* 책에서 사용한 Gson 사용처를 보니 단순하게 객체를 String으로 변환하는 것 뿐이여서, Gson의 디펜던시를 제거하고 Jackson의 ObjectMapper의 writeValueAsString() 메서드를 사용하는 방식으로 변경했다.
+    * ObjectMapper 유틸리티 클래스를 싱글톤의 Lazy초기화 방식을 사용했다.
+      * https://sabarada.tistory.com/128
+
+* `org.hamcrest.Matcher not found` 메시지가 떠서, `hamcrest` 라이브러리도 디펜던시에 추가했다.
+  * https://mvnrepository.com/artifact/org.hamcrest/hamcrest
+  * 그외에 `mockito-junit-jupiter`, `mockito-inline` 도 미리 추가해둠.
+
+* JSON Path
+  * SampleControllerTest 클래스에 JSON Path 를 통한 검증을 추가했다.
+  * https://github.com/json-path/JsonPath
+
+
+
+##### 16.4.2 기타 도구
+
+* curl, 크롬 확장 프로그램중 REST Client 등등...
 
 
 
@@ -109,11 +204,33 @@
 
 ### 16.5 다양한 전송방식
 
+* HTTP 전송방식
+
+  | 작업   | 전송방식 |
+  | ------ | -------- |
+  | Create | POST     |
+  | Read   | GET      |
+  | Update | PUT      |
+  | Delete | DELETE   |
+
+  
+
+* 회원이라는 자원을 대상으로 결합한다면 아래 예를 생각해볼 수 있다.
+
+  | 작업 | 전송방식 | URI                                   |
+  | ---- | -------- | ------------------------------------- |
+  | 등록 | POST     | /members/new                          |
+  | 조회 | GET      | /members/{id}                         |
+  | 수정 | PUT      | /members/{id} + body {json 데이터 등} |
+  | 삭제 | DELETE   | /member/{id}                          |
+
+  
 
 
 
 
 
+---
 
 ## 17. Ajax 댓글 처리
 

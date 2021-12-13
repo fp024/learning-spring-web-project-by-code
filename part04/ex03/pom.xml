@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/maven-v4_0_0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.fp024</groupId>
   <artifactId>ex03</artifactId>
@@ -15,7 +15,6 @@
     <org.springframework-version>5.2.18.RELEASE</org.springframework-version>
     <org.aspectj-version>1.9.7</org.aspectj-version>
     <jackson.version>2.13.0</jackson.version>
-    <gson.version>2.8.9</gson.version>
     <log4j2.version>2.15.0</log4j2.version>
     <lombok.version>1.18.22</lombok.version>
 
@@ -31,6 +30,11 @@
          https://stackoverflow.com/questions/66217350/deploying-spring-5-x-on-tomcat-10-x-with-jakarta-package        
     -->
     <jetty.version>10.0.7</jetty.version>
+
+    <junit.jupiter.version>5.8.2</junit.jupiter.version>
+    <json-path.version>2.6.0</json-path.version>
+    <mockito.version>4.1.0</mockito.version>
+    <hamcrest.version>2.2</hamcrest.version>
   </properties>
 
   <dependencyManagement>
@@ -45,7 +49,7 @@
       <dependency>
         <groupId>org.junit</groupId>
         <artifactId>junit-bom</artifactId>
-        <version>5.8.1</version>
+        <version>${junit.jupiter.version}</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -53,7 +57,7 @@
   </dependencyManagement>
 
   <dependencies>
-		<!-- Spring -->
+    <!-- Spring -->
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-context</artifactId>
@@ -70,28 +74,28 @@
       <groupId>org.aspectj</groupId>
       <artifactId>aspectjrt</artifactId>
       <version>${org.aspectj-version}</version>
-    </dependency>	
-		
+    </dependency>
+
     <!-- Logging -->
     <dependency>
       <groupId>org.apache.logging.log4j</groupId>
       <artifactId>log4j-slf4j-impl</artifactId>
     </dependency>
-    
+
     <!--
     <dependency>
       <groupId>org.apache.logging.log4j</groupId>
       <artifactId>log4j-web</artifactId>
     </dependency>
     -->
-    
+
     <!-- @Inject -->
     <dependency>
       <groupId>javax.inject</groupId>
       <artifactId>javax.inject</artifactId>
       <version>1</version>
     </dependency>
-				
+
     <!-- Servlet -->
     <dependency>
       <groupId>javax.servlet</groupId>
@@ -134,8 +138,8 @@
       <artifactId>java-time-jsptags</artifactId>
       <version>1.1.4</version>
     </dependency>
-    
-		
+
+
     <!-- Database -->
     <!-- https://mvnrepository.com/artifact/com.oracle.database.jdbc/ojdbc8/18.3.0.0 -->
     <dependency>
@@ -174,45 +178,65 @@
       <artifactId>spring-jdbc</artifactId>
       <version>${org.springframework-version}</version>
     </dependency>
-		
+
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-databind</artifactId>
       <version>${jackson.version}</version>
     </dependency>
-        
+
     <dependency>
       <groupId>com.fasterxml.jackson.dataformat</groupId>
       <artifactId>jackson-dataformat-xml</artifactId>
       <version>${jackson.version}</version>
     </dependency>
-    
-		<!-- lombok -->
+
+    <!-- lombok -->
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
       <version>${lombok.version}</version>
       <scope>provided</scope>
     </dependency>
-	
-		<!-- Test -->
+
+    <!-- Test -->
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-test</artifactId>
       <version>${org.springframework-version}</version>
       <scope>test</scope>
     </dependency>
-		
-    <!-- 테스트시 직접 Java 인스턴스를 JSON문자열로 바꾸는데 사용한다고 하여 추가 -->
+
+    <!-- JSON 검증을 json-path 로도 해봤던 것 같은데, test 스코프로 추가해두자! -->
     <dependency>
-      <groupId>com.google.code.gson</groupId>
-      <artifactId>gson</artifactId>
-      <version>${gson.version}</version>
+      <groupId>com.jayway.jsonpath</groupId>
+      <artifactId>json-path</artifactId>
+      <version>${json-path.version}</version>
       <scope>test</scope>
     </dependency>
-    
-		
-		<!-- Only needed to run tests in a version of IntelliJ IDEA that bundles older versions -->
+
+    <dependency>
+      <groupId>org.hamcrest</groupId>
+      <artifactId>hamcrest</artifactId>
+      <version>${hamcrest.version}</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-junit-jupiter</artifactId>
+      <version>${mockito.version}</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-inline</artifactId>
+      <version>${mockito.version}</version>
+      <scope>test</scope>
+    </dependency>
+
+    <!-- Only needed to run tests in a version of IntelliJ IDEA that bundles older versions -->
     <dependency>
       <groupId>org.junit.platform</groupId>
       <artifactId>junit-platform-launcher</artifactId>
@@ -223,12 +247,12 @@
       <artifactId>junit-jupiter-engine</artifactId>
       <scope>test</scope>
     </dependency>
-		<!-- // JUnit4 가 호환될 필요는 없다.
-		<dependency>
-			<groupId>org.junit.vintage</groupId>
-			<artifactId>junit-vintage-engine</artifactId>
-			<scope>test</scope>
-		</dependency>
+    <!-- // JUnit4 가 호환될 필요는 없다.
+    <dependency>
+      <groupId>org.junit.vintage</groupId>
+      <artifactId>junit-vintage-engine</artifactId>
+      <scope>test</scope>
+    </dependency>
     -->
   </dependencies>
   <build>
