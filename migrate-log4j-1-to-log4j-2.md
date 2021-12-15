@@ -186,7 +186,7 @@ log4j가 1.2.17 를 마지막으로 수명이 끝났고, 보안 위협도 존재
   ```xml
   <properties>
       ...
-      <log4j2.version>2.15.0</log4j2.version>
+      <log4j2.version>2.16.0</log4j2.version>
       ...
   </properties>
   ...
@@ -212,7 +212,7 @@ log4j가 1.2.17 를 마지막으로 수명이 끝났고, 보안 위협도 존재
 
   
 
-## Log4j2 에서도 보안 이슈가 있어 2.15.0 이상으로 버전업 해야한다.
+## Log4j2 에서도 보안 이슈가 있어 2.16.0 이상으로 버전업 해야한다.
 
 * Apache Log4j 2 취약점 주의 및 업데이트 권고(CVE-2021-44228)
   https://asec.ahnlab.com/ko/29479/

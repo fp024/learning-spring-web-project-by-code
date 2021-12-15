@@ -13,9 +13,9 @@
     <maven.compiler.source>${java-version}</maven.compiler.source>
     <maven.compiler.target>${java-version}</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <org.springframework-version>5.2.17.RELEASE</org.springframework-version>
+    <org.springframework-version>5.2.18.RELEASE</org.springframework-version>
     <org.aspectj-version>1.9.7</org.aspectj-version>
-    <log4j2.version>2.15.0</log4j2.version>
+    <log4j2.version>2.16.0</log4j2.version>
     <lombok.version>1.18.22</lombok.version>
   </properties>
 
