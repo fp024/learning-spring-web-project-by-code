@@ -1,35 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>org.fp024</groupId>
+
+  <parent>
+    <groupId>org.fp024</groupId>
+    <artifactId>study-dependencies-parent</artifactId>
+    <version>1.0.0-BUILD-SNAPSHOT</version>
+    <relativePath>../../study-dependencies-parent/pom.xml</relativePath>
+  </parent>
+
   <artifactId>ex02</artifactId>
   <name>${project.artifactId}</name>
   <packaging>war</packaging>
-  <version>1.0.0-BUILD-SNAPSHOT</version>
-  <properties>
-    <java-version>11</java-version>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <maven.compiler.source>${java-version}</maven.compiler.source>
-    <maven.compiler.target>${java-version}</maven.compiler.target>
-    <org.springframework-version>5.2.18.RELEASE</org.springframework-version>
-    <org.aspectj-version>1.9.7</org.aspectj-version>
-    <log4j2.version>2.16.0</log4j2.version>
-    <lombok.version>1.18.22</lombok.version>
-
-    <ojdbc8.version>18.3.0.0</ojdbc8.version>
-    <!-- 
-      1. web.xml기반 설정 프로젝트에서 소스파일 변경으로 Jetty의 자동재시작이 일어날때, 
-         예외가 발생하여, 9.x에서 10.x로 버전업 해봤는데, 버전 문제는 아닌 것 같다.
-         버전업을 해도 원인은 동일함, JavaConfig 설정으로 사용하는 프로젝트에서는 오류가 발생하지 않고 정상 재시작한다..
-    
-         https://github.com/eclipse/jetty.project/issues/4076
-              
-      2. Jetty 11.x버전은 주요 서블릿 패키지명이 바뀌였기 때문에 Spring 5에서 사용할 수 없다.          
-         https://stackoverflow.com/questions/66217350/deploying-spring-5-x-on-tomcat-10-x-with-jakarta-package        
-    -->
-    <jetty.version>10.0.7</jetty.version>
-  </properties>
 
   <dependencyManagement>
     <dependencies>
@@ -43,7 +27,7 @@
       <dependency>
         <groupId>org.junit</groupId>
         <artifactId>junit-bom</artifactId>
-        <version>5.8.1</version>
+        <version>${junit.jupiter.version}</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -145,22 +129,28 @@
     <dependency>
       <groupId>com.zaxxer</groupId>
       <artifactId>HikariCP</artifactId>
-      <!-- <version>5.0.0</version> -->
-      <version>4.0.3</version>
+      <version>${hikaricp.version}</version>      
     </dependency>
 
     <dependency>
       <groupId>org.mybatis</groupId>
       <artifactId>mybatis</artifactId>
-      <version>3.5.7</version>
+      <version>${mybatis.version}</version>
+    </dependency>
+
+   <dependency>
+      <groupId>org.mybatis</groupId>
+      <artifactId>mybatis-spring</artifactId>
+      <version>${mybatis.spring.version}</version>
     </dependency>
 
     <dependency>
-      <groupId>org.mybatis</groupId>
-      <artifactId>mybatis-spring</artifactId>
-      <version>2.0.6</version>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-tx</artifactId>
+      <version>${org.springframework-version}</version>
     </dependency>
-
+    
+    
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-tx</artifactId>

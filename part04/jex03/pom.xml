@@ -1,42 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/maven-v4_0_0.xsd">         
   <modelVersion>4.0.0</modelVersion>
-  <groupId>org.fp024</groupId>
+  
+  <parent>
+    <groupId>org.fp024</groupId>
+    <artifactId>study-dependencies-parent</artifactId>
+    <version>1.0.0-BUILD-SNAPSHOT</version>
+    <relativePath>../../study-dependencies-parent/pom.xml</relativePath>
+  </parent>
+
   <artifactId>jex03</artifactId>
   <name>${project.artifactId}</name>
   <packaging>war</packaging>
-  <version>1.0.0-BUILD-SNAPSHOT</version>
-  <properties>
-    <java-version>11</java-version>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <maven.compiler.source>${java-version}</maven.compiler.source>
-    <maven.compiler.target>${java-version}</maven.compiler.target>
-    <org.springframework-version>5.2.18.RELEASE</org.springframework-version>
-    <org.aspectj-version>1.9.7</org.aspectj-version>
-    <gson.version>2.8.9</gson.version>    
-    <log4j2.version>2.16.0</log4j2.version>
-    <lombok.version>1.18.22</lombok.version>
-
-    <ojdbc8.version>18.3.0.0</ojdbc8.version>
-
-    <!-- 
-      1. web.xml기반 설정 프로젝트에서 소스파일 변경으로 Jetty의 자동재시작이 일어날때, 
-         예외가 발생하여, 9.x에서 10.x로 버전업 해봤는데, 버전 문제는 아닌 것 같다.
-         버전업을 해도 원인은 동일함, JavaConfig 설정으로 사용하는 프로젝트에서는 오류가 발생하지 않고 정상 재시작한다..
-    
-         https://github.com/eclipse/jetty.project/issues/4076
-              
-      2. Jetty 11.x버전은 주요 서블릿 패키지명이 바뀌였기 때문에 Spring 5에서 사용할 수 없다.          
-         https://stackoverflow.com/questions/66217350/deploying-spring-5-x-on-tomcat-10-x-with-jakarta-package        
-    -->
-    <jetty.version>10.0.7</jetty.version>
-    
-    <junit.jupiter.version>5.8.2</junit.jupiter.version>
-    <json-path.version>2.6.0</json-path.version>
-    <mockito.version>4.1.0</mockito.version>
-    <hamcrest.version>2.2</hamcrest.version>
-  </properties>
 
   <dependencyManagement>
     <dependencies>
@@ -69,36 +46,31 @@
       <artifactId>spring-webmvc</artifactId>
       <version>${org.springframework-version}</version>
     </dependency>
-
     <!-- AspectJ -->
     <dependency>
       <groupId>org.aspectj</groupId>
       <artifactId>aspectjrt</artifactId>
       <version>${org.aspectj-version}</version>
-    </dependency>   
-        
+    </dependency>
     <!-- Logging -->
     <!-- Apache Log4j SLF4J Binding  -->
     <dependency>
       <groupId>org.apache.logging.log4j</groupId>
       <artifactId>log4j-slf4j-impl</artifactId>
     </dependency>
- 
     <!--
     <dependency>
       <groupId>org.apache.logging.log4j</groupId>
       <artifactId>log4j-web</artifactId>
     </dependency>
     -->
-
     <!-- @Inject -->
     <dependency>
       <groupId>javax.inject</groupId>
       <artifactId>javax.inject</artifactId>
       <version>1</version>
     </dependency>
-                
-   <!-- Servlet -->
+    <!-- Servlet -->
     <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>javax.servlet-api</artifactId>
@@ -132,14 +104,12 @@
       <version>1.2</version>
       <scope>runtime</scope>
     </dependency>
-    
     <!-- https://github.com/sargue/java-time-jsptags -->
     <dependency>
       <groupId>net.sargue</groupId>
       <artifactId>java-time-jsptags</artifactId>
       <version>1.1.4</version>
     </dependency>
-
     <!-- Database -->
     <!-- https://mvnrepository.com/artifact/com.oracle.database.jdbc/ojdbc8/18.3.0.0 -->
     <dependency>
@@ -147,56 +117,47 @@
       <artifactId>ojdbc8</artifactId>
       <version>${ojdbc8.version}</version>
     </dependency>
-
     <dependency>
       <groupId>com.zaxxer</groupId>
       <artifactId>HikariCP</artifactId>
       <version>5.0.0</version>
     </dependency>
-
     <dependency>
       <groupId>org.mybatis</groupId>
       <artifactId>mybatis</artifactId>
-      <version>3.5.7</version>
+      <version>${mybatis.version}</version>
     </dependency>
-
     <dependency>
       <groupId>org.mybatis</groupId>
       <artifactId>mybatis-spring</artifactId>
-      <version>2.0.6</version>
+      <version>${mybatis.spring.version}</version>
     </dependency>
-        
     <!-- https://mvnrepository.com/artifact/org.mybatis.dynamic-sql/mybatis-dynamic-sql -->
     <dependency>
       <groupId>org.mybatis.dynamic-sql</groupId>
       <artifactId>mybatis-dynamic-sql</artifactId>
-      <version>1.3.0</version>
+      <version>${mybatis.dynamic.sql.version}</version>
     </dependency>
-
     <dependency>
       <groupId>javax.annotation</groupId>
       <artifactId>javax.annotation-api</artifactId>
       <version>1.3.2</version>
     </dependency>
-
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-tx</artifactId>
       <version>${org.springframework-version}</version>
     </dependency>
-
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-jdbc</artifactId>
       <version>${org.springframework-version}</version>
     </dependency>
-
     <dependency>
       <groupId>com.google.code.gson</groupId>
       <artifactId>gson</artifactId>
       <version>${gson.version}</version>
     </dependency>
-
     <!-- lombok -->
     <dependency>
       <groupId>org.projectlombok</groupId>
@@ -204,7 +165,6 @@
       <version>${lombok.version}</version>
       <scope>provided</scope>
     </dependency>
-
     <!-- Test -->
     <dependency>
       <groupId>org.springframework</groupId>
@@ -212,7 +172,6 @@
       <version>${org.springframework-version}</version>
       <scope>test</scope>
     </dependency>
-
     <!-- JSON 검증을 json-path 로도 해봤던 것 같은데, test 스코프로 추가해두자! -->
     <dependency>
       <groupId>com.jayway.jsonpath</groupId>
@@ -220,28 +179,24 @@
       <version>${json-path.version}</version>
       <scope>test</scope>
     </dependency>
-
     <dependency>
       <groupId>org.hamcrest</groupId>
       <artifactId>hamcrest</artifactId>
       <version>${hamcrest.version}</version>
       <scope>test</scope>
     </dependency>
-
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-junit-jupiter</artifactId>
       <version>${mockito.version}</version>
       <scope>test</scope>
     </dependency>
-
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-inline</artifactId>
       <version>${mockito.version}</version>
       <scope>test</scope>
     </dependency>
-
     <!-- Only needed to run tests in a version of IntelliJ IDEA that bundles older versions -->
     <dependency>
       <groupId>org.junit.platform</groupId>
@@ -261,7 +216,6 @@
     </dependency>
     -->
   </dependencies>
-
   <build>
     <pluginManagement>
       <plugins>
@@ -269,7 +223,7 @@
         <plugin>
           <artifactId>maven-surefire-plugin</artifactId>
           <version>2.22.2</version>
-        </plugin>            
+        </plugin>
         <!-- 이 플러그인의 구성은 Eclipse m2e 설정만 저장하는 데 사용되고, Maven 빌드 자체에는 영향을 
             미치지 않음. toolchain 동작이 eclipse m2e에서는 의미가 없음. -->
         <plugin>
@@ -295,7 +249,8 @@
                     </goals>
                   </pluginExecutionFilter>
                   <action>
-                    <ignore></ignore> <!-- Eclipse m2e 동작에서는 무시 처리 -->
+                    <ignore/>
+                    <!-- Eclipse m2e 동작에서는 무시 처리 -->
                   </action>
                 </pluginExecution>
                 <pluginExecution>
@@ -314,7 +269,8 @@
                     </goals>
                   </pluginExecutionFilter>
                   <action>
-                    <ignore></ignore>  <!-- Eclipse m2e 동작에서는 무시 처리 -->
+                    <ignore/>
+                    <!-- Eclipse m2e 동작에서는 무시 처리 -->
                   </action>
                 </pluginExecution>
               </pluginExecutions>
@@ -328,7 +284,6 @@
         <groupId>org.mybatis.generator</groupId>
         <artifactId>mybatis-generator-maven-plugin</artifactId>
         <version>1.4.0</version>
-
         <!-- 아래내용을 활성화하면 compile관련 페이즈를 실행할 때도 항상 먼저 실행이된다. -->
         <!-- 나는 필요할때만 mybatis-generator:generate Goal로 쓰기로하자 -->
         <!--
@@ -342,7 +297,7 @@
         </executions> 
         -->
         <configuration>
-          <!-- https://mybatis.org/generator/running/runningWithMaven.html -->                                           
+          <!-- https://mybatis.org/generator/running/runningWithMaven.html -->
           <!-- Maven Goal 실행: mvn mybatis-generator:generate -->
           <!-- <configurationFile>${project.basedir}/src/test/resources/generatorConfig.xml</configurationFile> -->
           <configurationFile>${project.basedir}/generatorConfig.xml</configurationFile>
@@ -358,7 +313,6 @@
           </dependency>
         </dependencies>
       </plugin>
-
       <plugin>
         <artifactId>maven-eclipse-plugin</artifactId>
         <version>2.10</version>
@@ -380,13 +334,13 @@
         <configuration>
           <compilerArgs>
             <arg>-Xlint:all</arg>
-            <arg>-Xlint:-processing</arg>  <!-- No processor claimed any of these annotations 경고는 노출되지않게 설정 -->
+            <arg>-Xlint:-processing</arg>
+            <!-- No processor claimed any of these annotations 경고는 노출되지않게 설정 -->
           </compilerArgs>
           <showWarnings>true</showWarnings>
           <showDeprecation>true</showDeprecation>
         </configuration>
       </plugin>
-
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-toolchains-plugin</artifactId>
@@ -406,7 +360,6 @@
           </toolchains>
         </configuration>
       </plugin>
-
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>exec-maven-plugin</artifactId>
@@ -422,7 +375,6 @@
           <failOnMissingWebXml>false</failOnMissingWebXml>
         </configuration>
       </plugin>
-            
       <!-- Jetty 서버 구동 -->
       <plugin>
         <!-- https://www.eclipse.org/jetty/documentation/jetty-10/programming-guide/index.html#jetty-maven-plugin -->
