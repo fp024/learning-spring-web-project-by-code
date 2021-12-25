@@ -12,7 +12,7 @@
   </parent>
 
   <artifactId>ex00</artifactId>
-  <name>${artifactId}</name>
+  <name>${project.artifactId}</name>
   <packaging>war</packaging>
 
   <dependencyManagement>
