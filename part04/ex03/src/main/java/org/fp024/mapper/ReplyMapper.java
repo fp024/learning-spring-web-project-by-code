@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface ReplyMapper {
 
-  void insert(ReplyVO vo);
+  int insert(ReplyVO vo);
 
   ReplyVO read(Long bno);
 

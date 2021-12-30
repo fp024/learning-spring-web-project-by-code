@@ -311,6 +311,77 @@ REST 예제를 붙여넣었던 ex03에 그대로 진행을 먼저하고, jex03�
 
 ### 17.3 서비스 영역과 Controller 처리
 
+* 리플의 insert의 리턴을 int로 받는 부분이 있어서 이후 코드를 보았을 때, 업데이트 카운트로 처리하고 있었다.
+
+  그러면 XML매퍼에서 `<update>`로 해야했던 것 같은데.. 진행하면서 확인해보자!
+
+
+
+##### 17.3.1 ReplyController의 설계
+
+| 작업   | URL                           | HTTP 전송방식 |
+| ------ | ----------------------------- | ------------- |
+| 등록   | /replies/new                  | POST          |
+| 조회   | /replies/${rno}               | GET           |
+| 삭제   | /replies/${rno}               | DELETE        |
+| 수정   | /replies/${rno}               | PUT or PATCH  |
+| 페이지 | /replies/pages/${bno}/${page} | GET           |
+
+
+
+##### 17.3.2 등록 작업과 테스트
+
+* 등록/수정 등의 테스트는 @SpringJUnitWebConfig, MockMvc로 테스트를 하자!
+
+
+
+* LocalDateTime을 JSON 스트링으로 변환할 일이 있을 때, jackson을 쓴다면 아래 라이브러리가 디펜던시되야한다.
+
+  ```xml
+  <!--
+    Java 8 date/time 처리를 위해서는 아래 모듈 추가 후 등록해야한다.
+    JacksonJSONWriter 클래스 참조
+  -->
+  <dependency>
+      <groupId>com.fasterxml.jackson.datatype</groupId>
+      <artifactId>jackson-datatype-jsr310</artifactId>
+      <version>${jackson.version}</version>
+  </dependency>
+  ```
+
+  
+
+* content-type으로 인코딩을 설정하는 것들이 Deprecated 되고 있어서, MVC 테스트를 할 때, 강제 UTF-8 필터를 미리 설정해줘야 한글이 안깨진다.
+
+  ```java
+    @BeforeEach
+    void setUp() {
+      this.mockMvc =
+          MockMvcBuilders.standaloneSetup(new ReplyController(service))
+              .addFilter(new CharacterEncodingFilter(StandardCharsets.UTF_8.name(), true))
+              .build();
+    }
+  ```
+
+* JSON String으로 LocalDateTime 값을 서버로 부터 받을 때 날짜형식이 좀 특이한데, 다음 챕터 할 때 고려해야겠다.
+
+  ```json
+  {"rno":6,"bno":10000487,"reply":"댓글 테스트 6","replyer":"replayer6","replyDate":[2021,12,31,1,46,27],"updateDate":[2021,12,31,1,46,27]}
+  ```
+
+  그냥 Date를 썼으면 타임스템프 숫자가 반환되긴할 텐데...
+
+  ```java
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm:ss")
+    private LocalDateTime replyDate;
+  ```
+
+  ReplyVO 도메인에 날짜 필드에 위와 같이 붙이고 이 기준으로 다음 챕터에서 적용해보자!
+
+  * https://github.com/FasterXML/jackson-modules-java8/tree/master/datetime
+
+
+
 
 
 

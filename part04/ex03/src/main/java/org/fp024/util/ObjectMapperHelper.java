@@ -1,6 +1,7 @@
 package org.fp024.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -12,6 +13,7 @@ public class ObjectMapperHelper {
   }
 
   private static class ObjectMapperHolder {
-    private static final ObjectMapper INSTANCE = new ObjectMapper();
+    private static final ObjectMapper INSTANCE =
+        new ObjectMapper().registerModule(new JavaTimeModule());
   }
 }

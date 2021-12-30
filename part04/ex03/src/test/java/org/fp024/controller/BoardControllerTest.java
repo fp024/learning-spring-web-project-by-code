@@ -2,6 +2,7 @@ package org.fp024.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.Set;
@@ -19,6 +20,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.ui.ModelMap;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.filter.CharacterEncodingFilter;
 
 /**
  * https://www.baeldung.com/spring-5-junit-config<br>
@@ -41,7 +43,9 @@ class BoardControllerTest {
   @BeforeEach
   void setUp() {
     // this.mockMvc = MockMvcBuilders.webAppContextSetup(ctx).build();
-    this.mockMvc = MockMvcBuilders.standaloneSetup(new BoardController(service)).build();
+    this.mockMvc = MockMvcBuilders.standaloneSetup(new BoardController(service))
+        .addFilter(new CharacterEncodingFilter(StandardCharsets.UTF_8.name(), true))
+        .build();
   }
 
   @Test
