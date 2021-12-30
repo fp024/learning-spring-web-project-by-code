@@ -1,22 +1,18 @@
 package org.fp024.service;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-
-import java.time.LocalDateTime;
-
+import lombok.extern.slf4j.Slf4j;
 import org.fp024.domain.BoardVO;
 import org.fp024.domain.Criteria;
 import org.fp024.domain.PageSize;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
-import lombok.extern.slf4j.Slf4j;
+import java.time.LocalDateTime;
 
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration("file:src/main/webapp/WEB-INF/spring/root-context.xml")
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+@SpringJUnitConfig(locations = "file:src/main/webapp/WEB-INF/spring/root-context.xml")
 @Slf4j
 class BoardServiceTest {
   @Autowired private BoardService service;
@@ -41,7 +37,9 @@ class BoardServiceTest {
 
   @Test
   void testGetList() {
-    service.getList(new Criteria(1, PageSize.SIZE_10)).forEach(board -> LOGGER.info(board.toString()));
+    service
+        .getList(new Criteria(1, PageSize.SIZE_10))
+        .forEach(board -> LOGGER.info(board.toString()));
   }
 
   @Test
@@ -66,12 +64,10 @@ class BoardServiceTest {
     board.setTitle("제목 수정합니다. - " + LocalDateTime.now().getSecond());
     LOGGER.info("MODIFY RESULT: {}", service.modify(board));
   }
-  
-  
+
   @Test
   void testGetTotal() {
-    long totalCount = service.getTotal(new Criteria());    
-    LOGGER.info("total count: {}", totalCount);    
+    long totalCount = service.getTotal(new Criteria());
+    LOGGER.info("total count: {}", totalCount);
   }
-  
 }

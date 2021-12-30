@@ -1,23 +1,18 @@
 package org.fp024.persistence;
 
-import static org.junit.jupiter.api.Assertions.fail;
-
-import java.sql.Connection;
-
-import javax.sql.DataSource;
-
+import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
-import lombok.extern.slf4j.Slf4j;
+import javax.sql.DataSource;
+import java.sql.Connection;
 
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration("file:src/main/webapp/WEB-INF/spring/root-context.xml")
+import static org.junit.jupiter.api.Assertions.fail;
+
+@SpringJUnitConfig(locations = "file:src/main/webapp/WEB-INF/spring/root-context.xml")
 @Slf4j
 class DataSourceTest {
   @Autowired private DataSource dataSource;
@@ -43,7 +38,7 @@ class DataSourceTest {
   @Test
   void testMyBatis() {
     try (SqlSession session = sqlSessionFactory.openSession();
-        Connection con = session.getConnection(); ) {
+        Connection con = session.getConnection()) {
       LOGGER.info("{}", session);
       LOGGER.info("{}", con);
     } catch (Exception e) {

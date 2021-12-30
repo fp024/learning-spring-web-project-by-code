@@ -236,17 +236,76 @@
 
 
 
-
-
 ### 17.1 프로젝트의 구성
 
-
+REST 예제를 붙여넣었던 ex03에 그대로 진행을 먼저하고, jex03에도 mybatis-dynamic-sql 에 맞게변경해서 진행하면 되겠다.
 
 
 
 ### 17.2 댓글 처리를 위한 영속 영역
 
+* 댓글 처리를 위한 테이블 생성과 처리
 
+  ```sql
+  CREATE TABLE tbl_reply (
+      rno         NUMBER(10,0),
+      bno         NUMBER(10,0)        NOT NULL,
+      reply       VARCHAR2(1000)      NOT NULL,
+      replyer     VARCHAR2(50)        NOT NULL,
+      replyDate   DATE                DEFAULT SYSDATE,
+      updateDate  DATE                DEFAULT SYSDATE
+  );
+  
+  CREATE SEQUENCE seq_reply;
+  
+  ALTER TABLE tbl_reply ADD CONSTRAINT pk_reply PRIMARY KEY (rno);
+  
+  ALTER TABLE tbl_reply ADD CONSTRAINT fk_reply_board
+    FOREIGN KEY (bno) REFERENCES tbl_board (bno);
+  ```
+
+* 최신 게시글 몇개를 보고 싶을 때
+
+  ```sql
+  SELECT * FROM tbl_board WHERE rownum < 10 ORDER BY bno DESC;
+  ```
+
+  책에 위와 같이 나왔는데, 잘못 적으신 것 같다. ORDER BY 보다 rownum < 10 이 먼저 실행되어 원하는 내용이 안나온다.
+
+  ```sql
+  SELECT  /*+ INDEX_DESC(tbl_board pk_board) */ * FROM tbl_board WHERE rownum < 10;
+  
+  -- 위 또는 아래 처럼 쿼리 해야한다.
+  
+  SELECT * FROM (
+     SELECT * 
+       FROM tbl_board
+      ORDER BY bno DESC
+  ) WHERE rownum < 10;
+  ```
+
+  | BNO      | TITLE                       | CONTENT                       | WRITER  | REGDATE             | UPDATEDATE          |
+  | :------- | :-------------------------- | :---------------------------- | :------ | :------------------ | :------------------ |
+  | 10000487 | 1새로 작성하는 글           | 새로 작성하는 내용            | newbie  | 2021-12-30 00:52:26 | 2021-12-30 00:52:26 |
+  | 10000486 | 새로 작성하는 글 select key | 새로 작성하는 내용 select key | newbie  | 2021-12-30 00:52:23 | 2021-12-30 00:52:23 |
+  | 10000485 | 테스트 새글 제목            | 테스트 새글 내용              | useer00 | 2021-12-30 00:52:23 | 2021-12-30 00:52:23 |
+  | 10000484 | 새로 작성하는 글            | 새로 작성하는 내용            | newbie  | 2021-12-30 00:51:49 | 2021-12-30 00:51:49 |
+  | 10000483 | 새로 작성하는 글            | 새로 작성하는 내용            | newbie  | 2021-12-30 00:51:48 | 2021-12-30 00:51:48 |
+  | 10000482 | 새로 작성하는 글 select key | 새로 작성하는 내용 select key | newbie  | 2021-12-30 00:51:45 | 2021-12-30 00:51:45 |
+  | 10000481 | 테스트 새글 제목            | 테스트 새글 내용              | useer00 | 2021-12-30 00:51:45 | 2021-12-30 00:51:45 |
+  | 10000470 | 새로 작성하는 글            | 새로 작성하는 내용            | newbie  | 2021-12-27 15:02:27 | 2021-12-27 15:02:27 |
+  | 10000469 | 새로 작성하는 글            | 새로 작성하는 내용            | newbie  | 2021-12-27 15:02:26 | 2021-12-27 15:02:26 |
+
+* IntelliJ가 MyBatis로서 처리되는 Mapper 빈을 인식을 못하는 것 같다.
+
+  ```java
+  // 테스트 코드의 필드로 mapper를 정의하고 @Autowired로 받을 때, 아래 오류 노출.
+  // Could not autowire. No beans of 'ReplyMapper' type found. 
+  @Autowired private ReplyMapper mapper;
+  // 테스트 실행에는 문제가 없다.
+  ```
+
+  
 
 
 

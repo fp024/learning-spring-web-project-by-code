@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 class PageSizeTest {
   @Test
   void testValueOfAmountAllowed() {
+    assertEquals(PageSize.SIZE_5, PageSize.valueOfAmount(5));
     assertEquals(PageSize.SIZE_10, PageSize.valueOfAmount(10));
     assertEquals(PageSize.SIZE_20, PageSize.valueOfAmount(20));
     assertEquals(PageSize.SIZE_50, PageSize.valueOfAmount(50));

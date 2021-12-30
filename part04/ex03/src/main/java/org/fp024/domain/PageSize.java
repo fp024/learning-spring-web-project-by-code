@@ -7,6 +7,7 @@ import lombok.Getter;
  * 한 페이지의 크기를 외부로부터 그대로 입력받게하지 말고 범위를 정해주자!<br>
  */
 public enum PageSize {
+  SIZE_5(5),
   SIZE_10(10),
   SIZE_20(20),
   SIZE_50(50);

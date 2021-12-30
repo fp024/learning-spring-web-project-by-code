@@ -2,6 +2,7 @@ package org.fp024.service;
 
 import java.util.List;
 
+import lombok.RequiredArgsConstructor;
 import org.fp024.domain.BoardVO;
 import org.fp024.domain.Criteria;
 import org.fp024.mapper.BoardMapper;
@@ -12,11 +13,11 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class BoardServiceImpl implements BoardService {
   // Spring 4.3이상에서 자동처리 (단일 파라미터 생성자에 대해서는 자동 주입)
   // 모든 인자에 대한 생성자를 자동으로 만들도록 lombok에서 정의했음.
-  private BoardMapper mapper;
+  private final BoardMapper mapper;
 
   @Override
   public void register(BoardVO board) {
