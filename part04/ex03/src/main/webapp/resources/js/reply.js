@@ -83,15 +83,37 @@ var replyService = (function () {
         error();
       }
     });
-
-
   }
+
+  // [년,월,일,시,분,초] 배열이 인자로 들어온다.
+  function displayTime(timeValue) {
+    var today = new Date()
+    today.setHours(0, 0, 0, 0);
+
+    var replyDate = new Date();
+    replyDate.setFullYear(timeValue[0], timeValue[1] - 1, timeValue[2]);
+    replyDate.setHours(timeValue[3], timeValue[4], timeValue[5], 0);
+
+    if (today.getTime() > replyDate.getTime()) {
+      var yy = replyDate.getFullYear();
+      var mm = replyDate.getMonth() + 1;
+      var dd = replyDate.getDate();
+      return [yy, ((mm > 9 ? '' : '0') + mm), ((dd > 9 ? '' : '0') + dd)].join('/');
+    } else {
+      var hh = replyDate.getHours();
+      var mi = replyDate.getMinutes();
+      var ss = replyDate.getSeconds();
+      return [((hh > 9 ? '' : '0') + hh), ((mi > 9 ? '' : '0') + mi), ((ss > 9 ? '' : '0') + ss)].join(':');
+    }
+  }
+
 
   return {
     add: add,
     getList: getList,
     remove: remove,
     update: update,
-    get: get
+    get: get,
+    displayTime: displayTime
   };
 })();

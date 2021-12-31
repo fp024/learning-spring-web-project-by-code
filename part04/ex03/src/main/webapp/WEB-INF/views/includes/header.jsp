@@ -12,6 +12,8 @@
 
 <!-- Custom fonts for this template -->
 <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+<!-- 프로젝트에 fontjs를 포함하고 있지는 않아서, cdnjs.cloudflare.com 것을 가져다 사용하자! -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
 <!-- Custom styles for this template -->
 <link href="/resources/css/sb-admin-2.min.css" rel="stylesheet">

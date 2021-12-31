@@ -390,7 +390,36 @@ REST 예제를 붙여넣었던 ex03에 그대로 진행을 먼저하고, jex03�
 
 ### 17.5 이벤트 처리와 HTML 처리
 
+##### 17.5.1 댓글 목록 처리
 
+지금 부트스트랩 환경과 책과 안맞아서 모양을 맞춰서 바꾸었다.
+
+* `chat` 클래스 > `list-group list-group-flush`
+  * https://getbootstrap.com/docs/4.0/components/list-group/
+
+* font awesome 의 css나 이미지 등은 프로젝트에 포함하고 있지 않아서, cdnjs.cloudflare.com에서 호스팅하고 있는 것을 불러왔다.
+
+  ```html
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  ```
+
+
+
+##### 시간에 대한 처리
+
+내가 진행한 상태는 LocalDateTime의 결과를 `yyyy-MM-dd HH:mm:ss` 모양으로 JSON에서 리턴하고 있어서 책에서 요구하는 함수를 추가할 필요는 없어보이는데.  추가 기능(24시간이 지난 댓글은 yyyy/MM/dd  그 이내 댓글은 시간만 표시)이 있어 따라해봐야겠다.
+
+Javascript의 Date의 함수를 보니 아래 처럼 할 수 있어서, 배열로 `[년,월,일,시,분,초]` 를 받아오는 내용을 그대로 활용할 수 있겠다.
+
+```javascript
+var replyDate = new Date();
+replyDate.setFullYear(timeValue[0],timeValue[1], timeValue[2]);
+replyDate.setHours(timeValue[3],timeValue[4],timeValue[5],0);
+```
+
+* 책은 24시기간 이내 댓글은 시:분:초를 표시하는 것으로 되어있었는데, 나는 오늘 0시 부터 댓글만 그렇게 표시하는 것으로 했다. 그 이전이라면 년/월/일 표시
+
+* 이번장 내용도 좋았다. 나라면 스크립트 처리 부분이 거지같았을 텐데, module화 되고 차근차근 진행하니문제 없이 댓글에 대한 추가/수장/목록보기/수정이 원할하게 진행되었다.. 😄
 
 
 
@@ -413,3 +442,12 @@ REST 예제를 붙여넣었던 ex03에 그대로 진행을 먼저하고, jex03�
 ---
 
 ## 기타
+
+
+
+## 정오표
+
+* p421. get.jsp 내의 모달창 코드를 보면 Close 버튼이 두개가 중복으로 정의되어있다. 하나는 id가 `modalRegisterBtn`인 버튼이 되야할 것 같다.
+
+
+

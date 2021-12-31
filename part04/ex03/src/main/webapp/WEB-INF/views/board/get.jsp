@@ -67,8 +67,24 @@
             </div>
           </div>
 
+          <div class="card shadow mb-4">
+            <div class="card-header py-3">
+              <div>
+                <span class="font-weight-bold text-primary"><i class="fa fa-comments fa-fw"></i>Reply</span><button id="addReplyBtn" class="btn btn-primary btn-sm float-md-right">New Reply</button>
+              </div>
+            </div>
+            <div class="card-body">
+              <ul id="replyUL" class="list-group list-group-flush">
+                <!-- start reply -->
+                <li class="list-group-item left clearfix" data-rno="12"></li>
+                <!-- end reply -->
+              </ul>
+            </div>
+          </div>
+
         </div>
         <!-- /.container-fluid -->
+
 
       </div>
       <!-- End of Main Content -->
@@ -84,48 +100,142 @@
   </div>
   <!-- End of Page Wrapper -->
   <%@include file="../includes/dialogAndScript.jsp"%>
+
+  <!-- 댓글 등록 Modal-->
+  <div class="modal fade" id="replyModal" tabindex="-1" role="dialog" aria-labelledby="replyModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="replyModalLabel">REPLY MODAL</h5>
+          <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label>Reply</label>
+            <input class="form-control" name="reply" value="New Reply!!!!!">
+          </div>
+          <div class="form-group">
+            <label>Replyer</label>
+            <input class="form-control" name="replyer" value="replyer">
+          </div>
+          <div class="form-group">
+            <label>Reply Date</label>
+            <input class="form-control" name="replyDate" value="">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button id="modalModBtn" class="btn btn-warning" type="button" data-dismiss="modal">Modify</button>
+          <button id="modalRemoveBtn" class="btn btn-danger" type="button" data-dismiss="modal">Remove</button>
+          <button id="modalRegisterBtn" class="btn btn-primary" type="button" data-dismiss="modal">Register</button>
+          <button id="modalCloseBtn" class="btn btn-secondary" type="button" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script type="text/javascript" src="/resources/js/reply.js"></script>
   <script type="text/javascript">
-    console.log("==========");
-    console.log("JS TEST");
-
-
     var bnoValue = '<c:out value="${board.bno}"/>';
+    var replyUL = $('#replyUL');
 
-    /*
-    replyService.add(
-        {reply: "JS Test", replyer: "tester", bno: bnoValue}
-        , function (result) {
-          alert("RESULT: " + result);
+    showList(1);
+
+    function showList(page) {
+      replyService.getList({bno: bnoValue, page: 1}, function (list) {
+        var str = "";
+        if (list == null || list.length == 0) {
+          replyUL.html("");
+          return;
         }
-    );
 
-    replyService.getList({bno: bnoValue, page: 1}, function (list) {
-      for (var i = 0, len = list.length || 0; i < len; i++) {
-        console.log(list[i]);
+        for (var i = 0, len = list.length || 0; i < len; i++) {
+          str += '<li class="list-group-item left clearfix" data-rno=' + list[i].rno + '>';
+          str += '<div>';
+          str += '<div class="header">';
+          str += '<strong class="font-weight-bold text-primary">' + list[i].replyer + '</strong>';
+          str += '<small class="float-right text-muted">' + replyService.displayTime(list[i].replyDate) + '</small>';
+          str += '</div>'
+          str += '<p>' + list[i].reply + '</p>'
+          str += '</div>'
+          str += '</li>'
+        }
+        replyUL.html(str);
+      });
+    }
+
+    var replyModal = $("#replyModal");
+    var modalInputReply = replyModal.find("input[name='reply']");
+    var modalInputReplyer = replyModal.find("input[name='replyer']");
+    var modalInputReplyDate = replyModal.find("input[name='replyDate']");
+
+    var modalModBtn = $("#modalModBtn");
+    var modalRemoveBtn = $("#modalRemoveBtn");
+    var modalRegisterBtn = $("#modalRegisterBtn");
+
+    $("#addReplyBtn").on("click", function (e) {
+      replyModal.find("input").val("");
+      modalInputReplyDate.closest("div").hide();
+      replyModal.find("button[id != 'modalCloseBtn']").hide();
+
+      modalRegisterBtn.show();
+
+      replyModal.modal("show");
+    });
+
+    modalRegisterBtn.on("click", function (e) {
+      var reply = {
+        reply: modalInputReply.val(),
+        replyer: modalInputReplyer.val(),
+        bno: bnoValue
       }
-    });
 
-    replyService.remove(61, function (count) {
-      console.log(count);
-      if (count === "Success") {
-        alert("REMOVED");
-      } else {
-        alert("FALSE");
-      }
-    }, function (err) {
-      alert('ERROR...')
-    });
+      replyService.add(reply, function (result) {
+        alert(result);
 
+        replyModal.find("input").val("");
+        replyModal.modal("hide");
 
-    replyService.update({rno:81, bno:bnoValue, reply:"Modified Reply..."}, function (result) {
-     alert("수정 완료");
-    });
-    */
-
-    replyService.get(81, function (data) {
-      console.log(data);
+        showList(1);
+      });
     })
+
+    replyUL.on("click", "li", function (e) {
+      var rno = $(this).data("rno");
+      replyService.get(rno, function (reply) {
+        modalInputReply.val(reply.reply);
+        modalInputReplyer.val(reply.replyer);
+        modalInputReplyDate.val(replyService.displayTime(reply.replyDate)).attr("readonly", "readonly");
+        replyModal.data("rno", reply.rno);
+
+        replyModal.find("button[id != 'modalCloseBtn']").hide();
+
+        modalModBtn.show();
+        modalRemoveBtn.show();
+
+        replyModal.modal("show");
+      });
+    });
+
+    modalModBtn.on("click", function (e) {
+      var reply = {rno: replyModal.data("rno"), reply: modalInputReply.val()};
+      replyService.update(reply, function (result) {
+        alert(result);
+        replyModal.modal("hide");
+        showList(1);
+      });
+    });
+
+    modalRemoveBtn.on("click", function (e) {
+      var rno = replyModal.data("rno");
+
+      replyService.remove(rno, function (result) {
+        alert(result);
+        replyModal.modal("hide");
+        showList(1);
+      });
+    });
   </script>
 
   <script type="text/javascript">
@@ -143,7 +253,7 @@
         $operForm.submit();
       });
     });
-    </script>
+  </script>
 </body>
 
 </html>

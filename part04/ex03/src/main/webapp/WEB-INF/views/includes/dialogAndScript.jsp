@@ -6,11 +6,11 @@
 
 
 <!-- 게시물 등록 완료 Modal-->
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="registerBoardModal" tabindex="-1" role="dialog" aria-labelledby="registerBoardModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Modal Title</h5>
+        <h5 class="modal-title" id="registerBoardModalLabel">Modal Title</h5>
         <button class="close" type="button" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">×</span>
         </button>
@@ -23,12 +23,13 @@
   </div>
 </div>
 
+
 <!-- Logout Modal-->
-<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="logoutModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+        <h5 class="modal-title" id="logoutModalLabel">Ready to Leave?</h5>
         <button class="close" type="button" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">×</span>
         </button>
@@ -41,6 +42,9 @@
     </div>
   </div>
 </div>
+
+
+
 
 <!-- Bootstrap core JavaScript-->
 <script src="/resources/vendor/jquery/jquery.min.js"></script>
@@ -77,10 +81,10 @@
       }
 
       if (parseInt(result) > 0) {
-        $("#myModal .modal-body").html("게시글 " + parseInt(result) + "번이 등록되었습니다.");
+        $("#registerBoardModal .modal-body").html("게시글 " + parseInt(result) + "번이 등록되었습니다.");
       }
 
-      $("#myModal").modal("show");
+      $("#registerBoardModal").modal("show");
     }
 
     $("#regBtn").on("click", function() {
