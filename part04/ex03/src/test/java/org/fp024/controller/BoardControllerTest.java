@@ -1,12 +1,6 @@
 package org.fp024.controller;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
-import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import java.util.EnumSet;
-import java.util.Set;
-
+import lombok.extern.slf4j.Slf4j;
 import org.fp024.domain.Criteria;
 import org.fp024.domain.SearchType;
 import org.fp024.service.BoardService;
@@ -18,9 +12,12 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.ui.ModelMap;
-
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.filter.CharacterEncodingFilter;
+
+import java.nio.charset.StandardCharsets;
+import java.util.EnumSet;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * https://www.baeldung.com/spring-5-junit-config<br>
@@ -43,9 +40,10 @@ class BoardControllerTest {
   @BeforeEach
   void setUp() {
     // this.mockMvc = MockMvcBuilders.webAppContextSetup(ctx).build();
-    this.mockMvc = MockMvcBuilders.standaloneSetup(new BoardController(service))
-        .addFilter(new CharacterEncodingFilter(StandardCharsets.UTF_8.name(), true))
-        .build();
+    this.mockMvc =
+        MockMvcBuilders.standaloneSetup(new BoardController(service))
+            .addFilter(new CharacterEncodingFilter(StandardCharsets.UTF_8.name(), true))
+            .build();
   }
 
   @Test

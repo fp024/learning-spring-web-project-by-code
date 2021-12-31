@@ -84,22 +84,65 @@
   </div>
   <!-- End of Page Wrapper -->
   <%@include file="../includes/dialogAndScript.jsp"%>
+  <script type="text/javascript" src="/resources/js/reply.js"></script>
+  <script type="text/javascript">
+    console.log("==========");
+    console.log("JS TEST");
+
+
+    var bnoValue = '<c:out value="${board.bno}"/>';
+
+    /*
+    replyService.add(
+        {reply: "JS Test", replyer: "tester", bno: bnoValue}
+        , function (result) {
+          alert("RESULT: " + result);
+        }
+    );
+
+    replyService.getList({bno: bnoValue, page: 1}, function (list) {
+      for (var i = 0, len = list.length || 0; i < len; i++) {
+        console.log(list[i]);
+      }
+    });
+
+    replyService.remove(61, function (count) {
+      console.log(count);
+      if (count === "Success") {
+        alert("REMOVED");
+      } else {
+        alert("FALSE");
+      }
+    }, function (err) {
+      alert('ERROR...')
+    });
+
+
+    replyService.update({rno:81, bno:bnoValue, reply:"Modified Reply..."}, function (result) {
+     alert("수정 완료");
+    });
+    */
+
+    replyService.get(81, function (data) {
+      console.log(data);
+    })
+  </script>
 
   <script type="text/javascript">
-      $(document).ready(function() {
-        var $operForm = $("#operForm");
+    $(document).ready(function () {
+      var $operForm = $("#operForm");
 
-        $("#board-read-body button[data-oper='modify']").on("click", function(e) {
-          $operForm.attr("action", "/board/modify").submit();
-        });
-
-        // 빈폼으로 Submit을 해버리면 결과 URL 끝에 ?가 붙는다.
-        $("#board-read-body button[data-oper='list']").on("click", function(e) {
-          $operForm.find("#bno").remove();
-          $operForm.attr("action", "/board/list").submit();
-          $operForm.submit();
-        });
+      $("#board-read-body button[data-oper='modify']").on("click", function (e) {
+        $operForm.attr("action", "/board/modify").submit();
       });
+
+      // 빈폼으로 Submit을 해버리면 결과 URL 끝에 ?가 붙는다.
+      $("#board-read-body button[data-oper='list']").on("click", function (e) {
+        $operForm.find("#bno").remove();
+        $operForm.attr("action", "/board/list").submit();
+        $operForm.submit();
+      });
+    });
     </script>
 </body>
 
