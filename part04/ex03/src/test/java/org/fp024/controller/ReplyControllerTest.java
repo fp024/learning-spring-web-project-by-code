@@ -67,7 +67,7 @@ class ReplyControllerTest {
   void testGetList() throws Exception {
     String responseContent =
         mockMvc
-            .perform(MockMvcRequestBuilders.get("/replies/pages/10000501/1"))
+            .perform(MockMvcRequestBuilders.get("/replies/pages/10000521/2"))
             .andExpect(status().isOk())
             .andReturn()
             .getResponse()

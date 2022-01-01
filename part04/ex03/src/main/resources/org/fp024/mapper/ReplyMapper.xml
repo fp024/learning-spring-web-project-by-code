@@ -26,10 +26,22 @@
   </update>
 
   <select id="getListWithPaging" resultType="org.fp024.domain.ReplyVO">
+    <![CDATA[
     SELECT rno, bno, reply, replyer, replydate, updatedate
+      FROM ( SELECT ROWNUM AS rn, rno, bno, reply, replyer, replydate, updatedate
+               FROM tbl_reply
+              WHERE bno = #{bno}
+                AND rno > 0
+                AND rownum <= #{cri.pageNum} * #{cri.amount})
+     WHERE rn > (#{cri.pageNum} - 1) * #{cri.amount}
+     ]]>
+  </select>
+
+
+  <select id="getCountByBno" resultType="int">
+    SELECT COUNT(*)
       FROM tbl_reply
      WHERE bno = #{bno}
-     ORDER BY rno
   </select>
 
 </mapper>

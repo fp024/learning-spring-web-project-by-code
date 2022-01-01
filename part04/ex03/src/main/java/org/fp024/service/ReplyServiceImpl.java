@@ -3,6 +3,7 @@ package org.fp024.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.fp024.domain.Criteria;
+import org.fp024.domain.ReplyPageDTO;
 import org.fp024.domain.ReplyVO;
 import org.fp024.mapper.ReplyMapper;
 import org.springframework.stereotype.Service;
@@ -44,5 +45,11 @@ public class ReplyServiceImpl implements ReplyService {
   public List<ReplyVO> getList(Criteria cri, Long bno) {
     LOGGER.info("get Reply List of a board {}", bno);
     return replyMapper.getListWithPaging(cri, bno);
+  }
+
+  @Override
+  public ReplyPageDTO getListPage(Criteria cri, Long bno) {
+    return new ReplyPageDTO(
+        cri.getAmount(), replyMapper.getCountByBno(bno), replyMapper.getListWithPaging(cri, bno));
   }
 }

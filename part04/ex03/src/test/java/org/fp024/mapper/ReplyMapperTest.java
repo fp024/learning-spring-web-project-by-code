@@ -3,6 +3,7 @@ package org.fp024.mapper;
 import lombok.extern.slf4j.Slf4j;
 import org.fp024.domain.BoardVO;
 import org.fp024.domain.Criteria;
+import org.fp024.domain.PageSize;
 import org.fp024.domain.ReplyVO;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,5 +86,18 @@ public class ReplyMapperTest {
     List<ReplyVO> replies = mapper.getListWithPaging(cri, 10000501L);
 
     replies.forEach(reply -> LOGGER.info("reply: {}", reply));
+  }
+
+  @Test
+  void testListPaging() {
+    Criteria cri = new Criteria(3, PageSize.SIZE_5);
+    List<ReplyVO> replies = mapper.getListWithPaging(cri, 10000521L);
+    replies.forEach(reply -> LOGGER.info("reply: {}", reply));
+  }
+
+  @Test
+  void testGetCountByBno() {
+    int count = mapper.getCountByBno(10000521L);
+    LOGGER.info("count: {}", count);
   }
 }

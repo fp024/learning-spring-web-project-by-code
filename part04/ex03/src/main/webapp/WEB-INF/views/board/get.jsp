@@ -76,9 +76,11 @@
             <div class="card-body">
               <ul id="replyUL" class="list-group list-group-flush">
                 <!-- start reply -->
-                <li class="list-group-item left clearfix" data-rno="12"></li>
+                <li class="list-group-item left clearfix">댓글이 없습니다.</li>
                 <!-- end reply -->
               </ul>
+            </div>
+            <div id="reply-page-navigation" class="card-footer">
             </div>
           </div>
 
@@ -139,19 +141,69 @@
   <script type="text/javascript">
     var bnoValue = '<c:out value="${board.bno}"/>';
     var replyUL = $('#replyUL');
+    var replyPageFooter = $('#reply-page-navigation');
+    var pageNum = 1;
 
-    showList(1);
+    /** 페이지 네비게이션 그리기 */
+    function showReplyPage(pageNum, pageSize, pageNavigationSize, replyCount) {
+      var endNum = Math.ceil(pageNum / pageNavigationSize) * pageNavigationSize;
+      var startNum = endNum - (pageNavigationSize - 1);
+
+      var prev = startNum != 1;
+      var next = false;
+
+      if (endNum * pageSize >= replyCount) {
+        endNum = Math.ceil(replyCount / pageSize);
+      }
+
+      if (endNum * pageSize < replyCount) {
+        next = true;
+      }
+
+      var str = "<ul class='pagination pull-right'>";
+
+      if (prev) {
+        str += "<li class='page-item'><a class='page-link' href='" + (startNum - 1) + "'>Previous</a></li>"
+      }
+
+      for (var i = startNum; i <= endNum; i++) {
+        var active = pageNum == i ? "active" : "";
+        str += "<li class='page-item " + active + "'><a class='page-link' href='" + i + "'>" + i + "</a></li>"
+      }
+
+      if (next) {
+        str += "<li class='page-item'><a class='page-link' href='" + (endNum + 1) + "'>Next</a></li>"
+      }
+
+      str += "</ul></div>";
+
+      console.log("page-navigation" + str);
+
+      replyPageFooter.html(str);
+    }
+
 
     function showList(page) {
-      replyService.getList({bno: bnoValue, page: 1}, function (list) {
+      console.log("show list page: " + page);
+
+      replyService.getList({bno: bnoValue, page: page || 1}, function (pageSize, pageNavigationSize, replyCount, list) {
+        console.log("replyCount: " + replyCount);
+        console.log("list: " + list);
+        console.log(list);
+
+        if (page == -1) {
+          var pageNum = Math.ceil(replyCount / pageSize); // 페이지 사이즈를 서버의 데이터로 받아왔다., Javascript는 정수 나눗셈이 이나여서 실수를 곱해주지 않아도 되겠다.
+          showList(pageNum);
+          return;
+        }
+
         var str = "";
         if (list == null || list.length == 0) {
-          replyUL.html("");
           return;
         }
 
         for (var i = 0, len = list.length || 0; i < len; i++) {
-          str += '<li class="list-group-item left clearfix" data-rno=' + list[i].rno + '>';
+          str += '<li class="reply-item list-group-item left clearfix" data-rno=' + list[i].rno + '>';
           str += '<div>';
           str += '<div class="header">';
           str += '<strong class="font-weight-bold text-primary">' + list[i].replyer + '</strong>';
@@ -162,8 +214,11 @@
           str += '</li>'
         }
         replyUL.html(str);
+        showReplyPage(page, pageSize, pageNavigationSize, replyCount);
       });
     }
+
+    showList(pageNum);
 
     var replyModal = $("#replyModal");
     var modalInputReply = replyModal.find("input[name='reply']");
@@ -197,11 +252,11 @@
         replyModal.find("input").val("");
         replyModal.modal("hide");
 
-        showList(1);
+        showList(-1);
       });
     })
 
-    replyUL.on("click", "li", function (e) {
+    replyUL.on("click", "li.reply-item", function (e) {
       var rno = $(this).data("rno");
       replyService.get(rno, function (reply) {
         modalInputReply.val(reply.reply);
@@ -223,7 +278,7 @@
       replyService.update(reply, function (result) {
         alert(result);
         replyModal.modal("hide");
-        showList(1);
+        showList(pageNum);
       });
     });
 
@@ -233,9 +288,20 @@
       replyService.remove(rno, function (result) {
         alert(result);
         replyModal.modal("hide");
-        showList(1);
+        showList(pageNum);
       });
     });
+
+    replyPageFooter.on("click", "li a", function (e) {
+      e.preventDefault();
+      console.log("page click");
+
+      var targetPageNum = $(this).attr("href");
+      console.log("targetPageNum: " + targetPageNum);
+      pageNum = targetPageNum;
+      showList(pageNum);
+    });
+
   </script>
 
   <script type="text/javascript">
@@ -246,7 +312,7 @@
         $operForm.attr("action", "/board/modify").submit();
       });
 
-      // 빈폼으로 Submit을 해버리면 결과 URL 끝에 ?가 붙는다.
+      // 빈 폼으로 Submit을 해버리면 결과 URL 끝에 ?가 붙는다.
       $("#board-read-body button[data-oper='list']").on("click", function (e) {
         $operForm.find("#bno").remove();
         $operForm.attr("action", "/board/list").submit();

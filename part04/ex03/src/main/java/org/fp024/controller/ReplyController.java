@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.fp024.domain.Criteria;
 import org.fp024.domain.PageSize;
+import org.fp024.domain.ReplyPageDTO;
 import org.fp024.domain.ReplyVO;
 import org.fp024.service.ReplyService;
 import org.springframework.http.HttpStatus;
@@ -58,12 +59,12 @@ public class ReplyController {
   @GetMapping(
       value = "/pages/{bno}/{page}",
       produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
-  public ResponseEntity<List<ReplyVO>> getList(
+  public ResponseEntity<ReplyPageDTO> getList(
       @PathVariable("page") int page, @PathVariable("bno") Long bno) {
     LOGGER.info("getList.....");
     Criteria cri = new Criteria(page, PageSize.SIZE_10);
     LOGGER.info("cri: {}", cri);
-    return new ResponseEntity<>(replyService.getList(cri, bno), HttpStatus.OK);
+    return new ResponseEntity<>(replyService.getListPage(cri, bno), HttpStatus.OK);
   }
 
   /**

@@ -1,6 +1,7 @@
 package org.fp024.service;
 
 import org.fp024.domain.Criteria;
+import org.fp024.domain.ReplyPageDTO;
 import org.fp024.domain.ReplyVO;
 
 import java.util.List;
@@ -15,4 +16,6 @@ public interface ReplyService {
   int remove(Long rno);
 
   List<ReplyVO> getList(Criteria cri, Long bno);
+
+  ReplyPageDTO getListPage(Criteria cri, Long bno);
 }

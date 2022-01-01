@@ -425,11 +425,77 @@ replyDate.setHours(timeValue[3],timeValue[4],timeValue[5],0);
 
 ### 17.6 댓글의 페이징 처리
 
+##### 17.6.1 데이터베이스의 인덱스 설계
 
+* 게시물을 기준으로 댓글을 조회하므로 게시물 번호 기준 내림 차순 댓글 번호 기준 오름차순 인덱스를 생성한다.
+
+  ```sql
+  CREATE INDEX idx_reply ON tbl_reply (bno DESC , rno ASC);
+  ```
+
+  
+
+##### 17.6.2 인덱스를 이용한 페이징 쿼리
+
+* 댓글 페이지 사이즈가 10이라고하고 2페이지를 가져올 때
+
+  ```sql
+  SELECT rno, bno, reply, replyer, replydate, updatedate
+    FROM ( SELECT ROWNUM AS rn, rno, bno, reply, replyer, replydate, updatedate
+             FROM tbl_reply
+            WHERE bno = 10000521 /* 댓글이 여러개 달린 게시물 번호 */
+              AND rno > 0
+              AND ROWNUM <= 20)
+   WHERE rn > 10;
+  ```
+
+* ReplyMapper.xml 에 적용
+
+  ```xml
+    <select id="getListWithPaging" resultType="org.fp024.domain.ReplyVO">
+      <![CDATA[
+      SELECT rno, bno, reply, replyer, replydate, updatedate
+        FROM ( SELECT ROWNUM AS rn, rno, bno, reply, replyer, replydate, updatedate
+                 FROM tbl_reply
+                WHERE bno = #{bno}
+                  AND rno > 0
+                  AND rownum <= #{cri.pageNum} * #{cri.amount})
+       WHERE rn > (#{cri.pageNum} - 1) * #{cri.amount}
+       ]]>
+    </select>
+  ```
+
+  
+
+##### 17.6.3 댓글의 숫자 파악
+
+* 카운트 쿼리 (resultType을 long으로 할 필요는 없다. 어떤 게시물의 댓글이 Int max만큼 들어갈일은 없으므로...)
+
+  ```xml
+    <select id="getCountByBno" resultType="int">
+      SELECT COUNT(*)
+        FROM tbl_reply
+       WHERE bno = #{bno}
+    </select>
+  ```
+
+  
+
+##### 17.6.4 ReplyServiceImpl에서 댓글과 댓글 수 처리
+
+##### 17.6.5 ReplyController 수정
 
 
 
 ### 17.7 댓글 페이지의 화면 처리
+
+##### 17.7.1 댓글 페이지 계산과 출력
+
+* pageSize 와 pageNavigationSize는 서버에서 넘겨주는 값으로 처리했다.
+
+##### 17.7.2 댓글의 수정과 삭제                                                                                                                   
+
+* 코드가 처음엔 복잡하다고 느끼더라도 일단 요구하는 기능을 잘 만들어내는 게 중요한 것 같다. 🤨                                                                                                                                                                                                                 
 
 
 
@@ -441,7 +507,11 @@ replyDate.setHours(timeValue[3],timeValue[4],timeValue[5],0);
 
 ---
 
-## 기타
+## 의견
+
+* BoardController를 다룰 때, MVC 컨트롤러 테스트 방법을 이미 나왔으므로, ReplyController를 다룰 때도 MVC 컨트롤러 테스트로 작성하고 로그를 확인하는 방식으로 하는 것이 좋을 것 같습니다.
+
+* p440에서 페이지네비게이션 사이즈와 페이지 사이즈를 그냥 상수로 10.0이나 10으로 적는 것 보단 변수로 이름을 지정해서 나타내는 것이 나을 것 같습니다.
 
 
 
