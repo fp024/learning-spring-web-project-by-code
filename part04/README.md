@@ -559,6 +559,25 @@ public class ServletConfig implements WebMvcConfigurer {
 
 * 그런데 이부분은 WebApplicationContext 로 mockMvc를 만들지 않아서 그럴 수도 있을 것 같긴하다.
 
+### Jackson이라면 Getter를 정의해서 직렬화가 가능한데, Gson은 필드기반 직렬화만 가능하다.
+
+```java
+/** Gson의 경우 필드기반 직렬화를 하여, getPageNavigationSize()를 직렬화하지 않는다. */
+@RequiredArgsConstructor
+@Getter
+@ToString
+public class ReplyPageDTO {
+  /** 댓글 페이지 네비게이터에 표시할 페이지 인덱스 수 */
+  public final int pageNavigationSize = 3;
+
+  private final int pageSize;
+  private final int replyCount;
+  private final List<ReplyVO> list;
+}
+```
+
+* Jackson 사용하면서, Getter 메서드 재정의해서 직렬화되도록 자주 사용하곤 했는데, Gson이 이런줄은 처음알았다.🤔
+
 
 
 
