@@ -499,13 +499,69 @@ replyDate.setHours(timeValue[3],timeValue[4],timeValue[5],0);
 
 
 
-
-
-
-
-
-
 ---
+
+## jex03 프로젝트 진행
+
+### ReplyVO에 대한 도메인, Mapper 자동 생성이 필요
+
+```bash
+mvnw mybatis-generator:generate
+```
+
+* 자동생성 코드부분을 왠지 모듈로 뻬야할 것 같다. 예전에도 생각한 내용이지만, 자동생성 코드는 수정 필요시  `generatorConfig.xml` 수정 후 mybatis-generator 로 자동생성하도록 하고 수정하지 말아야한다.
+
+### Gson은 XML을 따로 처리하지 않으므로  컨트롤러에서 JSON만 생성하도록 하자!
+
+```java
+produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}
+```
+
+* MediaType.APPLICATION_XML_VALUE 는 빼도록 하자.
+
+### Jackson과 일관성을 위해 LocalDateTime을 배열 형식으로 내보낼 필요가 있었는데...GsonHttpMessageConverter 가  쉽게 등록이 안된다.
+
+```java
+@Slf4j
+@EnableWebMvc
+@ComponentScan(basePackages = {"org.fp024.controller"})
+public class ServletConfig implements WebMvcConfigurer {
+  //...
+  @Override
+  public void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
+    converters.removeIf(
+        httpMessageConverter -> httpMessageConverter.getClass() == GsonHttpMessageConverter.class);
+    converters.add(GsonHelper.gsonHttpMessageConverter());
+  }
+  //...  
+}
+```
+
+자동으로 GsonHttpMessageConverter가 등록이 된 상태여서, 지워주고 LocalDateTime 직렬화 규칙을 정의한 GsonHttpMessageConverter 를 추가해줘야 제대로 인식한다.
+
+* gsonHttpMessageConverter 란 이름으로 빈으로 등록해도안되었다. 😥
+
+### MVC 테스트시에 ServletConfig에 사용자 정의한 내용이 적용이 안되서, 별로로 설정을 해줘야한다.
+
+```java
+ @BeforeEach
+  void setUp() {
+    this.mockMvc =
+        MockMvcBuilders.standaloneSetup(new ReplyController(service))
+            // 설정을 임의로 해주면, 기본 목록에 더해서 추가하는 것이 아니여서, 몇가지 사용하는 것을 써줘야한다.
+            // 그런데 기본목록이 ServletConfig 에 사용자 정의한 내용이 추가 되는게 아님.
+            .setMessageConverters(
+                new StringHttpMessageConverter(), GsonHelper.gsonHttpMessageConverter())
+            .addFilter(new CharacterEncodingFilter(StandardCharsets.UTF_8.name(), true))
+            .build();
+  }
+```
+
+* 그런데 이부분은 WebApplicationContext 로 mockMvc를 만들지 않아서 그럴 수도 있을 것 같긴하다.
+
+
+
+
 
 ## 의견
 

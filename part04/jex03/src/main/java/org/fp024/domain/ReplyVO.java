@@ -3,24 +3,34 @@ package org.fp024.domain;
 import java.time.LocalDateTime;
 import javax.annotation.Generated;
 
-public class BoardVO {
+public class ReplyVO {
+    @Generated("org.mybatis.generator.api.MyBatisGenerator")
+    private Long rno;
+
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
     private Long bno;
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
-    private String title;
+    private String reply;
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
-    private String content;
+    private String replyer;
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
-    private String writer;
-
-    @Generated("org.mybatis.generator.api.MyBatisGenerator")
-    private LocalDateTime regdate;
+    private LocalDateTime replyDate;
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
     private LocalDateTime updateDate;
+
+    @Generated("org.mybatis.generator.api.MyBatisGenerator")
+    public Long getRno() {
+        return rno;
+    }
+
+    @Generated("org.mybatis.generator.api.MyBatisGenerator")
+    public void setRno(Long rno) {
+        this.rno = rno;
+    }
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
     public Long getBno() {
@@ -33,43 +43,33 @@ public class BoardVO {
     }
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
-    public String getTitle() {
-        return title;
+    public String getReply() {
+        return reply;
     }
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
-    public void setTitle(String title) {
-        this.title = title == null ? null : title.trim();
+    public void setReply(String reply) {
+        this.reply = reply == null ? null : reply.trim();
     }
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
-    public String getContent() {
-        return content;
+    public String getReplyer() {
+        return replyer;
     }
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
-    public void setContent(String content) {
-        this.content = content == null ? null : content.trim();
+    public void setReplyer(String replyer) {
+        this.replyer = replyer == null ? null : replyer.trim();
     }
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
-    public String getWriter() {
-        return writer;
+    public LocalDateTime getReplyDate() {
+        return replyDate;
     }
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
-    public void setWriter(String writer) {
-        this.writer = writer == null ? null : writer.trim();
-    }
-
-    @Generated("org.mybatis.generator.api.MyBatisGenerator")
-    public LocalDateTime getRegdate() {
-        return regdate;
-    }
-
-    @Generated("org.mybatis.generator.api.MyBatisGenerator")
-    public void setRegdate(LocalDateTime regdate) {
-        this.regdate = regdate;
+    public void setReplyDate(LocalDateTime replyDate) {
+        this.replyDate = replyDate;
     }
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
@@ -89,11 +89,11 @@ public class BoardVO {
         sb.append(getClass().getSimpleName());
         sb.append(" [");
         sb.append("Hash = ").append(hashCode());
+        sb.append(", rno=").append(rno);
         sb.append(", bno=").append(bno);
-        sb.append(", title=").append(title);
-        sb.append(", content=").append(content);
-        sb.append(", writer=").append(writer);
-        sb.append(", regdate=").append(regdate);
+        sb.append(", reply=").append(reply);
+        sb.append(", replyer=").append(replyer);
+        sb.append(", replyDate=").append(replyDate);
         sb.append(", updateDate=").append(updateDate);
         sb.append("]");
         return sb.toString();

@@ -37,7 +37,7 @@
         </javaClientGenerator>
        
 
-        <!-- 타켓 테이블 -->
+        <!-- 타켓 테이블 - 게시판 테이블 -->
         <table tableName="tbl_board" domainObjectName="BoardVO"
             mapperName="BoardMapper">
             <!-- 키생성 컬럼과 쿼리를 정의한다. -->
@@ -49,5 +49,19 @@
             <columnOverride column="regdate" property="regdate" jdbcType='DATE' javaType='java.time.LocalDateTime' />
             <columnOverride column="updatedate" property="updateDate" jdbcType='DATE' javaType='java.time.LocalDateTime' />
         </table>
+
+        <!-- 타켓 테이블 - 댓글 테이블 -->
+        <table tableName="tbl_reply" domainObjectName="ReplyVO"
+               mapperName="ReplyMapper">
+            <!-- 키생성 컬럼과 쿼리를 정의한다. -->
+            <!-- 시퀀스를 호출해서 값을 넣기 때문에, identity를 false로 둔다. MySQL AutoIncreatement였다면 true로 두고, sqlStatemen="MySql" 로 설정할 필요가 있다. -->
+            <generatedKey column="rno" identity="false" sqlStatement="SELECT seq_reply.nextval FROM DUAL" />
+
+            <!-- Oracle에서 bno 컬럼을 NUMBER(10,0)으로 설정했는데, 일단은 BIGINT로 써본다. -->
+            <columnOverride column="rno" property="rno" jdbcType='BIGINT' javaType='java.lang.Long' />
+            <columnOverride column="replydate" property="replyDate" jdbcType='DATE' javaType='java.time.LocalDateTime' />
+            <columnOverride column="updatedate" property="updateDate" jdbcType='DATE' javaType='java.time.LocalDateTime' />
+        </table>
+
     </context>
 </generatorConfiguration>
