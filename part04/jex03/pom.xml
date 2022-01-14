@@ -120,7 +120,7 @@
     <dependency>
       <groupId>com.zaxxer</groupId>
       <artifactId>HikariCP</artifactId>
-      <version>5.0.0</version>
+      <version>${hikaricp.version}</version>
     </dependency>
     <dependency>
       <groupId>org.mybatis</groupId>
