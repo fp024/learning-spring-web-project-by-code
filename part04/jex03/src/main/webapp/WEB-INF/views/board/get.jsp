@@ -1,11 +1,11 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
-<%@ taglib prefix="javatime" uri="http://sargue.net/jsptags/time"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="javatime" uri="http://sargue.net/jsptags/time" %>
 <!DOCTYPE html>
 <html lang="ko">
 
-<%@include file="../includes/header.jsp"%>
+<%@include file="../includes/header.jsp" %>
 
 <body id="page-top">
 
@@ -18,7 +18,7 @@
     <div id="content">
 
       <!-- topbar도 별도 파일에 분리하자! -->
-      <%@include file="../includes/topbar.jsp"%>
+      <%@include file="../includes/topbar.jsp" %>
 
       <!-- Begin Page Content -->
       <div class="container-fluid">
@@ -34,17 +34,21 @@
           </div>
           <div id="board-read-body" class="card-body">
             <div class="form-group">
-              <label>Bno</label> <input class="form-control" name="bno" value="<c:out value='${board.bno}'/>" readonly="readonly">
+              <label>Bno</label> <input class="form-control" name="bno" value="<c:out value='${board.bno}'/>"
+                                        readonly="readonly">
             </div>
             <div class="form-group">
-              <label>Title</label> <input class="form-control" name="title" value="<c:out value='${board.title}'/>" readonly="readonly">
+              <label>Title</label> <input class="form-control" name="title" value="<c:out value='${board.title}'/>"
+                                          readonly="readonly">
             </div>
             <div class="form-group">
               <label>Text area</label>
-              <textarea class="form-control" rows="5" name="content" readonly="readonly"><c:out value='${board.content}' /></textarea>
+              <textarea class="form-control" rows="5" name="content" readonly="readonly"><c:out
+                  value='${board.content}'/></textarea>
             </div>
             <div class="form-group">
-              <label>Writer</label> <input class="form-control" name="writer" readonly="readonly" value="<c:out value='${board.writer}'/>">
+              <label>Writer</label> <input class="form-control" name="writer" readonly="readonly"
+                                           value="<c:out value='${board.writer}'/>">
             </div>
             <div class="form-group">
               <label>Register Date</label> <input class="form-control" name="regDate" readonly="readonly"
@@ -70,7 +74,8 @@
         <div class="card shadow mb-4">
           <div class="card-header py-3">
             <div>
-              <span class="font-weight-bold text-primary"><i class="fa fa-comments fa-fw"></i>Reply</span><button id="addReplyBtn" class="btn btn-primary btn-sm float-md-right">New Reply</button>
+              <span class="font-weight-bold text-primary"><i class="fa fa-comments fa-fw"></i>Reply</span>
+              <button id="addReplyBtn" class="btn btn-primary btn-sm float-md-right">New Reply</button>
             </div>
           </div>
           <div class="card-body">
@@ -93,7 +98,7 @@
 
 
     <!-- Footer -->
-    <%@include file="../includes/footer.jsp"%>
+    <%@include file="../includes/footer.jsp" %>
     <!-- End of Footer -->
 
   </div>
@@ -101,10 +106,11 @@
 
 </div>
 <!-- End of Page Wrapper -->
-<%@include file="../includes/dialogAndScript.jsp"%>
+<%@include file="../includes/dialogAndScript.jsp" %>
 
 <!-- 댓글 등록 Modal-->
-<div class="modal fade" id="replyModal" tabindex="-1" role="dialog" aria-labelledby="replyModalLabel" aria-hidden="true">
+<div class="modal fade" id="replyModal" tabindex="-1" role="dialog" aria-labelledby="replyModalLabel"
+     aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -186,6 +192,7 @@
 
   function showList(page) {
     console.log("show list page: " + page);
+    pageNum = page; // 전역변수 변경, 함수 내에서 페이지번호를 조정할 수 있는 부분이 있어서 변경해줘야했다.
 
     replyService.getList({bno: bnoValue, page: page || 1}, function (pageSize, pageNavigationSize, replyCount, list) {
       console.log("replyCount: " + replyCount);
@@ -200,6 +207,11 @@
 
       var str = "";
       if (list == null || list.length == 0) {
+        if (page > 1) {
+          showList(page - 1);
+        } else {
+          replyUL.html('<li class="list-group-item left clearfix">댓글이 없습니다.</li>');
+        }
         return;
       }
 
