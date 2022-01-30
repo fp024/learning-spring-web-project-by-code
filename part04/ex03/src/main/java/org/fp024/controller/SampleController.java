@@ -20,7 +20,9 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @RestController
-@RequestMapping("/sample")
+@RequestMapping(
+    value = "/sample",
+    produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
 @Slf4j
 public class SampleController {
   @GetMapping(value = "/getText", produces = "text/plain; charset=UTF-8")
@@ -29,26 +31,24 @@ public class SampleController {
     return "안녕하세요";
   }
 
-  @GetMapping(
-      value = "/getSample",
-      produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+  @GetMapping({"/getSample"})
   public SampleVO getSample() {
     return new SampleVO(112, "스타", "로드");
   }
 
-  @GetMapping("/getSample2")
+  @GetMapping({"/getSample2"})
   public SampleVO getSample2() {
     return new SampleVO(113, "로켓", "라쿤");
   }
 
-  @GetMapping("/getList")
+  @GetMapping({"/getList"})
   public List<SampleVO> getList() {
     return IntStream.rangeClosed(1, 10)
         .mapToObj(i -> new SampleVO(i, i + "First", i + " Last"))
         .collect(Collectors.toList());
   }
 
-  @GetMapping("/getMap")
+  @GetMapping({"/getMap"})
   public Map<String, SampleVO> getMap() {
     Map<String, SampleVO> map = new HashMap<>();
     map.put("First", new SampleVO(111, "그루트", "주니어"));
@@ -60,7 +60,7 @@ public class SampleController {
       height, height 파라미터 전달이 모두 포함되지 않으면 400 상태코드로 에러 반환
   */
   @GetMapping(
-      value = "/check",
+      value = {"/check"},
       params = {"height", "height"})
   public ResponseEntity<SampleVO> check(Double height, Double weight) {
 
@@ -77,12 +77,12 @@ public class SampleController {
     return result;
   }
 
-  @GetMapping("/product/{cat}/{pid}")
+  @GetMapping({"/product/{cat}/{pid}"})
   public String[] getPath(@PathVariable("cat") String cat, @PathVariable("pid") Integer pid) {
     return new String[] {"category: " + cat, "productId: " + pid};
   }
 
-  @PostMapping("/ticket")
+  @PostMapping(value = {"/ticket"})
   public Ticket convert(@RequestBody Ticket ticket) {
     LOGGER.info("convert.........ticket: {}", ticket);
     return ticket;

@@ -580,6 +580,16 @@ public class ReplyPageDTO {
 
 
 
+### URL 접미사로 (확장자)  수신할 응답 유형을 선택하는 것이 Spring 5.3.x부터 비활성화가 기본 값이다.
+
+예제가 .json을 붙여서 URL을 호출하면 JSON을 받는 식으로 되어있는데, Spring 5.3 부터는 이런 방식을 기본으로 사용할 수 가 없다. 
+
+확장자를 없이 요청자의 Accept Header로 판별하는 것 같다. `.json`으로 끝나는 URL은 전부 정리하고 js에서 호출시에서는 $.getJSON() 등으로 변경해주었다.
+
+Mock 테스트 요청 코드에는 `.accept(MediaType.APPLICATION_JSON)` 를 붙여주었다.
+
+
+
 
 
 ## 의견

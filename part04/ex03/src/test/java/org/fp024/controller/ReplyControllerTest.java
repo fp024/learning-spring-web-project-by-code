@@ -67,7 +67,9 @@ class ReplyControllerTest {
   void testGetList() throws Exception {
     String responseContent =
         mockMvc
-            .perform(MockMvcRequestBuilders.get("/replies/pages/10000521/2"))
+            .perform(
+                MockMvcRequestBuilders.get("/replies/pages/10000521/2")
+                    .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andReturn()
             .getResponse()
@@ -80,7 +82,7 @@ class ReplyControllerTest {
   void testGet() throws Exception {
     String responseContent =
         mockMvc
-            .perform(MockMvcRequestBuilders.get("/replies/6.json"))
+            .perform(MockMvcRequestBuilders.get("/replies/6").accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andReturn()
             .getResponse()

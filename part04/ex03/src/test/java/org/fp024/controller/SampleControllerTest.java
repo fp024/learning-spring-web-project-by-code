@@ -17,6 +17,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+/**
+ * Spring 5.3부터 URL의 접미사 패턴일치에 대한 기본 값이 변경되서, 등록된 경로 확장자만 요청 매핑 및 컨텐츠 협상에 사용됨
+ * https://github.com/spring-projects/spring-framework/issues/24179
+ */
 @SpringJUnitWebConfig(
     locations = {
       "file:src/main/webapp/WEB-INF/spring/root-context.xml",
@@ -45,8 +49,9 @@ class SampleControllerTest {
     MvcResult result =
         mockMvc
             .perform(
-                post("/sample/ticket.json")
+                post("/sample/ticket")
                     .contentType(MediaType.APPLICATION_JSON)
+                    .accept(MediaType.APPLICATION_JSON)
                     .content(jsonString))
             .andExpect(status().is(200))
             .andExpect(jsonPath("$.tno", equalTo(123)))
