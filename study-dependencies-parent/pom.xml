@@ -8,7 +8,7 @@
   <packaging>pom</packaging>
   <version>1.0.0-BUILD-SNAPSHOT</version>
   <properties>
-    <java-version>11</java-version>
+    <java-version>17</java-version>
     
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     
