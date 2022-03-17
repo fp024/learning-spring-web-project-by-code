@@ -21,16 +21,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.fp024.config.RootConfig;
 import org.fp024.domain.BoardVO;
 import org.fp024.domain.Criteria;
 import org.fp024.domain.SearchType;
 import org.junit.jupiter.api.Test;
+import org.mybatis.dynamic.sql.AndOrCriteriaGroup;
 import org.mybatis.dynamic.sql.Constant;
 import org.mybatis.dynamic.sql.DerivedColumn;
-import org.mybatis.dynamic.sql.SqlCriterion;
 import org.mybatis.dynamic.sql.render.RenderingStrategies;
 import org.mybatis.dynamic.sql.select.QueryExpressionDSL;
 import org.mybatis.dynamic.sql.select.SelectModel;
@@ -259,7 +258,7 @@ class BoardMapperTest {
   @Test
   void testCreateSearchWhereClause_C() {
     Criteria criteria = new Criteria();
-    criteria.setSearchCodes(Arrays.asList("C"));
+    criteria.setSearchCodes(List.of("C"));
     criteria.setKeyword("검색어");
 
     DerivedColumn<Long> rownum = DerivedColumn.of("ROWNUM");
@@ -286,7 +285,7 @@ class BoardMapperTest {
   @Test
   void testCreateSearchWhereClause_W() {
     Criteria criteria = new Criteria();
-    criteria.setSearchCodes(Arrays.asList("W"));
+    criteria.setSearchCodes(List.of("W"));
     criteria.setKeyword("검색어");
     
     DerivedColumn<Long> rownum = DerivedColumn.of("ROWNUM");
@@ -315,8 +314,8 @@ class BoardMapperTest {
    */
   QueryExpressionDSL<SelectModel> addSearchWhereClause(QueryExpressionDSL<SelectModel> innerSql, Criteria criteria) {    
     List<SearchType> searchTypeList =
-        criteria.getSearchTypeSet().stream().collect(Collectors.toList());
-    List<SqlCriterion> subCriteriaList = new ArrayList<>();
+        criteria.getSearchTypeSet().stream().toList();
+    List<AndOrCriteriaGroup> subCriteriaList = new ArrayList<>();
 
     for (int i = 0; i < searchTypeList.size(); i++) {
       if (i > 0) {
@@ -448,6 +447,10 @@ class BoardMapperTest {
   void testRead() {
     // 존재하는 게시물 번호로 테스트
     Optional<BoardVO> board = mapper.selectByPrimaryKey(1L);
+    if(board.isEmpty()) {
+      throw new IllegalStateException("1번 게시물이 없음");
+    }
+
     LOGGER.info(board.get().toString());
   }
 

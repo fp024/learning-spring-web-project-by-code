@@ -24,9 +24,9 @@ import org.fp024.domain.Criteria;
 import org.fp024.domain.SearchType;
 import org.fp024.mapper.BoardMapper;
 import org.fp024.mapper.BoardVODynamicSqlSupport;
+import org.mybatis.dynamic.sql.AndOrCriteriaGroup;
 import org.mybatis.dynamic.sql.Constant;
 import org.mybatis.dynamic.sql.DerivedColumn;
-import org.mybatis.dynamic.sql.SqlCriterion;
 import org.mybatis.dynamic.sql.render.RenderingStrategies;
 import org.mybatis.dynamic.sql.select.QueryExpressionDSL;
 import org.mybatis.dynamic.sql.select.SelectModel;
@@ -170,7 +170,7 @@ public class BoardServiceImpl implements BoardService {
       QueryExpressionDSL<SelectModel> selectDSL, Criteria criteria) {
     List<SearchType> searchTypeList =
         criteria.getSearchTypeSet().stream().collect(Collectors.toList());
-    List<SqlCriterion> subCriteriaList = new ArrayList<>();
+    List<AndOrCriteriaGroup> subCriteriaList = new ArrayList<>();
 
     for (int i = 0; i < searchTypeList.size(); i++) {
       if (i > 0) {

@@ -16,6 +16,7 @@ import static org.mybatis.dynamic.sql.SqlBuilder.select;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 
+import java.util.Objects;
 import org.fp024.config.RootConfig;
 import org.fp024.domain.BoardVO;
 import org.fp024.domain.Criteria;
@@ -149,12 +150,12 @@ class BoardServiceTest {
 
     selectDSL =
         ((QueryExpressionDSL<SelectModel>)
-                ReflectionTestUtils.invokeMethod(
-                    service,
-                    "addSearchWhereClause",
-                    select(hint, rn, bno, title, content, writer, regdate, updateDate)
-                        .from(BoardVODynamicSqlSupport.boardVO),
-                    criteria))
+            Objects.requireNonNull(ReflectionTestUtils.invokeMethod(
+                service,
+                "addSearchWhereClause",
+                select(hint, rn, bno, title, content, writer, regdate, updateDate)
+                    .from(BoardVODynamicSqlSupport.boardVO),
+                criteria)))
             .where()
             .and(rn, isLessThanOrEqualTo(criteria.getPageNum() * criteria.getAmount()));
 
@@ -188,11 +189,9 @@ class BoardServiceTest {
     QueryExpressionDSL<SelectModel> selectDSL =
         select(count()).from(BoardVODynamicSqlSupport.boardVO);
 
-    @SuppressWarnings("unchecked")
     QueryExpressionDSL<SelectModel> addedSearchWhereClause =
-        (QueryExpressionDSL<SelectModel>)
-            ReflectionTestUtils.invokeMethod(service, "addSearchWhereClause", selectDSL, criteria);
-    return addedSearchWhereClause
+        ReflectionTestUtils.invokeMethod(service, "addSearchWhereClause", selectDSL, criteria);
+    return Objects.requireNonNull(addedSearchWhereClause)
         .where()
         .and(bno, isGreaterThan(0L))
         .build()

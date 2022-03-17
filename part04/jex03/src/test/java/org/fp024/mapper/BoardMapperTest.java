@@ -21,16 +21,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-
+import lombok.extern.slf4j.Slf4j;
 import org.fp024.config.RootConfig;
 import org.fp024.domain.BoardVO;
 import org.fp024.domain.Criteria;
 import org.fp024.domain.SearchType;
 import org.junit.jupiter.api.Test;
+import org.mybatis.dynamic.sql.AndOrCriteriaGroup;
 import org.mybatis.dynamic.sql.Constant;
 import org.mybatis.dynamic.sql.DerivedColumn;
-import org.mybatis.dynamic.sql.SqlCriterion;
 import org.mybatis.dynamic.sql.render.RenderingStrategies;
 import org.mybatis.dynamic.sql.select.QueryExpressionDSL;
 import org.mybatis.dynamic.sql.select.SelectModel;
@@ -38,8 +37,6 @@ import org.mybatis.dynamic.sql.select.render.SelectStatementProvider;
 import org.mybatis.dynamic.sql.update.render.UpdateStatementProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
-
-import lombok.extern.slf4j.Slf4j;
 /**
  * mybatis-dynamic-sql 으로 만들어진 mapper를 쓸 때,<br>
  * QueryDSL 같이 사용한 부분은 별도 클래스로 분리해서 그것이 mapper클래스를 사용하게 해야할 것 같다.
@@ -226,7 +223,7 @@ class BoardMapperTest {
     assertEquals(
         "{p1=%검색어%" + ", p2=%검색어%" + ", p3=10}", selectStatement.getParameters().toString());
   }
-  
+
   @Test
   void testCreateSearchWhereClause_T_W() {
     Criteria criteria = new Criteria();
@@ -254,12 +251,11 @@ class BoardMapperTest {
     assertEquals(
         "{p1=%검색어%" + ", p2=%검색어%" + ", p3=10}", selectStatement.getParameters().toString());
   }
-  
 
   @Test
   void testCreateSearchWhereClause_C() {
     Criteria criteria = new Criteria();
-    criteria.setSearchCodes(Arrays.asList("C"));
+    criteria.setSearchCodes(List.of("C"));
     criteria.setKeyword("검색어");
 
     DerivedColumn<Long> rownum = DerivedColumn.of("ROWNUM");
@@ -281,14 +277,13 @@ class BoardMapperTest {
 
     assertEquals("{p1=%검색어%" + ", p2=10}", selectStatement.getParameters().toString());
   }
-  
-  
+
   @Test
   void testCreateSearchWhereClause_W() {
     Criteria criteria = new Criteria();
-    criteria.setSearchCodes(Arrays.asList("W"));
+    criteria.setSearchCodes(List.of("W"));
     criteria.setKeyword("검색어");
-    
+
     DerivedColumn<Long> rownum = DerivedColumn.of("ROWNUM");
     DerivedColumn<Long> rn = rownum.as("rn");
 
@@ -308,15 +303,12 @@ class BoardMapperTest {
 
     assertEquals("{p1=%검색어%" + ", p2=10}", selectStatement.getParameters().toString());
   }
-  
-  
-  /**
-   * 쿼리문에 검색 조건 WHERE 절 붙임
-   */
-  QueryExpressionDSL<SelectModel> addSearchWhereClause(QueryExpressionDSL<SelectModel> innerSql, Criteria criteria) {    
-    List<SearchType> searchTypeList =
-        criteria.getSearchTypeSet().stream().collect(Collectors.toList());
-    List<SqlCriterion> subCriteriaList = new ArrayList<>();
+
+  /** 쿼리문에 검색 조건 WHERE 절 붙임 */
+  QueryExpressionDSL<SelectModel> addSearchWhereClause(
+      QueryExpressionDSL<SelectModel> innerSql, Criteria criteria) {
+    List<SearchType> searchTypeList = criteria.getSearchTypeSet().stream().toList();
+    List<AndOrCriteriaGroup> subCriteriaList = new ArrayList<>();
 
     for (int i = 0; i < searchTypeList.size(); i++) {
       if (i > 0) {
@@ -331,14 +323,18 @@ class BoardMapperTest {
           .where(
               searchTypeList.get(0).getColumn(),
               isLikeWhenPresent(criteria.getKeyword()).map(this::addWildcards))
-          .and(DerivedColumn.of("ROWNUM"), isLessThanOrEqualTo(criteria.getPageNum() * criteria.getAmount()));
+          .and(
+              DerivedColumn.of("ROWNUM"),
+              isLessThanOrEqualTo(criteria.getPageNum() * criteria.getAmount()));
     } else if (searchTypeList.size() > 1) {
       innerSql
           .where(
               searchTypeList.get(0).getColumn(),
               isLikeWhenPresent(criteria.getKeyword()).map(this::addWildcards),
               subCriteriaList)
-          .and(DerivedColumn.of("ROWNUM"), isLessThanOrEqualTo(criteria.getPageNum() * criteria.getAmount()));
+          .and(
+              DerivedColumn.of("ROWNUM"),
+              isLessThanOrEqualTo(criteria.getPageNum() * criteria.getAmount()));
     }
     return innerSql;
   }
@@ -448,6 +444,11 @@ class BoardMapperTest {
   void testRead() {
     // 존재하는 게시물 번호로 테스트
     Optional<BoardVO> board = mapper.selectByPrimaryKey(1L);
+
+    if (board.isEmpty()) {
+      throw new IllegalStateException("1번 게시물 없음");
+    }
+
     LOGGER.info(board.get().toString());
   }
 
