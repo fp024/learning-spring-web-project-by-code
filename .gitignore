@@ -2,5 +2,5 @@
 .mvn/wrapper/*
 !.mvn/wrapper/maven-wrapper.properties
 
-latest/
+latest
 log/*.log
