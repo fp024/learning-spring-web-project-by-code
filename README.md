@@ -89,5 +89,29 @@
     * [Spring MVC Template 생성 프로젝트의 Log4j 1에서 Log4j 2 전환](./migrate-log4j-1-to-log4j-2.md)
 
 
+
+## 서버 실행 / 정지 스크립트
+
+가상 머신에 띄어두기위해서 서버 실행/정지 스크립트를 만들고 크론탭으로 서버 시작시 실행되게 하였다.
+
+* 최신 테스트할 프로젝트에 대해 latest 란 심볼릭 링크를 우선 만든다.
+
+  ```bash
+  cd /home/fp024/git-fp024/learning-spring-web-project-by-code
+  ln -s part04/jex03 latest
+  ```
+* [start-server.sh](start-server.sh) : 서버 시작
+
+* [stop-server.sh](stop-server.sh) : 서버 종료
+
+* `crontab -e` 설정
+
+  ```bash
+  # 코드로 배우는 스프링 웹프로젝트 스터디 게시판 서버 시작
+  @reboot /home/fp024/git-fp024/learning-spring-web-project-by-code/start-server.sh
+  ```
+
+  
+
 ## 정오표
 
