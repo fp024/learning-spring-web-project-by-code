@@ -13,26 +13,36 @@
 
 * 실습 진행 환경
   
-    * STS 3 3.9.14.RELEASE 또는 Eclipse 2021-09
-    * Adoptium OpenJDK 11
+    * STS 3 또는 Eclipse 또는 IntelliJ
+    * Adoptium OpenJDK 17
         * 책 환경: Oracle JDK 1.8
     * Oracle 18c Express Edition
         * 책 환경: Oracle 11c Express Edition
-    * Tomcat 8.5.x
-    * Jetty 10.x
+    * WAS
+        * Jetty 10.x (Maven Jetty 플러그인 실행)
+        * Tomcat 8.5.x
     * Maven 3.8.x
+      
 
-## 목차
+## 스터디 진행 목차
 
 * [Part 1. 스프링 개발환경 구축](part01)
   * [데이터베이스 설정](part01/ex00/database)
 * [Part 2. 스프링 MVC설정](part02)
 * [Part 3. 기본적인 웹 게시물 관리](part03)
-* Part 4. REST 방식과 Ajax를 이용하는 댓글 처리
-* Part 5. AOP와 트랜젝션
+* [Part 4. REST 방식과 Ajax를 이용하는 댓글 처리](part04)
+* [Part 5. AOP와 트랜젝션](part05)
 * Part 6. 파일 업로드 처리
 * Part 7. Spring Web Security를 이용한 로그인 처리
 * 부록
+
+
+
+## 버전관리 Maven Parent 프로젝트
+
+디펜던시하고 있는 라이브러리들의 버전 관리를 하나의 POM에서 하기 위해서, 부모 POM으로 분리해두었음.
+
+* [study-dependencies-parent](study-dependencies-parent)
 
 
 
@@ -90,7 +100,7 @@
 
 
 
-## 서버 실행 / 정지 스크립트
+## 서버 실행 / 정지/ 로그 보기 스크립트
 
 가상 머신에 띄어두기위해서 서버 실행/정지 스크립트를 만들고 크론탭으로 서버 시작시 실행되게 하였다.
 
@@ -100,9 +110,12 @@
   cd /home/fp024/git-fp024/learning-spring-web-project-by-code
   ln -s part04/jex03 latest
   ```
+  
 * [start-server.sh](start-server.sh) : 서버 시작
 
 * [stop-server.sh](stop-server.sh) : 서버 종료
+
+* [show-log.sh](show-log.sh): 실행 로그 보기
 
 * `crontab -e` 설정
 
@@ -111,7 +124,24 @@
   @reboot /home/fp024/git-fp024/learning-spring-web-project-by-code/start-server.sh
   ```
 
+
+### Linux  환경 스크립트에서 사용하는  환경변수  설정 파일
+
+스크립트에서 사용하는 환경 설정 파일 정의
+
+* env.properties
+
+  ```properties
+  JAVA_HOME=/home/fp024/.sdkman/candidates/java/current
+  MAVEN_HOME=/home/fp024/.sdkman/candidates/maven/current
   
+  # 최종 진행 완료한 프로젝트를 명시, Linux 스크립트로 시작, 종료시 사용
+  LATEST_HOME=part04/jex03
+  ```
+
+
 
 ## 정오표
+
+* 각 진행 문서에 작성
 
