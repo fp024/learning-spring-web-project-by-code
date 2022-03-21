@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  
+
   <parent>
     <groupId>org.fp024</groupId>
     <artifactId>study-dependencies-parent</artifactId>
@@ -15,24 +13,6 @@
   <name>${project.artifactId}</name>
   <packaging>war</packaging>
 
-  <dependencyManagement>
-    <dependencies>
-      <dependency>
-        <groupId>org.apache.logging.log4j</groupId>
-        <artifactId>log4j-bom</artifactId>
-        <version>${log4j2.version}</version>
-        <scope>import</scope>
-        <type>pom</type>
-      </dependency>
-      <dependency>
-        <groupId>org.junit</groupId>
-        <artifactId>junit-bom</artifactId>
-        <version>${junit.jupiter.version}</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
-    </dependencies>
-  </dependencyManagement>
   <dependencies>
     <!-- Spring -->
     <dependency>
@@ -107,7 +87,7 @@
     <dependency>
       <groupId>net.sargue</groupId>
       <artifactId>java-time-jsptags</artifactId>
-      <version>1.1.4</version>
+      <version>${java-time-jsptags.version}</version>
     </dependency>
     <!-- Database -->
     <!-- https://mvnrepository.com/artifact/com.oracle.database.jdbc/ojdbc8/18.3.0.0 -->
@@ -188,11 +168,6 @@
   <build>
     <pluginManagement>
       <plugins>
-        <!-- JUnit 5 사용을 위해서 maven-surefire-plugin 버전을 올려두자! -->
-        <plugin>
-          <artifactId>maven-surefire-plugin</artifactId>
-          <version>2.22.2</version>
-        </plugin>
         <!-- 이 플러그인의 구성은 Eclipse m2e 설정만 저장하는 데 사용되고, Maven 빌드 자체에는 영향을 
             미치지 않음. toolchain 동작이 eclipse m2e에서는 의미가 없음. -->
         <plugin>
@@ -218,7 +193,7 @@
                     </goals>
                   </pluginExecutionFilter>
                   <action>
-                    <ignore/>
+                    <ignore />
                     <!-- Eclipse m2e 동작에서는 무시 처리 -->
                   </action>
                 </pluginExecution>
@@ -238,7 +213,7 @@
                     </goals>
                   </pluginExecutionFilter>
                   <action>
-                    <ignore/>
+                    <ignore />
                     <!-- Eclipse m2e 동작에서는 무시 처리 -->
                   </action>
                 </pluginExecution>
@@ -282,6 +257,9 @@
           </dependency>
         </dependencies>
       </plugin>
+      <!-- maven-eclipse-plugin 제거, m2e를 사용중이면 아래 내용이 필요없는 것 같다.-->
+      <!-- https://maven.apache.org/plugins/maven-eclipse-plugin/ -->
+      <!--
       <plugin>
         <artifactId>maven-eclipse-plugin</artifactId>
         <version>2.10</version>
@@ -296,104 +274,14 @@
           <downloadJavadocs>true</downloadJavadocs>
         </configuration>
       </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.8.1</version>
-        <configuration>
-          <compilerArgs>
-            <arg>-Xlint:all</arg>
-            <arg>-Xlint:-processing</arg>
-            <!-- No processor claimed any of these annotations 경고는 노출되지않게 설정 -->
-          </compilerArgs>
-          <showWarnings>true</showWarnings>
-          <showDeprecation>true</showDeprecation>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-toolchains-plugin</artifactId>
-        <version>3.0.0</version>
-        <executions>
-          <execution>
-            <goals>
-              <goal>toolchain</goal>
-            </goals>
-          </execution>
-        </executions>
-        <configuration>
-          <toolchains>
-            <jdk>
-              <version>${java-version}</version>
-            </jdk>
-          </toolchains>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>exec-maven-plugin</artifactId>
-        <version>3.0.0</version>
-        <configuration>
-          <mainClass>org.test.int1.Main</mainClass>
-        </configuration>
-      </plugin>
+      -->
+
       <plugin>
         <artifactId>maven-war-plugin</artifactId>
         <version>3.3.1</version>
         <configuration>
           <failOnMissingWebXml>false</failOnMissingWebXml>
         </configuration>
-      </plugin>
-      <!-- Jetty 서버 구동 -->
-      <plugin>
-        <!-- https://www.eclipse.org/jetty/documentation/jetty-10/programming-guide/index.html#jetty-maven-plugin -->
-        <groupId>org.eclipse.jetty</groupId>
-        <artifactId>jetty-maven-plugin</artifactId>
-        <version>${jetty.version}</version>
-        <configuration>
-          <webApp>
-            <contextPath>/</contextPath>
-            <sessionHandler>
-              <sessionIdPathParameterName>none</sessionIdPathParameterName>
-            </sessionHandler>
-          </webApp>
-          <detail>true</detail>
-          <deployMode>EMBED</deployMode>
-          <stopKey>CTRL+C</stopKey>
-          <stopPort>8999</stopPort>
-          <!-- 9.x 설정: <scanIntervalSeconds> 대신 <scan> 사용 -->
-          <!-- 
-            변경 감지 자동 재시작시 ContextLoaderListener가 제대로 실행되지 않는 오류가 발생한다.
-            설정을 -1로하여 자동 재시작이 일어나지 않도록 한다.
-           -->
-          <scan>-1</scan>
-          <!-- 9.x 설정: <webApp>의 기본값이 ${project.baseDir}/src/main/webapp/WEB-INF/web.xml 으로 정의되어 일부러 선언할 필요는 없음.-->
-          <scanTargetPatterns>
-            <scanTargetPattern>
-              <directory>src/main/webapp/WEB-INF</directory>
-              <includes>
-                <include>**/*.properties</include>
-                <include>**/*.xml</include>
-              </includes>
-              <excludes>
-                <exclude>**/*.jsp</exclude>
-              </excludes>
-            </scanTargetPattern>
-          </scanTargetPatterns>
-        </configuration>
-        <dependencies>
-          <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>apache-jstl</artifactId>
-            <version>${jetty.version}</version>
-            <exclusions>
-              <exclusion>
-                <groupId>org.apache.taglibs</groupId>
-                <artifactId>taglibs-standard-impl</artifactId>
-              </exclusion>
-            </exclusions>
-          </dependency>
-        </dependencies>
       </plugin>
     </plugins>
   </build>

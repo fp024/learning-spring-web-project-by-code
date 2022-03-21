@@ -14,18 +14,11 @@
   <artifactId>ex00</artifactId>
   <name>${project.artifactId}</name>
   <packaging>war</packaging>
+  
+  <properties>
+    <jetty-context-path>/controller</jetty-context-path>
+  </properties>
 
-  <dependencyManagement>
-    <dependencies>
-      <dependency>
-        <groupId>org.apache.logging.log4j</groupId>
-        <artifactId>log4j-bom</artifactId>
-        <version>${log4j2.version}</version>
-        <scope>import</scope>
-        <type>pom</type>
-      </dependency>
-    </dependencies>
-  </dependencyManagement>
   <dependencies>
     <!-- Spring -->
     <dependency>
@@ -85,12 +78,13 @@
       <version>1.2</version>
       <scope>runtime</scope>
     </dependency>
-    <!-- Database -->
+    <!-- Database -->    
     <dependency>
       <groupId>com.oracle.database.jdbc</groupId>
       <artifactId>ojdbc8</artifactId>
       <version>${ojdbc8.version}</version>
     </dependency>
+
     <dependency>
       <groupId>com.zaxxer</groupId>
       <artifactId>HikariCP</artifactId>
@@ -124,12 +118,24 @@
       <scope>provided</scope>
     </dependency>
     <!-- Test -->
+    <!-- Only needed to run tests in a version of IntelliJ IDEA that bundles older versions -->
     <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>4.13.2</version>
+      <groupId>org.junit.platform</groupId>
+      <artifactId>junit-platform-launcher</artifactId>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-engine</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <!-- // JUnit4 가 호환될 필요는 없다.
+    <dependency>
+      <groupId>org.junit.vintage</groupId>
+      <artifactId>junit-vintage-engine</artifactId>
+      <scope>test</scope>
+    </dependency>
+    -->
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-test</artifactId>
@@ -137,45 +143,5 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
-  <build>
-    <plugins>
-      <plugin>
-        <artifactId>maven-eclipse-plugin</artifactId>
-        <version>2.9</version>
-        <configuration>
-          <additionalProjectnatures>
-            <projectnature>org.springframework.ide.eclipse.core.springnature</projectnature>
-          </additionalProjectnatures>
-          <additionalBuildcommands>
-            <buildcommand>org.springframework.ide.eclipse.core.springbuilder</buildcommand>
-          </additionalBuildcommands>
-          <downloadSources>true</downloadSources>
-          <downloadJavadocs>true</downloadJavadocs>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.8.1</version>
-        <configuration>
-          <source>${java-version}</source>
-          <target>${java-version}</target>
-          <compilerArgs>
-            <arg>-Xlint:all</arg>
-            <arg>-Xlint:-processing</arg>
-          </compilerArgs>
-          <showWarnings>true</showWarnings>
-          <showDeprecation>true</showDeprecation>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>exec-maven-plugin</artifactId>
-        <version>3.0.0</version>
-        <configuration>
-          <mainClass>org.test.int1.Main</mainClass>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
+
 </project>

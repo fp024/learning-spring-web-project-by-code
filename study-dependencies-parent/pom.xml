@@ -32,7 +32,9 @@
     
     <hikaricp.version>5.0.1</hikaricp.version>
 
+    <!-- 설치해서 사용중인 Oracle DB 버전이 18.3이여서, 드라이버 버전도 동일하게 둔다. -->
     <ojdbc8.version>18.3.0.0</ojdbc8.version>
+
     <!-- 
       1. web.xml기반 설정 프로젝트에서 소스파일 변경으로 Jetty의 자동재시작이 일어날때, 
          예외가 발생하여, 9.x에서 10.x로 버전업 해봤는데, 버전 문제는 아닌 것 같다.
@@ -52,7 +54,161 @@
     <mockito.version>4.4.0</mockito.version>
     
     <hamcrest.version>2.2</hamcrest.version>
-  
+
+    <!-- 2.0.0 부터는 Servlet 5.0이상, Java 17이 요구사항이다. 1.1.4 버전을 유지한다. -->
+    <java-time-jsptags.version>1.1.4</java-time-jsptags.version>
+
+    <!-- Jetty Context Path 설정 기본값 -->
+    <jetty-context-path>/</jetty-context-path>
+
   </properties>
+
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.apache.logging.log4j</groupId>
+        <artifactId>log4j-bom</artifactId>
+        <version>${log4j2.version}</version>
+        <scope>import</scope>
+        <type>pom</type>
+      </dependency>
+      <dependency>
+        <groupId>org.junit</groupId>
+        <artifactId>junit-bom</artifactId>
+        <version>${junit.jupiter.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+
+  <build>
+    <pluginManagement>
+      <plugins>
+        <!-- JUnit 5 사용을 위해서 maven-surefire-plugin 버전을 올려두자! -->
+        <plugin>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>2.22.2</version>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+
+    <plugins>
+      <!-- maven-eclipse-plugin 제거, m2e를 사용중이면 아래 내용이 필요없는 것 같다.-->
+      <!-- https://maven.apache.org/plugins/maven-eclipse-plugin/ -->
+      <!--
+      <plugin>
+        <artifactId>maven-eclipse-plugin</artifactId>
+        <version>2.10</version>
+        <configuration>
+          <additionalProjectnatures>
+            <projectnature>org.springframework.ide.eclipse.core.springnature</projectnature>
+          </additionalProjectnatures>
+          <additionalBuildcommands>
+            <buildcommand>org.springframework.ide.eclipse.core.springbuilder</buildcommand>
+          </additionalBuildcommands>
+          <downloadSources>true</downloadSources>
+          <downloadJavadocs>true</downloadJavadocs>
+        </configuration>
+      </plugin>
+      -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.8.1</version>
+        <configuration>
+          <source>${java-version}</source>
+          <target>${java-version}</target>
+          <compilerArgs>
+            <arg>-Xlint:all</arg>
+            <arg>-Xlint:-processing</arg>
+            <!-- No processor claimed any of these annotations 경고는 노출되지않게 설정 -->
+          </compilerArgs>
+          <showWarnings>true</showWarnings>
+          <showDeprecation>true</showDeprecation>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-toolchains-plugin</artifactId>
+        <version>3.0.0</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>toolchain</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <toolchains>
+            <jdk>
+              <version>${java-version}</version>
+            </jdk>
+          </toolchains>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>3.0.0</version>
+        <configuration>
+          <mainClass>org.test.int1.Main</mainClass>
+        </configuration>
+      </plugin>
+      <!-- Jetty 서버 구동 -->
+      <!-- 도움말 자세히보기: mvnw jetty:help -Ddetail=true -Dgoal=run -->
+      <plugin>
+        <!-- https://www.eclipse.org/jetty/documentation/jetty-10/programming-guide/index.html#jetty-maven-plugin -->
+        <groupId>org.eclipse.jetty</groupId>
+        <artifactId>jetty-maven-plugin</artifactId>
+        <version>${jetty.version}</version>
+        <configuration>
+          <webApp>
+            <contextPath>${jetty-context-path}</contextPath>
+            <sessionHandler>
+              <sessionIdPathParameterName>none</sessionIdPathParameterName>
+            </sessionHandler>
+          </webApp>
+          <deployMode>EMBED</deployMode>
+          <stopKey>CTRL+C</stopKey>
+          <stopPort>8999</stopPort>
+          <!-- 9.x 설정: <scanIntervalSeconds> 대신 <scan> 사용 -->
+          <!-- 
+            변경 감지 자동 재시작시 ContextLoaderListener가 제대로 실행되지 않는 오류가 발생한다.
+            설정을 -1로하여 자동 재시작이 일어나지 않도록 한다.
+           -->
+          <scan>-1</scan>
+          <!-- 9.x 설정: <webApp>의 기본값이 ${project.baseDir}/src/main/webapp/WEB-INF/web.xml 으로 정의되어 일부러 선언할 필요는 없음.-->
+          <scanTargetPatterns>
+            <scanTargetPattern>
+              <directory>src/main/webapp/WEB-INF</directory>
+              <includes>
+                <include>**/*.properties</include>
+                <include>**/*.xml</include>
+              </includes>
+              <excludes>
+                <exclude>**/*.jsp</exclude>
+              </excludes>
+            </scanTargetPattern>
+          </scanTargetPatterns>
+        </configuration>
+        <dependencies>
+          <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>apache-jstl</artifactId>
+            <version>${jetty.version}</version>
+            <exclusions>
+              <exclusion>
+                <groupId>org.apache.taglibs</groupId>
+                <artifactId>taglibs-standard-impl</artifactId>
+              </exclusion>
+            </exclusions>
+          </dependency>
+        </dependencies>
+      </plugin>
+    </plugins>
+  </build>
 
 </project>

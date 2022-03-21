@@ -13,7 +13,8 @@
 
 * 실습 진행 환경
   
-    * STS 3 또는 Eclipse 또는 IntelliJ
+    * 개발도구
+        * STS 3, Eclipse, IntelliJ, VS Code
     * Adoptium OpenJDK 17
         * 책 환경: Oracle JDK 1.8
     * Oracle 18c Express Edition
@@ -22,7 +23,7 @@
         * Jetty 10.x (Maven Jetty 플러그인 실행)
         * Tomcat 8.5.x
     * Maven 3.8.x
-      
+    
 
 ## 스터디 진행 목차
 
@@ -138,6 +139,16 @@
   # 최종 진행 완료한 프로젝트를 명시, Linux 스크립트로 시작, 종료시 사용
   LATEST_HOME=part04/jex03
   ```
+
+
+
+## Visual Studio Code 에서 Java Project 인식 시간이 너무 느릴 때... 😥
+
+* `Ctrl` + `<Shift>` + `P` 로 모든 명령 연 다음..
+* java clean 이라고 입력하면...
+* `Java: Clean Java Language Server Workspace` 명령이 뜨는데 이것을 실행해주자! 😄
+
+
 
 
 

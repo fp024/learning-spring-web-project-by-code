@@ -17,8 +17,8 @@ import static org.mybatis.dynamic.sql.SqlBuilder.select;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.fp024.domain.BoardVO;
 import org.fp024.domain.Criteria;
 import org.fp024.domain.SearchType;
@@ -31,9 +31,6 @@ import org.mybatis.dynamic.sql.render.RenderingStrategies;
 import org.mybatis.dynamic.sql.select.QueryExpressionDSL;
 import org.mybatis.dynamic.sql.select.SelectModel;
 import org.springframework.stereotype.Service;
-
-import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * 쿼리 DSL 작성 참조 링크
@@ -168,8 +165,7 @@ public class BoardServiceImpl implements BoardService {
 
   private QueryExpressionDSL<SelectModel> addSearchWhereClause(
       QueryExpressionDSL<SelectModel> selectDSL, Criteria criteria) {
-    List<SearchType> searchTypeList =
-        criteria.getSearchTypeSet().stream().toList();
+    List<SearchType> searchTypeList = criteria.getSearchTypeSet().stream().toList();
     List<AndOrCriteriaGroup> subCriteriaList = new ArrayList<>();
 
     for (int i = 0; i < searchTypeList.size(); i++) {

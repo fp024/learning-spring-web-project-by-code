@@ -1,31 +1,24 @@
 package org.fp024.sample;
 
-import static org.junit.Assert.assertNotNull;
-
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("file:src/main/webapp/WEB-INF/spring/root-context.xml")
+@SpringJUnitConfig(locations = "file:src/main/webapp/WEB-INF/spring/root-context.xml")
 @Slf4j
-public class SampleTest {
-	
-	@Setter(onMethod_= {@Autowired})
-	private Restaurant restaurant;
-	
-	@Test
-	public void testExist() {
-		assertNotNull(restaurant);
+class SampleTest {
 
-		logger.info("{}", restaurant);
-		logger.info("------------------------------------------");
-		logger.info("{}", restaurant.getChef());
-	}
-	
+  @Setter(onMethod_ = {@Autowired})
+  private Restaurant restaurant;
+
+  void testExist() {
+    assertNotNull(restaurant);
+
+    logger.info("{}", restaurant);
+    logger.info("------------------------------------------");
+    logger.info("{}", restaurant.getChef());
+  }
 }
