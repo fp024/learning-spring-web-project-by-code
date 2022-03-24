@@ -1,10 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans:beans
-	xmlns="http://www.springframework.org/schema/mvc"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:beans="http://www.springframework.org/schema/beans"
-	xmlns:context="http://www.springframework.org/schema/context"
-	xsi:schemaLocation="http://www.springframework.org/schema/mvc https://www.springframework.org/schema/mvc/spring-mvc.xsd
+<beans:beans xmlns="http://www.springframework.org/schema/mvc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:beans="http://www.springframework.org/schema/beans" xmlns:context="http://www.springframework.org/schema/context" xsi:schemaLocation="http://www.springframework.org/schema/mvc https://www.springframework.org/schema/mvc/spring-mvc.xsd
 		http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
 
@@ -20,25 +15,22 @@
 
 	<!-- Resolves views selected for rendering by @Controllers to .jsp resources 
 		in the /WEB-INF/views directory -->
-	<beans:bean
-		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+	<beans:bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 		<beans:property name="prefix" value="/WEB-INF/views/" />
 		<beans:property name="suffix" value=".jsp" />
 	</beans:bean>
 
 
-	<beans:bean id="multipartResolver"
-		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+	<beans:bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
 		<beans:property name="defaultEncoding" value="utf-8" />
 		<!-- 1024 * 1024 * 100 bytes = 10MB -->
 		<beans:property name="maxUploadSize" value="1048575600" />
 
 		<!-- 1024 * 1024 * 20 bytes = 2MB -->
-		<beans:property name="maxUploadSizePerFile"
-			value="20971520" />
+		<beans:property name="maxUploadSizePerFile" value="20971520" />
 
-		<beans:property name="uploadTempDir"
-			value="file:/D:/upload/tmp" />
+		<!--<beans:property name="uploadTempDir" value="file:/D:/upload/tmp" />-->
+		<beans:property name="uploadTempDir" value="spring-study-upload-tmp" />
 
 		<!-- Set the maximum allowed size (in bytes) before uploads are written 
 			to disk. Uploaded files will still be received past this amount, but they 
@@ -48,10 +40,8 @@
 
 	</beans:bean>
 
-	<context:component-scan
-		base-package="org.fp024.controller" />
-	<context:component-scan
-		base-package="org.fp024.exception" />
+	<context:component-scan base-package="org.fp024.controller" />
+	<context:component-scan base-package="org.fp024.exception" />
 
 
 </beans:beans>
