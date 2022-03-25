@@ -32,6 +32,30 @@
 
 ### 18.2 AOP 실습
 
+* 프로젝트: 
+  * XML기반설정: [ex04](ex04)
+  * Java 기반설정: [jex04](jex04)
+    
+
+* `acpectjweaver`를 디펜던시하면 `aspectrt`를 디펜던시하지 않아도 되는 것 같다.
+  * 둘다 선언하면 클래스 중복이 일어남.
+
+
+
+### 18.3 AOP 설정
+
+* IntelliJ에서 Spring 네임스페이스 추가
+  * https://stackoverflow.com/questions/9862808/does-intellij-have-spring-namespaces-wizard
+  * Eclipse처럼 별도로 네임스페이스를 추가하는 부분은 없고, 사용할 태그를 입력해주면 자동으로 입력해준다.
+
+
+
+### 18.4 AOP 테스트
+
+
+
+### 18.5 @Around와 ProceedingJoinPoint
+
 
 
 
