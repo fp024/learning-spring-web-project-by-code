@@ -36,6 +36,8 @@
 
     <!-- 설치해서 사용중인 Oracle DB 버전이 18.3이여서, 드라이버 버전도 동일하게 둔다. -->
     <ojdbc8.version>18.3.0.0</ojdbc8.version>
+    <!-- 몇몇 프로젝트에서는 hsqldb로 사용해보자... -->
+    <hsqldb.version>2.6.1</hsqldb.version>
 
     <!-- 
       1. web.xml기반 설정 프로젝트에서 소스파일 변경으로 Jetty의 자동재시작이 일어날때, 
@@ -62,9 +64,10 @@
     
     <commons-fileupload.version>1.4</commons-fileupload.version>
 
+    <mybatis-generator-maven-plugin.version>1.4.1</mybatis-generator-maven-plugin.version>
+
     <!-- Jetty Context Path 설정 기본값 -->
     <jetty-context-path>/</jetty-context-path>
-
   </properties>
 
 

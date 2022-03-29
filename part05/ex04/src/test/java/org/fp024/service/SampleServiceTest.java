@@ -1,7 +1,5 @@
 package org.fp024.service;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +23,6 @@ class SampleServiceTest {
 
   @Test
   void testAddError() {
-    assertThrows(
-        NumberFormatException.class, () -> LOGGER.info(service.doAdd("123", "ABC").toString()));
+    service.doAdd("123", "ABC");
   }
 }

@@ -1,7 +1,5 @@
 package org.fp024.service;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
 import lombok.extern.slf4j.Slf4j;
 import org.fp024.config.RootConfig;
 import org.junit.jupiter.api.Test;
@@ -26,7 +24,7 @@ class SampleServiceTest {
 
   @Test
   void testAddError() {
-    assertThrows(
-        NumberFormatException.class, () -> LOGGER.info(service.doAdd("123", "ABC").toString()));
+    // AOP 코드 상에서 예외 발생시 예외만 잡고, 그것을 따로 던지질 않아서 예외가 던져지지 않는다.
+    service.doAdd("123", "ABC");
   }
 }

@@ -227,7 +227,7 @@
       <plugin>
         <groupId>org.mybatis.generator</groupId>
         <artifactId>mybatis-generator-maven-plugin</artifactId>
-        <version>1.4.0</version>
+        <version>${mybatis-generator-maven-plugin.version}</version>
         <!-- 아래내용을 활성화하면 compile관련 페이즈를 실행할 때도 항상 먼저 실행이된다. -->
         <!-- 나는 필요할때만 mybatis-generator:generate Goal로 쓰기로하자 -->
         <!--
