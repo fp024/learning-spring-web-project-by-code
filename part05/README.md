@@ -184,9 +184,46 @@ CREATE table tbl_sample2 (col2 VARCHAR2(50));
 
 ## 20. 댓글과 댓글 수에 대한 처리
 
+ex05, jex05는 AOP, 트랜잭션 샘플 테스트 프로젝트 이름으로 사용하므로,
+
+Part 4에서 진행했던 프로젝트를 ex05-board, jex05-board 란 이름으로 변경해서 수정하도록 하자!
 
 
-​                                                                                                                              
+
+#### 테이블 데이터 수정
+
+* 게시판 테이블에 댓글 수 컬럼 추가
+
+  ```sql
+  ALTER TABLE tbl_board ADD (replycnt NUMBER DEFAULT 0);
+  ```
+
+* 현재 데이터 기준으로 댓글 수 업데이트
+
+  ```sql
+  UPDATE tbl_board
+    SET replycnt = (
+      SELECT COUNT(rno) 
+        FROM tbl_reply
+       WHERE tbl_reply.bno=tbl_board.bno
+    )
+  ```
+
+  
+
+### 20.1 프로젝트 수정
+
+#### 20.1.2 ReplayServiceImpl의 트랜젝션 처리
+
+#### 20.1.3 화면 수정
+
+댓글 뷰의 카운트 스타일은 sb-admin2 에 있는 CSS 디자인을 사용했다.
+
+```html
+<span class="badge badge-info badge-counter"><c:out value="${board.replyCount}" /></span>
+```
+
+
 
 
 
@@ -196,7 +233,7 @@ CREATE table tbl_sample2 (col2 VARCHAR2(50));
 
 ### HyperSQL DB 사용
 
-* HyperSQL DB 적용시 문제없이 잘 동작하였다.
+* 단순 샘플 프로젝트여서 변경해보았고 문제없이 잘 동작하였다.
 
 ### mybatis generator로 생성
 
@@ -208,20 +245,102 @@ $ mvnw mybatis-generator:generate
 
 
 
+## jex04-board 프로젝트 진행 특이사항
+
+테이블이 변경되었으므로  mybatis generator로 도메인과 매퍼를 다시 만들어야한다. 이런 상황들을 고려해서 자동으로 생성된 코드는 일부러 수정하지 말고 항상 가져다 쓰는 식으로 구현해야한다.
+
+
+
+### 1. Mybatis Dynamic SQL 용 코드 자동생성
+
+`mybatis-generator:generate` 골을 실행하면 같은 도메인 및 매퍼는 덮어씌어진다.
+
+* `generatorConfig.xml`의 게시판 테이블 지정 부분
+
+  ```xml
+  <columnOverride column="replycnt" property="replyCount" jdbcType='BIGINT' javaType='int' />
+  ```
+  
+  BoardVO 도메인에 리플 카운트에 대해 테이블 컬럼명과 이름이 동일하지 않으므로 프로퍼티 설정을 하고, javaType 등을 지정해준다.
+  
+  IntelliJ등에서 인식이 잘 안되면 `.idea` 디렉토리를 지우고 프로젝트를 다시 로드해볼 것..!!!
+  
+
+### 2.  서비스 변경
+
+ex04처럼 매퍼 클래스를 직접 수정하지 말고, 자동생성된 코드를 활용하여 BoardService에서 수정해야한다.
+
+그런데... 아래 쿼리를 바꿔야하는데...
+
+```sql
+UPDATE tbl_board
+   SET replycnt = replycnt + #{amount}
+ WHERE bno = #{bno}
+```
+
+위의 쿼리를 아래처럼 바꿔보았는데.. 잘될지? 테스트를 돌려보니 잘된다.
+
+```java
+  @Override
+  public void updateReplyCount(Long bno, int amount) {
+    mapper.update(
+        c ->
+            c.set(BoardVODynamicSqlSupport.replyCount)
+                .equalToConstant(
+                    String.format("%s + %d", BoardVODynamicSqlSupport.replyCount.name(), amount))
+                .where(BoardVODynamicSqlSupport.bno, isEqualTo(bno)));
+  }
+```
+
+쿼리 실행 결과도 아래와 같이 의도한 대로 되었다. 😂😂😂
+
+```sql
+DEBUG: org.fp024.mapper.BoardMapper.update - ==>  Preparing: update TBL_BOARD set REPLYCNT = REPLYCNT + 0 where BNO = ?
+DEBUG: org.fp024.mapper.BoardMapper.update - ==> Parameters: 10001041(Long)
+DEBUG: org.fp024.mapper.BoardMapper.update - <==    Updates: 1
+
+```
+
+
+
+### 3. 댓글 추가/삭제 코드에 적용
+
+BoardService를 가져와서 동일하게 사용하면 되서 별차이는 없었다.
+
+트랜젝션은 사용하지만 AspectJ 코드를 넣은 부분은 아직 없어서 게시판 프로젝트에서는 `@EnableAspectJAutoProxy`는 넣지 않았다. 
+
 
 
 ---
 
 ## 의견
 
-* 
+* Mybatis Generator 로 생성한 코드를 IntelliJ에서 인식을 너무 못할 때가 있다 😣 결국 VS Code에서 수정함...😅
+* 샘플 프로젝트 ex04, jex04에서는 AOP코드가 있기 때문에 `aspectj-autoproxy`를 추가한 것은 이해했는데, 게시판 코드에서는 스프링 트랜젝션만 쓰기 때문에 이 설정에 의미가 없을 것 같은데.. 일단 게시판 프로젝트에는 추가하지 않았다.
+
+* 수정을 시도하는 Test코드에 `@Transactinal`을 붙이긴했으나... 테스트 코드 수행 후 댓글 카운트가 안맞을 때는 보정을 해주자! 
+
+  ```sql
+  UPDATE tbl_board
+    SET replycnt = (
+      SELECT COUNT(rno) 
+        FROM tbl_reply
+       WHERE tbl_reply.bno=tbl_board.bno
+    );
+    
+    COMMIT;
+  ```
+
+  
 
 
 
 
 ## 정오표
 
-* 
+* 480쪽 alter 윗쪽 설명
+  * 시간이 조금 더 걸릴 수 3. => 시간이 조금 더 걸릴 수 있습니다.
+
 
 
 
