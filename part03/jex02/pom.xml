@@ -146,15 +146,19 @@
       <version>${org.springframework-version}</version>
       <scope>test</scope>
     </dependency>
+    <!-- Test -->
     <!-- Only needed to run tests in a version of IntelliJ IDEA that bundles older versions -->
+    <!-- IntelliJ 최신 버전을 사용중이여서 나한테는 의미 없을 것 같다.-->
+    <!--
     <dependency>
       <groupId>org.junit.platform</groupId>
       <artifactId>junit-platform-launcher</artifactId>
       <scope>test</scope>
     </dependency>
+    -->
     <dependency>
       <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-engine</artifactId>
+      <artifactId>junit-jupiter</artifactId>
       <scope>test</scope>
     </dependency>
     <!-- // JUnit4 가 호환될 필요는 없다.
