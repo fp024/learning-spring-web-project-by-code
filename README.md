@@ -15,14 +15,23 @@
   
     * 개발도구
         * STS 3, Eclipse, IntelliJ, VS Code
-    * Adoptium OpenJDK 17
+    * JDK
+        * [Temurin OpenJDK 17](https://adoptium.net/temurin/archive)
         * 책 환경: Oracle JDK 1.8
-    * Oracle 18c Express Edition
-        * 책 환경: Oracle 11c Express Edition
+        
+    * Database
+        * Oracle 18c Express Edition
+            * 책 환경: Oracle 11c Express Edition
+    
+        * [HyperSQL DB 2.6.x](http://hsqldb.org/)
+            * 일부 단순 프로젝트, 최종 프로젝트
+                * Java 기반 설정과 [Mybatis Dynamic SQL](https://mybatis.org/mybatis-dynamic-sql/docs/introduction.html)를 적용한 최종장 프로젝트는 Oracle이 없더라도 Pull 만 받아서 바로 실행가능하도록 HyperSQL DB Embedded 적용 목표.
+    
     * WAS
-        * Jetty 10.x (Maven Jetty 플러그인 실행)
-        * Tomcat 8.5.x
-    * Maven 3.8.x
+        * [Jetty 10.x](https://mvnrepository.com/artifact/org.eclipse.jetty/jetty-maven-plugin) (Maven Jetty 플러그인 실행)
+        * [Tomcat 8.5.x](https://tomcat.apache.org/download-80.cgi)
+    * 빌드 도구
+        * [Maven 3.8.x](https://maven.apache.org/index.html)
     
 
 ## 스터디 진행 목차
@@ -33,13 +42,13 @@
 * [Part 3. 기본적인 웹 게시물 관리](part03)
 * [Part 4. REST 방식과 Ajax를 이용하는 댓글 처리](part04)
 * [Part 5. AOP와 트랜젝션](part05)
-* Part 6. 파일 업로드 처리
+* [Part 6. 파일 업로드 처리](part06)
 * Part 7. Spring Web Security를 이용한 로그인 처리
 * 부록
 
 
 
-## 버전관리 Maven Parent 프로젝트
+## 라이브러리 버전 관리 목적의 Maven Parent 프로젝트
 
 디펜던시하고 있는 라이브러리들의 버전 관리를 하나의 POM에서 하기 위해서, 부모 POM으로 분리해두었음.
 
@@ -51,7 +60,7 @@
 
 * Oracle JDK는 개인 용도 사용이 아닌 경우라면 라이선스 문제가 있을 수 있어, OpenJDK 설치로
   소개해주시면 좋을 것 같습니다.
-    * https://adoptium.net/?variant=openjdk11&jvmVariant=hotspot
+    * https://adoptium.net/temurin/archive
     * Oracle의 Java SE TCK 테스트 통과
         * https://blog.adoptopenjdk.net/2021/08/goodbye-adoptopenjdk-hello-adoptium/
 
@@ -116,7 +125,7 @@
 
 * [stop-server.sh](stop-server.sh) : 서버 종료
 
-* [show-log.sh](show-log.sh): 실행 로그 보기
+* [show-log.sh](show-log.sh): 실행 로그 보기 (최초 시작후 로그만 남김, log rotate등은 적용하지 않음, 재부팅 때마다 새로 갱신)
 
 * `crontab -e` 설정
 

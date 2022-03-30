@@ -10,7 +10,7 @@
   </parent>
 
   <artifactId>ex04</artifactId>
-  <name>ex04 - AOP Study</name>
+  <name>${project.artifactId} - AOP Study</name>
   <packaging>war</packaging>
 
   <dependencies>
