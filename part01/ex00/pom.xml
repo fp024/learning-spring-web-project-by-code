@@ -62,20 +62,20 @@
     <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>javax.servlet-api</artifactId>
-      <version>3.1.0</version>
+      <version>${javax.servlet-api.version}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>javax.servlet.jsp</groupId>
       <artifactId>javax.servlet.jsp-api</artifactId>
-      <version>2.3.3</version>
+      <version>${javax.servlet.jsp-api.version}</version>
       <scope>provided</scope>
     </dependency>
     <!-- Jetty는 jstl 라이브러리를 가지고 있지만 tomcat은 가지고 있지 않다. provided로 설정하지말자! -->
     <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>jstl</artifactId>
-      <version>1.2</version>
+      <version>${jstl.version}</version>
       <scope>runtime</scope>
     </dependency>
     <!-- Database -->    

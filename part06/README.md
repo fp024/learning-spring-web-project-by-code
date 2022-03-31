@@ -15,11 +15,43 @@
 
 
 
+#### 서버에서 첨부파일을 처리할 때 사용하는 API
+
+* [commons-fileupload](https://commons.apache.org/proper/commons-fileupload/): 가장 일반적으로 사용됨, Servlet 3.0 이전에도 사용가능
+* Servlet 3.0 이상: 자체적으로 파일 업로드 처리 API 지원
+
+
+
+#### 업로드 디렉토리 경로 구성
+
+* `C:\upload\temp`
+  * 필요하다면 mklink /J 로 정션 링크를 구성하자!
+
+
+
+
+
 ### 21.1 스프링 첨부파일을 위한 설정
 
 * 프로젝트
   * XML설정기반: [ex05](ex05)
   * Java 설정기반: [jex05](jex05)
+
+#### 21.1.1 web.xml을 이용하는 경우의 첨부파일 설정
+
+서블릿 2.5, 3.1, 4.0 혼재되어있던 코드를 4.0으로 통일하고 Maven 버전 프로퍼티를 정리하였다.
+
+* web.xml의 상위 스키마 선언 부는 4.0 버전으로 전부 변경
+
+  ```xml
+  <web-app
+    xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
+    version="4.0">
+  ```
+
+  
 
 
 
