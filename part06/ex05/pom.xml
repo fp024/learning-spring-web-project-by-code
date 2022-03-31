@@ -77,11 +77,14 @@
       <version>${jackson-databind.version}</version>
     </dependency>
     <!-- 파일 업로드 -->
+    <!-- Servlet 4.0을 지원하는 WAS를 사용하므로, commons-fileupload는 사용하지 않는다. -->
+    <!--
     <dependency>
       <groupId>commons-fileupload</groupId>
       <artifactId>commons-fileupload</artifactId>
       <version>${commons-fileupload.version}</version>
     </dependency>
+    -->
     <!-- lombok  -->
     <dependency>
       <groupId>org.projectlombok</groupId>

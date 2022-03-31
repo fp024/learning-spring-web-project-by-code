@@ -139,6 +139,7 @@
         </plugin>
         <!-- JUnit 5 사용을 위해서 maven-surefire-plugin 버전을 올려두자! -->
         <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-surefire-plugin</artifactId>
           <version>${maven-surefire-plugin.version}</version>
         </plugin>

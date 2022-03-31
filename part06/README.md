@@ -29,8 +29,6 @@
 
 
 
-
-
 ### 21.1 스프링 첨부파일을 위한 설정
 
 * 프로젝트
@@ -51,7 +49,36 @@
     version="4.0">
   ```
 
+* `<multipart-config>` 설정
+
+  ```xml
+      <multipart-config>
+        <!-- 파일을 저장할 공간 -->
+        <location>C:\\upload\\temp</location>
+        <!-- 업로드되는 파일의 최대 크기 -->
+        <max-file-size>20971520</max-file-size> <!-- 1MB * 20 -->
+        <!-- 한번에 올릴 수 있는 최대 크기 -->
+        <max-request-size>41943040</max-request-size> <!-- 40MB -->
+        <!-- 파일이 메모리에 기록되는 임계값  -->
+        <file-size-threshold>20971520</file-size-threshold> <!-- 20MB -->
+      </multipart-config>
+  ```
+
+* 스프링에서의 업로드 처리는 MultipartResolver 타입의 빈을 등록해야 가능하다. (servlet-context.xml)
+
+  ```xml
+  	<!-- commons-fileupload를 사용할 때와는 다르게, 이 빈에 상세 속성을 적지 않고, web.xml에 정의된 값을 따르는 것 같다. -->
+  	<beans:bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver" />
   
+  ```
+
+  
+
+#### 21.1.2 Java 설정을 이용하는 경우
+
+
+
+
 
 
 
