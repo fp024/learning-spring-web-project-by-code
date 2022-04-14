@@ -53,7 +53,7 @@ class ReplyServiceImplTest {
 
   @Test
   void testRead() {
-    long targetRno = 227L;
+    long targetRno = 100L;
     ReplyVO vo = replyService.get(targetRno);
     LOGGER.info("{}", vo);
   }
@@ -68,7 +68,7 @@ class ReplyServiceImplTest {
   @Transactional
   @Test
   void testUpdate() {
-    long targetRno = 124L;
+    long targetRno = 2L;
 
     ReplyVO vo = replyService.get(targetRno);
 
@@ -91,7 +91,7 @@ class ReplyServiceImplTest {
   @Test
   void testListPaging() {
     Criteria cri = new Criteria(4, PageSize.SIZE_10);
-    ReplyPageDTO replyPageDTO = replyService.getListPage(cri, 10000521L);
+    ReplyPageDTO replyPageDTO = replyService.getListPage(cri, 100L);
     replyPageDTO.getList().forEach(reply -> LOGGER.info("reply: {}", reply));
   }
 }

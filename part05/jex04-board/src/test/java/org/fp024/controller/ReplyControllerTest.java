@@ -1,5 +1,11 @@
 package org.fp024.controller;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
 import lombok.extern.slf4j.Slf4j;
 import org.fp024.config.RootConfig;
 import org.fp024.config.ServletConfig;
@@ -16,13 +22,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.filter.CharacterEncodingFilter;
-
-import java.nio.charset.StandardCharsets;
-import java.time.LocalDateTime;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringJUnitWebConfig(classes = {RootConfig.class, ServletConfig.class})
 @Slf4j
@@ -46,7 +45,7 @@ class ReplyControllerTest {
   @Test
   void testCreate() throws Exception {
     ReplyVO reply = new ReplyVO();
-    reply.setBno(10000501L);
+    reply.setBno(1L);
     reply.setReply("Hello Reply");
     reply.setReplyer("user00");
 
@@ -71,8 +70,7 @@ class ReplyControllerTest {
     String responseContent =
         mockMvc
             .perform(
-                MockMvcRequestBuilders.get("/replies/pages/10000521/2")
-                    .accept(MediaType.APPLICATION_JSON))
+                MockMvcRequestBuilders.get("/replies/pages/1/2").accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andReturn()
             .getResponse()

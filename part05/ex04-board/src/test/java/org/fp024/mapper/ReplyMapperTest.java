@@ -1,5 +1,8 @@
 package org.fp024.mapper;
 
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import lombok.extern.slf4j.Slf4j;
 import org.fp024.domain.BoardVO;
 import org.fp024.domain.Criteria;
@@ -8,10 +11,6 @@ import org.fp024.domain.ReplyVO;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
-
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 import org.springframework.transaction.annotation.Transactional;
 
 @SpringJUnitConfig(locations = "file:src/main/webapp/WEB-INF/spring/root-context.xml")
@@ -72,7 +71,7 @@ public class ReplyMapperTest {
   @Transactional
   @Test
   void testUpdate() {
-    long targetRno = 10L;
+    long targetRno = 2L;
 
     ReplyVO vo = mapper.read(targetRno);
 

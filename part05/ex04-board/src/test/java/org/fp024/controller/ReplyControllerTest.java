@@ -1,5 +1,11 @@
 package org.fp024.controller;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
 import lombok.extern.slf4j.Slf4j;
 import org.fp024.domain.ReplyVO;
 import org.fp024.service.ReplyService;
@@ -13,13 +19,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.filter.CharacterEncodingFilter;
-
-import java.nio.charset.StandardCharsets;
-import java.time.LocalDateTime;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringJUnitWebConfig(
     locations = {
@@ -43,7 +42,7 @@ class ReplyControllerTest {
   @Test
   void testCreate() throws Exception {
     ReplyVO reply = new ReplyVO();
-    reply.setBno(10000501L);
+    reply.setBno(100L);
     reply.setReply("Hello Reply");
     reply.setReplyer("user00");
 

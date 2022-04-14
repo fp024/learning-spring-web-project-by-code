@@ -38,6 +38,7 @@
 
 * [Part 1. 스프링 개발환경 구축](part01)
   * [데이터베이스 설정](part01/ex00/database)
+  * [데이터베이스 스키마 변경과정](db-schema.md)
 * [Part 2. 스프링 MVC설정](part02)
 * [Part 3. 기본적인 웹 게시물 관리](part03)
 * [Part 4. REST 방식과 Ajax를 이용하는 댓글 처리](part04)

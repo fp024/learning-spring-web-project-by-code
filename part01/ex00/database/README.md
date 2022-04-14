@@ -57,3 +57,24 @@
 ## 드라이버 클래스 
 * Oracle 9이후로 oracle.jdbc.driver.OracleDriver 대신에 oracle.jdbc.OracleDriver를 사용해야한다고 함. 예전 클래스가 경로에 남아있긴 하지만, HikariCP 초기화시 경고가 나타남 
 
+
+
+
+
+## ✨Docker를 통한 생성
+
+* [DB 이미지 생성](https://github.com/fp024/etc/blob/main/docker/DB%20%EC%9D%B4%EB%AF%B8%EC%A7%80%20%EC%83%9D%EC%84%B1.md)
+
+위의 문서의 Oralce XE 18c Docker 명령어를 참조해서 사용하고, Docker 에서는 별도로 `SPRING_TEST`라는 테이블 스페이스를 만들지 않았으니 기본으로 존재하는 `USERS` 테이블 스페이스를 사용하자!
+
+```sql
+ALTER SESSION SET "_ORACLE_SCRIPT"=true;
+
+CREATE USER book_ex IDENTIFIED BY book_ex
+DEFAULT TABLESPACE USERS
+TEMPORARY TABLESPACE TEMP;
+
+GRANT CONNECT, RESOURCE TO book_ex;
+```
+
+Windows 10 이상의 WSL2 환경에서 Docker Desktop으로 편하게 사용할 수 있었다. 😁
