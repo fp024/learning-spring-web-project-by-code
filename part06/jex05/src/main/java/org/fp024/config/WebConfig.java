@@ -4,10 +4,12 @@ import java.nio.charset.StandardCharsets;
 import javax.servlet.Filter;
 import javax.servlet.MultipartConfigElement;
 import javax.servlet.ServletRegistration;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 /** web.xml 대체 */
+@Slf4j
 public class WebConfig extends AbstractAnnotationConfigDispatcherServletInitializer {
 
   @Override
@@ -37,9 +39,18 @@ public class WebConfig extends AbstractAnnotationConfigDispatcherServletInitiali
   @Override
   protected void customizeRegistration(ServletRegistration.Dynamic registration) {
     registration.setInitParameter("throwExceptionIfNoHandlerFound", "true");
-
     MultipartConfigElement multipartConfig =
-        new MultipartConfigElement("C:\\upload\\temp", 20971520, 41943040, 20971520);
+        new MultipartConfigElement(
+            ProjectDataUtils.getProperty("multipart.uploadTempFolder"),
+            ProjectDataUtils.getLongProperty("multipart.maxFileSize"),
+            ProjectDataUtils.getLongProperty("multipart.maxRequestSize"),
+            ProjectDataUtils.getIntegerProperty("multipart.fileSizeThreshold"));
+
+    LOGGER.info("### multipart config의 location 값: {}", multipartConfig.getLocation());
+    LOGGER.info("### multipart config의 maxFileSize 값: {}", multipartConfig.getMaxFileSize());
+    LOGGER.info("### multipart config의 maxRequestSize 값: {}", multipartConfig.getMaxRequestSize());
+    LOGGER.info(
+        "### multipart config의 fileSizeThreshold 값: {}", multipartConfig.getFileSizeThreshold());
     registration.setMultipartConfig(multipartConfig);
   }
 }
