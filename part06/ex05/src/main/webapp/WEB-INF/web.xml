@@ -61,7 +61,7 @@
     <load-on-startup>1</load-on-startup>
 
     <multipart-config>
-      <!-- 파일을 저장할 공간 -->
+      <!-- 20MB가 넘는 상황이 발생할 때, 임시로 파일을 저장할 공간 -->
       <location>C:\\upload\\temp</location>
       <!-- 업로드되는 파일의 최대 크기 -->
       <max-file-size>20971520</max-file-size> <!-- 1MB * 20 -->
