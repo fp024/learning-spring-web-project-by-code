@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
@@ -12,6 +14,46 @@
   <artifactId>ex05</artifactId>
   <name>${project.artifactId}</name>
   <packaging>war</packaging>
+
+  <!-- web.xml에서 경로 변화를 주기위해, profile을 윈도우와 리눅스 환경으로 나눠보았다. -->
+  <profiles>
+    <profile>
+      <id>win</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+        <os>
+          <family>windows</family>
+        </os>
+      </activation>
+      <properties>
+        <env>win</env>
+        <webXmlFileName>web.xml</webXmlFileName>
+      </properties>
+    </profile>
+
+    <profile>
+      <id>linux</id>
+      <activation>
+        <os>
+          <family>linux</family>
+        </os>
+      </activation>
+      <properties>
+        <env>linux</env>
+        <webXmlFileName>web-linux.xml</webXmlFileName>
+      </properties>
+
+      <build>
+        <resources>
+          <resource>
+            <directory>src/main/resources/${linux}</directory>
+          </resource>
+        </resources>
+      </build>
+
+    </profile>
+  </profiles>
+
 
   <dependencies>
     <!-- Spring -->
@@ -105,5 +147,21 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
+
+  <build>
+
+
+
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-war-plugin</artifactId>
+        <version>${maven-war-plugin.version}</version>
+        <configuration>
+          <webXml>${basedir}/src/main/webapp/WEB-INF/${webXmlFileName}</webXml>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 
 </project>

@@ -59,7 +59,7 @@
         <max-file-size>20971520</max-file-size> <!-- 1MB * 20 -->
         <!-- 한번에 올릴 수 있는 최대 크기 -->
         <max-request-size>41943040</max-request-size> <!-- 40MB -->
-        <!-- 파일이 메모리에 기록되는 임계값  -->
+        <!-- 파일이 디스크에 기록될 때까지의 크기 임계값 -->
         <file-size-threshold>20971520</file-size-threshold> <!-- 20MB -->
       </multipart-config>
   ```
@@ -68,7 +68,7 @@
 
   ```xml
   	<!-- commons-fileupload를 사용할 때와는 다르게, 이 빈에 상세 속성을 적지 않고, web.xml에 정의된 값을 따르는 것 같다. -->
-  	<beans:bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver" />
+  	<beans:bean id="multipartResolver" class="org.springframework.web.multipart.support.StandardServletMultipartResolver" />
   
   ```
 
@@ -76,11 +76,40 @@
 
 #### 21.1.2 Java 설정을 이용하는 경우
 
+* MultipartConfigElement 클래스 이용
+  * https://docs.oracle.com/javaee/7/api/javax/servlet/MultipartConfigElement.html
 
+* WebConfig 클래스
 
+  ```java
+    /** 처리할 수 있는 핸들러를 찾을 수 없을 때, 404를 예외로 처리하는 사용자 정의 설정 서블릿 3.0 이상에서 설정 가능. */
+    @Override
+    protected void customizeRegistration(ServletRegistration.Dynamic registration) {
+      registration.setInitParameter("throwExceptionIfNoHandlerFound", "true");
+  
+      MultipartConfigElement multipartConfig =
+          new MultipartConfigElement("C:\\upload\\temp", 20971520, 41943040, 20971520);
+      registration.setMultipartConfig(multipartConfig);
+    }
+  ```
 
+* ServletConfig 클래스
 
+  ```java
+    @Bean
+    public MultipartResolver multipartResolver() {
+      return new StandardServletMultipartResolver();
+    }
+  ```
 
+  
+
+### 21.2 \<form> 방식의 업로드
+
+#### 21.2.1 MultipartFile 타입
+
+* getOriginalFilename() 로 파일 명을 얻을 때, IE에서의 업로드는 파일경로 + 파일이름의 전체 경로가 나오고, Chrome에서는 파일이름만 받을 수 있었다.
+* 책에서는 아직 한글 파일 입력이 안된다고 하였는데, 현재 설정한 프로젝트에서는 CharacterEncodingFilter 으로 강제 UTF-8 설정을 하고 있어서 한글파일 인식에 문제는 없었다.
 
 
 
