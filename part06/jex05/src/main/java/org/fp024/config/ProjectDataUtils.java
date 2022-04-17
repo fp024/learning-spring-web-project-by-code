@@ -9,9 +9,11 @@ import org.fp024.util.Resources;
 /** Project Data 프러퍼티 관리 유틸리티 */
 @Slf4j
 public final class ProjectDataUtils {
+  private static final Properties PROPERTIES = getProperties();
+
   /** Properties 를 외부로 공개하지 말고, 키로 값을 가져올 수 있는 getProperty 메서드만 추가해주자! */
   public static String getProperty(String key) {
-    return getProperties().getProperty(key);
+    return PROPERTIES.getProperty(key);
   }
 
   public static int getIntegerProperty(String key) {
