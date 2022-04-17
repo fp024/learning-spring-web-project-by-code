@@ -25,7 +25,7 @@
       </activation>
       <properties>
         <env>win</env>
-        <webXmlFileName>web.xml</webXmlFileName>
+        <web-xml-location>${project.basedir}/src/main/webapp/WEB-INF/web.xml</web-xml-location>
       </properties>
     </profile>
 
@@ -38,7 +38,7 @@
       </activation>
       <properties>
         <env>linux</env>
-        <webXmlFileName>web-linux.xml</webXmlFileName>
+        <web-xml-location>${project.basedir}/src/main/webapp/WEB-INF/web-${env}.xml</web-xml-location>
       </properties>
 
       <build>
@@ -152,15 +152,13 @@
   </dependencies>
 
   <build>
-
-
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-war-plugin</artifactId>
         <version>${maven-war-plugin.version}</version>
         <configuration>
-          <webXml>${basedir}/src/main/webapp/WEB-INF/${webXmlFileName}</webXml>
+          <webXml>${web-xml-location}</webXml>
         </configuration>
       </plugin>
     </plugins>

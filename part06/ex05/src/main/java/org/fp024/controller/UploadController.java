@@ -1,5 +1,6 @@
 package org.fp024.controller;
 
+import java.io.File;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
@@ -28,6 +29,15 @@ public class UploadController {
       LOGGER.info("------------------------------------");
       LOGGER.info("Upload File Name: {}", multipartFile.getOriginalFilename());
       LOGGER.info("Upload File Size: {}", multipartFile.getSize());
+
+      File saveFile = new File(uploadFolder, multipartFile.getOriginalFilename());
+
+      try {
+        multipartFile.transferTo(saveFile);
+      } catch (Exception e) {
+
+        LOGGER.error(e.getMessage(), e);
+      }
     }
   }
 }
