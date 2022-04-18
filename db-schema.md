@@ -70,6 +70,10 @@ ALTER TABLE tbl_reply ADD CONSTRAINT fk_reply_board
  ******************/
 ALTER TABLE tbl_board ADD (replycnt NUMBER DEFAULT 0);
 
+/* 트랜젝션 동작 확인용 단순 테이블 */
+/* jex04는 HSQLDB를 사용하니, SET DATABASE SQL SYNTAX ORA TRUE 로 실행후에 테이블을 만들어주자! */
+CREATE table tbl_sample1 (col1 VARCHAR2(500));
+CREATE table tbl_sample2 (col2 VARCHAR2(50));
 
 
 
