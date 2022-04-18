@@ -1,14 +1,14 @@
 package org.fp024.controller;
 
-import java.io.File;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.File;
 
 @Controller
 @Slf4j
@@ -20,17 +20,21 @@ public class UploadController {
     LOGGER.info("upload form");
   }
 
-  @Value("${uploadFolder}")
+  @Value("${multipart.uploadFolder}")
   private String uploadFolder;
 
   @PostMapping("/uploadFormAction")
-  public void uploadFormPost(MultipartFile[] uploadFile, Model model) {
+  public void uploadFormPost(MultipartFile[] uploadFile) {
     for (MultipartFile multipartFile : uploadFile) {
       LOGGER.info("------------------------------------");
       LOGGER.info("Upload File Name: {}", multipartFile.getOriginalFilename());
       LOGGER.info("Upload File Size: {}", multipartFile.getSize());
 
       File saveFile = new File(uploadFolder, "tmp_" + multipartFile.getOriginalFilename());
+
+      File renamedFile = new File(uploadFolder, multipartFile.getOriginalFilename());
+      // 테스트를 위해 이미 파일이 있다면 지워주자.
+      renamedFile.delete();
 
       try {
         multipartFile.transferTo(saveFile);
@@ -47,7 +51,48 @@ public class UploadController {
         // 동시에 2MB씩 10개 이상 파일이 업로드 시도 되었을 때에 한해서, 해당 디렉토리에 임시 파일이 생성되는 것을
         // 볼 수 있을 것 같긴하다.
         //
-        saveFile.renameTo(new File(uploadFolder, multipartFile.getOriginalFilename()));
+        if (!saveFile.renameTo(renamedFile)) {
+          throw new IllegalStateException("임시파일 이름 변경 실패");
+        }
+      } catch (Exception e) {
+        LOGGER.error(e.getMessage(), e);
+      }
+    }
+  }
+
+  @GetMapping("/uploadAjax")
+  public void uploadAjax() {
+    LOGGER.info("upload ajax");
+  }
+
+  @PostMapping("/uploadAjaxAction")
+  public void uploadAjaxPost(MultipartFile[] uploadFile) {
+    LOGGER.info("update ajax post........");
+
+    for (MultipartFile multipartFile : uploadFile) {
+      LOGGER.info("------------------------------------");
+      LOGGER.info("Upload File Name: {}", multipartFile.getOriginalFilename());
+      LOGGER.info("Upload File Size: {}", multipartFile.getSize());
+
+      String uploadFileName = multipartFile.getOriginalFilename();
+
+      // IE 는 파일 경로를 가짐.
+      uploadFileName = uploadFileName.substring(uploadFileName.indexOf(File.pathSeparator) + 1);
+      LOGGER.info("경로를 제외한 파일명: {}", uploadFileName);
+
+      File saveTempFile = new File(uploadFolder, "tmp_" + uploadFileName);
+
+      File renamedFile = new File(uploadFolder, uploadFileName);
+      // 테스트를 위해 이미 파일이 있다면 지워주자.
+      renamedFile.delete();
+
+      try {
+        multipartFile.transferTo(saveTempFile);
+
+        if (!saveTempFile.renameTo(renamedFile)) {
+          throw new IllegalStateException("임시파일 이름 변경 실패");
+        }
+
       } catch (Exception e) {
         LOGGER.error(e.getMessage(), e);
       }

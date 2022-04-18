@@ -109,7 +109,112 @@
 #### 21.2.1 MultipartFile 타입
 
 * getOriginalFilename() 로 파일 명을 얻을 때, IE에서의 업로드는 파일경로 + 파일이름의 전체 경로가 나오고, Chrome에서는 파일이름만 받을 수 있었다.
+
 * 책에서는 아직 한글 파일 입력이 안된다고 하였는데, 현재 설정한 프로젝트에서는 CharacterEncodingFilter 으로 강제 UTF-8 설정을 하고 있어서 한글파일 인식에 문제는 없었다.
+
+* **특이사항**
+
+  * MultipartFile을 사용한 컨트롤러 메서드 종료 후, 파일이 자동 정리 되는 (clean up) 현상이 나타났다.
+
+    ```java
+    @PostMapping("/uploadFormAction")
+      public void uploadFormPost(MultipartFile[] uploadFile, Model model) {
+        for (MultipartFile multipartFile : uploadFile) {
+          LOGGER.info("------------------------------------");
+          LOGGER.info("Upload File Name: {}", multipartFile.getOriginalFilename());
+          LOGGER.info("Upload File Size: {}", multipartFile.getSize());
+    
+          File saveFile = new File(uploadFolder, "tmp_" + multipartFile.getOriginalFilename());
+    
+          try {
+            multipartFile.transferTo(saveFile);
+            // transferTo()로 처음 생성한 파일은 (메모리 -> 파일저장) 메서드가 끝날때 자동 정리되는 것 같다.
+            //
+            // StandardServletMultipartResolver 클래스의 cleanupMultipart 메서드 참조바람!!!
+            //
+            // 파일이 업로드 된 이후 뭔가 다른 처리를 해줘야하는 것을 권고하는 것 같은데..
+            // 이 프로젝트는 테스트 동작 확인용이여서, 최초 생성할 때는 tmp_파일명으로 생성후 이후 tmp_를 제거하는 식으로
+            // 이름만 바꾸어줬다.
+            //
+            // web.xml의 <multipart-config> 이하 <location> 설정은...
+            // <file-size-threshold> 를 초과했을 때, 임시로 사용할 디스크 경로라고 하는데,
+            // 동시에 2MB씩 10개 이상 파일이 업로드 시도 되었을 때에 한해서, 해당 디렉토리에 임시 파일이 생성되는 것을
+            // 볼 수 있을 것 같긴하다.
+            //
+            saveFile.renameTo(new File(uploadFolder, multipartFile.getOriginalFilename()));
+          } catch (Exception e) {
+            LOGGER.error(e.getMessage(), e);
+          }
+        }
+      }
+    ```
+
+    일단 uploadFormPost 메서드는 약간의 파일 처리를 추가해서 자동 삭제를 막았다.
+
+  * **linux 환경에서도 실행 테스트를 하기 때문에 Maven에서 프로필 환경을 분리했다.**
+
+    ```xml
+      <!-- web.xml에서 경로 변화를 주기위해, profile을 윈도우와 리눅스 환경으로 나눠보았다. -->
+      <profiles>
+        <profile>
+          <id>win</id>
+          <activation>
+            <activeByDefault>true</activeByDefault>
+            <os>
+              <family>windows</family>
+            </os>
+          </activation>
+          <properties>
+            <env>win</env>
+            <web-xml-location>${project.basedir}/src/main/webapp/WEB-INF/web.xml</web-xml-location>
+          </properties>
+        </profile>
+    
+        <profile>
+          <id>linux</id>
+          <activation>
+            <os>
+              <family>linux</family>
+            </os>
+          </activation>
+          <properties>
+            <env>linux</env>
+            <web-xml-location>${project.basedir}/src/main/webapp/WEB-INF/web-${env}.xml</web-xml-location>
+          </properties>
+    
+          <build>
+            <resources>
+              <resource>
+                <directory>src/main/resources/${env}</directory>
+              </resource>
+              <resource>
+                <directory>src/main/resources</directory>
+                <excludes>
+                  <exclude>project-data.properties</exclude>
+                </excludes>
+              </resource>
+            </resources>
+          </build>
+        </profile>
+      </profiles>
+    ```
+
+    web.xml 과 project-data.properties 파일이 윈도우, 리눅스 환경으로 각각 구분될 필요가 있는데, Maven의 profile 기능으로 Maven 실행 환경에 따라 필요한 파일이 사용되도록 하였다.
+
+
+
+
+### 21.3 Ajax 방식의 업로드
+
+이부분은 ex05프로젝트에서는 책의 내용대로 jQuery로 진행하고 jex05 프로젝트에서는 최신 자바스크립트의 내장 메서드를 사용하는 쪽으로 구현해보자!
+
+
+
+
+
+
+
+
 
 
 
