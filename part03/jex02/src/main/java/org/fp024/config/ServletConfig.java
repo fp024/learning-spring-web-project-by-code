@@ -22,7 +22,8 @@ public class ServletConfig implements WebMvcConfigurer {
 
   @Override
   public void addResourceHandlers(ResourceHandlerRegistry registry) {
-    registry.addResourceHandler("/resources/**").addResourceLocations("/resources/");
-    registry.addResourceHandler("/favicon.ico").addResourceLocations("/favicon.ico");
+    registry
+        .addResourceHandler("/resources/**", "/favicon.ico")
+        .addResourceLocations("/resources/");
   }
 }

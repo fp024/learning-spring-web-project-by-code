@@ -16,8 +16,7 @@
     보통 별도의 처리 코드를 만드는 것 같던데... 이렇게 해도 다른 문제는 없을지? 일단 동작은 잘된다. 
     * https://www.baeldung.com/spring-boot-favicon
   -->
-  <resources mapping="/favicon.ico" location="/favicon.ico" />
-  
+  <resources mapping="/favicon.ico" location="/resources/" />
 
 	<!-- Resolves views selected for rendering by @Controllers to .jsp resources in the /WEB-INF/views directory -->
   <beans:bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">

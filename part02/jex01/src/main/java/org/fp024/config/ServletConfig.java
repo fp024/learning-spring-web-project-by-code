@@ -1,6 +1,5 @@
 package org.fp024.config;
 
-import java.io.IOException;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.core.io.FileSystemResource;
@@ -11,6 +10,8 @@ import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
+
+import java.io.IOException;
 
 @EnableWebMvc
 @ComponentScan(basePackages = {"org.fp024.controller", "org.fp024.exception"})
@@ -27,7 +28,9 @@ public class ServletConfig implements WebMvcConfigurer {
 
   @Override
   public void addResourceHandlers(ResourceHandlerRegistry registry) {
-    registry.addResourceHandler("/resources/**").addResourceLocations("/resources/");
+    registry
+        .addResourceHandler("/resources/**", "/favicon.ico")
+        .addResourceLocations("/resources/");
   }
 
   @Bean(name = "multipartResolver")

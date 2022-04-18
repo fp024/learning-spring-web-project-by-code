@@ -1,6 +1,5 @@
 package org.fp024.config;
 
-import java.util.List;
 import org.fp024.util.GsonHelper;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -11,6 +10,8 @@ import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
+
+import java.util.List;
 
 @EnableWebMvc
 @ComponentScan(basePackages = {"org.fp024.controller"})
@@ -26,8 +27,9 @@ public class ServletConfig implements WebMvcConfigurer {
 
   @Override
   public void addResourceHandlers(ResourceHandlerRegistry registry) {
-    registry.addResourceHandler("/resources/**").addResourceLocations("/resources/");
-    registry.addResourceHandler("/favicon.ico").addResourceLocations("/favicon.ico");
+    registry
+        .addResourceHandler("/resources/**", "/favicon.ico")
+        .addResourceLocations("/resources/");
   }
 
   @Override
