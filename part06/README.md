@@ -208,13 +208,35 @@
 
 이부분은 ex05프로젝트에서는 책의 내용대로 jQuery로 진행하고 jex05 프로젝트에서는 최신 자바스크립트의 내장 메서드를 사용하는 쪽으로 구현해보자!
 
+* jex06 프로젝트의 uploadAjax.jsp에서는 jQuery 대신 최신 자바스크립트로 로직을 구성
 
+  ```javascript
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelector('button').addEventListener('click', () => {
+        const formData = new FormData()
+        const inputFile = document.querySelector('input[name="uploadFile"]')
+        const files = inputFile.files // input이 1개가 명백하니, querySelector를 사용했고, 이것은 배열을 반환하지 않으므로, 배열참조를 제거하자!
+  
+        console.log(files)
+  
+        // 파일 데이터를 폼 데이터에 추가
+        for (let i = 0; i < files.length; i++) {
+          formData.append("uploadFile", files[i])
+        }
+  
+        fetch("/uploadAjaxAction", {
+          method: "POST",
+          body: formData
+        }).then(response => { // https://developer.mozilla.org/en-US/docs/Web/API/Response/text
+          return response.text().then(text => {
+            alert("Uploaded: " + text)
+          })
+        })
+      })
+    })
+  ```
 
-
-
-
-
-
+당장 404 콘솔 오류로그 뜨는것 보기싫어서, 해당 컨트롤러 메서드에 `@ResponseBody`를 붙이고, `ResponseEntity<String>`로 결과를 반환했다.
 
 
 

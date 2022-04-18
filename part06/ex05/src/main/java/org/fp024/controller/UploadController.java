@@ -1,27 +1,30 @@
 package org.fp024.controller;
 
+import java.io.File;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.io.File;
 
 @Controller
 @Slf4j
 @PropertySource("classpath:project-data.properties")
 public class UploadController {
-  @GetMapping("/uploadForm")
-  public void uploadForm() {
-    LOGGER.info("Upload Folder: {}", uploadFolder);
-    LOGGER.info("upload form");
-  }
 
   @Value("${multipart.uploadFolder}")
-  private String uploadFolder;
+  private String UPLOAD_FOLDER;
+
+  @GetMapping("/uploadForm")
+  public void uploadForm() {
+    LOGGER.info("Upload Folder: {}", UPLOAD_FOLDER);
+    LOGGER.info("upload form");
+  }
 
   @PostMapping("/uploadFormAction")
   public void uploadFormPost(MultipartFile[] uploadFile) {
@@ -30,9 +33,9 @@ public class UploadController {
       LOGGER.info("Upload File Name: {}", multipartFile.getOriginalFilename());
       LOGGER.info("Upload File Size: {}", multipartFile.getSize());
 
-      File saveFile = new File(uploadFolder, "tmp_" + multipartFile.getOriginalFilename());
+      File saveFile = new File(UPLOAD_FOLDER, "tmp_" + multipartFile.getOriginalFilename());
 
-      File renamedFile = new File(uploadFolder, multipartFile.getOriginalFilename());
+      File renamedFile = new File(UPLOAD_FOLDER, multipartFile.getOriginalFilename());
       // 테스트를 위해 이미 파일이 있다면 지워주자.
       renamedFile.delete();
 
@@ -66,7 +69,8 @@ public class UploadController {
   }
 
   @PostMapping("/uploadAjaxAction")
-  public void uploadAjaxPost(MultipartFile[] uploadFile) {
+  @ResponseBody
+  public ResponseEntity<String> uploadAjaxPost(MultipartFile[] uploadFile) {
     LOGGER.info("update ajax post........");
 
     for (MultipartFile multipartFile : uploadFile) {
@@ -80,9 +84,9 @@ public class UploadController {
       uploadFileName = uploadFileName.substring(uploadFileName.indexOf(File.pathSeparator) + 1);
       LOGGER.info("경로를 제외한 파일명: {}", uploadFileName);
 
-      File saveTempFile = new File(uploadFolder, "tmp_" + uploadFileName);
+      File saveTempFile = new File(UPLOAD_FOLDER, "tmp_" + uploadFileName);
 
-      File renamedFile = new File(uploadFolder, uploadFileName);
+      File renamedFile = new File(UPLOAD_FOLDER, uploadFileName);
       // 테스트를 위해 이미 파일이 있다면 지워주자.
       renamedFile.delete();
 
@@ -92,10 +96,11 @@ public class UploadController {
         if (!saveTempFile.renameTo(renamedFile)) {
           throw new IllegalStateException("임시파일 이름 변경 실패");
         }
-
       } catch (Exception e) {
         LOGGER.error(e.getMessage(), e);
+        return new ResponseEntity<>("fail", HttpStatus.INTERNAL_SERVER_ERROR);
       }
     }
+    return new ResponseEntity<>("success", HttpStatus.OK);
   }
 }
