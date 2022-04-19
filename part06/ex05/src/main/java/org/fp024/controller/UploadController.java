@@ -33,14 +33,18 @@ public class UploadController {
       LOGGER.info("Upload File Name: {}", multipartFile.getOriginalFilename());
       LOGGER.info("Upload File Size: {}", multipartFile.getSize());
 
-      File saveFile = new File(UPLOAD_FOLDER, "tmp_" + multipartFile.getOriginalFilename());
+      String uploadFileName = multipartFile.getOriginalFilename();
 
-      File renamedFile = new File(UPLOAD_FOLDER, multipartFile.getOriginalFilename());
+      // IE 는 파일 경로를 가짐.
+      uploadFileName = uploadFileName.substring(uploadFileName.lastIndexOf(File.separator) + 1);
+      LOGGER.info("경로를 제외한 파일명: {}", uploadFileName);
+      File saveTempFile = new File(UPLOAD_FOLDER, "tmp_" + uploadFileName);
+      File renamedFile = new File(UPLOAD_FOLDER, uploadFileName);
       // 테스트를 위해 이미 파일이 있다면 지워주자.
       renamedFile.delete();
 
       try {
-        multipartFile.transferTo(saveFile);
+        multipartFile.transferTo(saveTempFile);
         // transferTo()로 처음 생성한 파일은 (메모리 -> 파일저장) 메서드가 끝날때 자동 정리되는 것 같다.
         //
         // StandardServletMultipartResolver 클래스의 cleanupMultipart 메서드 참조바람!!!
@@ -54,7 +58,7 @@ public class UploadController {
         // 동시에 2MB씩 10개 이상 파일이 업로드 시도 되었을 때에 한해서, 해당 디렉토리에 임시 파일이 생성되는 것을
         // 볼 수 있을 것 같긴하다.
         //
-        if (!saveFile.renameTo(renamedFile)) {
+        if (!saveTempFile.renameTo(renamedFile)) {
           throw new IllegalStateException("임시파일 이름 변경 실패");
         }
       } catch (Exception e) {
@@ -81,7 +85,7 @@ public class UploadController {
       String uploadFileName = multipartFile.getOriginalFilename();
 
       // IE 는 파일 경로를 가짐.
-      uploadFileName = uploadFileName.substring(uploadFileName.indexOf(File.pathSeparator) + 1);
+      uploadFileName = uploadFileName.substring(uploadFileName.lastIndexOf(File.separator) + 1);
       LOGGER.info("경로를 제외한 파일명: {}", uploadFileName);
 
       File saveTempFile = new File(UPLOAD_FOLDER, "tmp_" + uploadFileName);

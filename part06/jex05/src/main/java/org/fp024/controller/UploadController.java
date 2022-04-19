@@ -1,5 +1,6 @@
 package org.fp024.controller;
 
+import java.io.File;
 import lombok.extern.slf4j.Slf4j;
 import org.fp024.config.ProjectDataUtils;
 import org.springframework.http.HttpStatus;
@@ -9,8 +10,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.io.File;
 
 @Controller
 @Slf4j
@@ -32,9 +31,14 @@ public class UploadController {
       LOGGER.info("Upload File Name: {}", multipartFile.getOriginalFilename());
       LOGGER.info("Upload File Size: {}", multipartFile.getSize());
 
-      File saveFile = new File(UPLOAD_FOLDER, "tmp_" + multipartFile.getOriginalFilename());
+      String uploadFileName = multipartFile.getOriginalFilename();
 
-      File renamedFile = new File(UPLOAD_FOLDER, multipartFile.getOriginalFilename());
+      // IE 는 파일 경로를 가짐.
+      uploadFileName = uploadFileName.substring(uploadFileName.lastIndexOf(File.separator) + 1);
+      LOGGER.info("경로를 제외한 파일명: {}", uploadFileName);
+
+      File saveFile = new File(UPLOAD_FOLDER, "tmp_" + uploadFileName);
+      File renamedFile = new File(UPLOAD_FOLDER, uploadFileName);
       // 테스트를 위해 이미 파일이 있다면 지워주자.
       renamedFile.delete();
 
@@ -80,7 +84,7 @@ public class UploadController {
       String uploadFileName = multipartFile.getOriginalFilename();
 
       // IE 는 파일 경로를 가짐.
-      uploadFileName = uploadFileName.substring(uploadFileName.indexOf(File.pathSeparator) + 1);
+      uploadFileName = uploadFileName.substring(uploadFileName.lastIndexOf(File.separator) + 1);
       LOGGER.info("경로를 제외한 파일명: {}", uploadFileName);
 
       File saveTempFile = new File(UPLOAD_FOLDER, "tmp_" + uploadFileName);

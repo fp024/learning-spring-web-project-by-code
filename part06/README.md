@@ -242,7 +242,28 @@
 
 ## 22. 파일 업로드 상세 처리
 
+### 22.1 파일의 확장자나 크기의 사전처리
 
+* https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Statements/for...of
+
+### Internet Explorer 11이 설치된 환경에서 확인해보았을 때.. 안되는  부분이 있다.
+
+* const, let이 처리되긴하는데 정상적으로 잘 되는지 확신이 안듬.
+
+  ```javascript
+  const test = "11"
+  console.log(test)
+  'test'이(가) 정의되지 않았습니다.
+  var test = "111"
+  undefined
+  console.log(test)
+  ```
+
+  콘솔에서 저렇게 뜨는 것으로 보아 제대로 지원이 안되는 것 같은데... ex05 프로젝트는 var로 써야겠다.
+
+* for of 안됨
+
+  for index 방식으로 다시 변경했다.
 
 
 
