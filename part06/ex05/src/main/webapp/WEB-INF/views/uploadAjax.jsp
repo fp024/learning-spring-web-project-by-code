@@ -3,7 +3,7 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8"/>
-  <title>Ajax 파일 업로드 테스트 페이지</title>
+  <title>Ajax 파일 업로드 테스트 페이지 - 테스트</title>
 </head>
 
 <body>
