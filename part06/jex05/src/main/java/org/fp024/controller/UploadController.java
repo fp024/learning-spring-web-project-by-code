@@ -3,6 +3,7 @@ package org.fp024.controller;
 import java.io.File;
 import lombok.extern.slf4j.Slf4j;
 import org.fp024.config.ProjectDataUtils;
+import org.fp024.util.CommonUtil;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -26,6 +27,15 @@ public class UploadController {
 
   @PostMapping("/uploadFormAction")
   public void uploadFormPost(MultipartFile[] uploadFile) {
+    // 폴더 만들기
+    final File uploadPath = new File(UPLOAD_FOLDER, CommonUtil.getFolder());
+    LOGGER.info("upload path: {}", uploadPath);
+
+    if (!uploadPath.exists()) {
+      uploadPath.mkdirs();
+    }
+    // yyyy/MM/dd 폴더 만듬.
+
     for (MultipartFile multipartFile : uploadFile) {
       LOGGER.info("------------------------------------");
       LOGGER.info("Upload File Name: {}", multipartFile.getOriginalFilename());
@@ -37,8 +47,8 @@ public class UploadController {
       uploadFileName = uploadFileName.substring(uploadFileName.lastIndexOf(File.separator) + 1);
       LOGGER.info("경로를 제외한 파일명: {}", uploadFileName);
 
-      File saveFile = new File(UPLOAD_FOLDER, "tmp_" + uploadFileName);
-      File renamedFile = new File(UPLOAD_FOLDER, uploadFileName);
+      File saveFile = new File(uploadPath, "tmp_" + uploadFileName);
+      File renamedFile = new File(uploadPath, uploadFileName);
       // 테스트를 위해 이미 파일이 있다면 지워주자.
       renamedFile.delete();
 
@@ -76,6 +86,15 @@ public class UploadController {
   public ResponseEntity<String> uploadAjaxPost(MultipartFile[] uploadFile) {
     LOGGER.info("update ajax post........");
 
+    // 폴더 만들기
+    final File uploadPath = new File(UPLOAD_FOLDER, CommonUtil.getFolder());
+    LOGGER.info("upload path: {}", uploadPath);
+
+    if (!uploadPath.exists()) {
+      uploadPath.mkdirs();
+    }
+    // yyyy/MM/dd 폴더 만듬.
+
     for (MultipartFile multipartFile : uploadFile) {
       LOGGER.info("------------------------------------");
       LOGGER.info("Upload File Name: {}", multipartFile.getOriginalFilename());
@@ -87,9 +106,9 @@ public class UploadController {
       uploadFileName = uploadFileName.substring(uploadFileName.lastIndexOf(File.separator) + 1);
       LOGGER.info("경로를 제외한 파일명: {}", uploadFileName);
 
-      File saveTempFile = new File(UPLOAD_FOLDER, "tmp_" + uploadFileName);
+      File saveTempFile = new File(uploadPath, "tmp_" + uploadFileName);
 
-      File renamedFile = new File(UPLOAD_FOLDER, uploadFileName);
+      File renamedFile = new File(uploadPath, uploadFileName);
       // 테스트를 위해 이미 파일이 있다면 지워주자.
       renamedFile.delete();
 
