@@ -1,7 +1,11 @@
 package org.fp024.controller;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
 import lombok.extern.slf4j.Slf4j;
+import net.coobird.thumbnailator.Thumbnailator;
 import org.fp024.config.ProjectDataUtils;
 import org.fp024.util.CommonUtil;
 import org.springframework.http.HttpStatus;
@@ -72,6 +76,10 @@ public class UploadController {
         if (!saveTempFile.renameTo(renamedFile)) {
           throw new IllegalStateException("임시파일 이름 변경 실패");
         }
+
+        if (CommonUtil.checkImageType(renamedFile)) {
+          makeThumbnail(renamedFile);
+        }
       } catch (Exception e) {
         LOGGER.error(e.getMessage(), e);
       }
@@ -122,11 +130,32 @@ public class UploadController {
         if (!saveTempFile.renameTo(renamedFile)) {
           throw new IllegalStateException("임시파일 이름 변경 실패");
         }
+
+        if (CommonUtil.checkImageType(renamedFile)) {
+          makeThumbnail(renamedFile);
+        }
       } catch (Exception e) {
         LOGGER.error(e.getMessage(), e);
         return new ResponseEntity<>("fail", HttpStatus.INTERNAL_SERVER_ERROR);
       }
     }
     return new ResponseEntity<>("success", HttpStatus.OK);
+  }
+
+  /**
+   * 섬네일 생성
+   *
+   * <p>MultipartFile을 명시적으로 close해줄 필요가 있었다.
+   *
+   * @param imageFile 이미지 파일
+   */
+  private void makeThumbnail(File imageFile) {
+    try (FileOutputStream thumbnail =
+            new FileOutputStream(new File(imageFile.getParent(), "s_" + imageFile.getName()));
+        InputStream inputStream = new FileInputStream(imageFile)) {
+      Thumbnailator.createThumbnail(inputStream, thumbnail, 100, 100);
+    } catch (Exception e) {
+      throw new IllegalStateException(e);
+    }
   }
 }

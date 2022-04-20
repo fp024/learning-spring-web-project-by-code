@@ -284,13 +284,57 @@
 -Djava.security.egd=file:/dev/./urandom
 ```
 
-윈도우나 Linux나 경로는 같은 것 같다. 윈도우에서는 실제로 저 경로가 없더라도 
+윈도우나 Linux나 경로는 같은 것 같다. 윈도우에서는 실제로 저 경로가 없더라도 시스템 적으로 인식이 되는 것 같다. 
 
 * transfer() 로 복사한 대상 파일이 자동삭제되서, 그대로 사용해봤는데, 여전하다..
 
   https://stackoverflow.com/questions/49849576/springboot-multipart-file-upload-remove-the-local-server-copy
 
   다른 사람도 동일한 문제가 있던 것 같은데... 자동삭제가 안되도록 transfer()로 복사한 대상 파일을 이름 바꿔두는 로직은 그대로 남겨두었다.
+
+* MultipartResolver 인터페이스
+
+  ```java
+  /**
+  * Cleanup any resources used for the multipart handling,
+  * like a storage for the uploaded files.
+  * @param request the request to cleanup resources for
+  */
+  void cleanupMultipart(MultipartHttpServletRequest request);
+  ```
+
+  
+
+### 22.2 섬네일 이미지 생성
+
+섬네일 생성에 라이브러리 사용
+
+```xml
+<!-- https://mvnrepository.com/artifact/net.coobird/thumbnailator -->
+<dependency>
+    <groupId>net.coobird</groupId>
+    <artifactId>thumbnailator</artifactId>
+    <version>0.4.17</version>
+</dependency>
+```
+
+최신버전이 2022년 2월 11일자인 것으로 보아 최근에도 버전업이 되고 있다.
+
+
+
+#### 22.2.1 이미지 파일의 판단
+
+요청완료시 transfer() 해서 생긴 파일을 자동으로 삭제하므로 이름을 바꿔왔는데, 섬네일 생성할 때, 이름 바뀐 파일로 FileInputStream을 생성해서 섬네일을 만들도록 수정했다.
+
+
+
+
+
+### 22.3 업로드된 파일의 데이터 반환
+
+#### 22.3.1 AttachFileDTO 클래스
+
+#### 22.3.2 브라우저에서 Ajax 처리
 
 
 

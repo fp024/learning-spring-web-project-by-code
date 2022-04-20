@@ -44,6 +44,7 @@
     <!-- 몇몇 프로젝트에서는 hsqldb로 사용해보자... -->
     <hsqldb.version>2.6.1</hsqldb.version>
 
+    <thumbnailator.version>0.4.17</thumbnailator.version>
     <!-- 
       1. web.xml기반 설정 프로젝트에서 소스파일 변경으로 Jetty의 자동재시작이 일어날때, 
          예외가 발생하여, 9.x에서 10.x로 버전업 해봤는데, 버전 문제는 아닌 것 같다.
