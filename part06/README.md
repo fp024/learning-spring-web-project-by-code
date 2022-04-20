@@ -276,9 +276,21 @@
 
 #### 22.1.2 년/월/일 폴더의 생성
 
+#### 22.1.3 중복 방지를 위한 UUID적용
 
+난수 만들떄, 블로킹이 생길 수 있으므로, `.nvm/jvm.config` 파일 생성후 아래 내용 기입
 
+```bash
+-Djava.security.egd=file:/dev/./urandom
+```
 
+윈도우나 Linux나 경로는 같은 것 같다. 윈도우에서는 실제로 저 경로가 없더라도 
+
+* transfer() 로 복사한 대상 파일이 자동삭제되서, 그대로 사용해봤는데, 여전하다..
+
+  https://stackoverflow.com/questions/49849576/springboot-multipart-file-upload-remove-the-local-server-copy
+
+  다른 사람도 동일한 문제가 있던 것 같은데... 자동삭제가 안되도록 transfer()로 복사한 대상 파일을 이름 바꿔두는 로직은 그대로 남겨두었다.
 
 
 

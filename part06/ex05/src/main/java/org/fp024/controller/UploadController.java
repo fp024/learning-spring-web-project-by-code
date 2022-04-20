@@ -49,9 +49,12 @@ public class UploadController {
       // IE 는 파일 경로를 가짐.
       uploadFileName = uploadFileName.substring(uploadFileName.lastIndexOf(File.separator) + 1);
       LOGGER.info("경로를 제외한 파일명: {}", uploadFileName);
-      File saveTempFile = new File(uploadPath, "tmp_" + uploadFileName);
-      File renamedFile = new File(uploadPath, uploadFileName);
-      // 테스트를 위해 이미 파일이 있다면 지워주자.
+
+      String uuidFileName = CommonUtil.getUUID() + "_" + uploadFileName;
+      LOGGER.info("UUID가 붙은 파일명: {}", uuidFileName);
+
+      File saveTempFile = new File(uploadPath, "tmp_" + uuidFileName);
+      File renamedFile = new File(uploadPath, uuidFileName);
       renamedFile.delete();
 
       try {
@@ -108,12 +111,17 @@ public class UploadController {
       uploadFileName = uploadFileName.substring(uploadFileName.lastIndexOf(File.separator) + 1);
       LOGGER.info("경로를 제외한 파일명: {}", uploadFileName);
 
-      File saveTempFile = new File(uploadPath, "tmp_" + uploadFileName);
-      File renamedFile = new File(uploadPath, uploadFileName);
+      String uuidFileName = CommonUtil.getUUID() + "_" + uploadFileName;
+      LOGGER.info("UUID가 붙은 파일명: {}", uuidFileName);
+
+      File saveTempFile = new File(uploadPath, "tmp_" + uuidFileName);
+      File renamedFile = new File(uploadPath, uuidFileName);
       // 테스트를 위해 이미 파일이 있다면 지워주자.
       renamedFile.delete();
 
       try {
+        // 요즘은 자동삭제 되는 것이 맞는것 같은데...
+        // https://stackoverflow.com/questions/49849576/springboot-multipart-file-upload-remove-the-local-server-copy
         multipartFile.transferTo(saveTempFile);
 
         if (!saveTempFile.renameTo(renamedFile)) {

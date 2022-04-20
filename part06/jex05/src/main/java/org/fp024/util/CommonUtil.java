@@ -3,6 +3,7 @@ package org.fp024.util;
 import java.io.File;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.UUID;
 
 /**
  * 유틸리티 클래스
@@ -14,5 +15,9 @@ public class CommonUtil {
     return LocalDateTime.now()
         .format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
         .replace("-", File.separator);
+  }
+
+  public static String getUUID() {
+    return UUID.randomUUID().toString();
   }
 }
