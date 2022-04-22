@@ -125,12 +125,6 @@
       <version>${lombok.version}</version>
       <scope>provided</scope>
     </dependency>
-    <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
-    <dependency>
-      <groupId>com.fasterxml.jackson.core</groupId>
-      <artifactId>jackson-databind</artifactId>
-      <version>${jackson-databind.version}</version>
-    </dependency>
     <!-- 파일 업로드 -->
     <!-- Servlet 4.0을 지원하는 WAS를 사용하므로, commons-fileupload는 사용하지 않는다. -->
     <!--
@@ -140,11 +134,17 @@
       <version>${commons-fileupload.version}</version>
     </dependency>
     -->
-    
+
     <dependency>
       <groupId>net.coobird</groupId>
       <artifactId>thumbnailator</artifactId>
       <version>${thumbnailator.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.google.code.gson</groupId>
+      <artifactId>gson</artifactId>
+      <version>${gson.version}</version>
     </dependency>
 
     <!-- Test -->

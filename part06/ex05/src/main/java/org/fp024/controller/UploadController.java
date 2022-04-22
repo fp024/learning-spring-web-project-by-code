@@ -4,8 +4,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import net.coobird.thumbnailator.Thumbnailator;
+import org.fp024.domain.AttachFileDTO;
 import org.fp024.util.CommonUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
@@ -94,11 +97,14 @@ public class UploadController {
 
   @PostMapping("/uploadAjaxAction")
   @ResponseBody
-  public ResponseEntity<String> uploadAjaxPost(MultipartFile[] uploadFile) {
+  public ResponseEntity<List<AttachFileDTO>> uploadAjaxPost(MultipartFile[] uploadFile) {
     LOGGER.info("update ajax post........");
 
+    List<AttachFileDTO> list = new ArrayList<>();
+
     // 폴더 만들기
-    final File uploadPath = new File(UPLOAD_FOLDER, CommonUtil.getFolder());
+    final String uploadFolderPath = CommonUtil.getFolder();
+    final File uploadPath = new File(UPLOAD_FOLDER, uploadFolderPath);
     LOGGER.info("upload path: {}", uploadPath);
 
     if (!uploadPath.exists()) {
@@ -107,23 +113,33 @@ public class UploadController {
     // yyyy/MM/dd 폴더 만듬.
 
     for (MultipartFile multipartFile : uploadFile) {
+
+      AttachFileDTO attachDTO = new AttachFileDTO();
+
       LOGGER.info("------------------------------------");
       LOGGER.info("Upload File Name: {}", multipartFile.getOriginalFilename());
       LOGGER.info("Upload File Size: {}", multipartFile.getSize());
 
-      String uploadFileName = multipartFile.getOriginalFilename();
+      final String originalFilename = multipartFile.getOriginalFilename();
 
       // IE 는 파일 경로를 가짐.
-      uploadFileName = uploadFileName.substring(uploadFileName.lastIndexOf(File.separator) + 1);
+      final String uploadFileName =
+          originalFilename.substring(originalFilename.lastIndexOf(File.separator) + 1);
       LOGGER.info("경로를 제외한 파일명: {}", uploadFileName);
 
-      String uuidFileName = CommonUtil.getUUID() + "_" + uploadFileName;
+      final String uuid = CommonUtil.getUUID();
+
+      String uuidFileName = uuid + "_" + uploadFileName;
       LOGGER.info("UUID가 붙은 파일명: {}", uuidFileName);
 
       File saveTempFile = new File(uploadPath, "tmp_" + uuidFileName);
       File renamedFile = new File(uploadPath, uuidFileName);
       // 테스트를 위해 이미 파일이 있다면 지워주자.
       renamedFile.delete();
+
+      attachDTO.setFileName(uploadFileName);
+      attachDTO.setUuid(uuid);
+      attachDTO.setUploadPath(uploadFolderPath);
 
       try {
         // 요즘은 자동삭제 되는 것이 맞는것 같은데...
@@ -135,20 +151,22 @@ public class UploadController {
         }
 
         if (CommonUtil.checkImageType(renamedFile)) {
+          attachDTO.setImage(true);
           makeThumbnail(renamedFile);
         }
+        attachDTO.setSuccess(true);
       } catch (Exception e) {
         LOGGER.error(e.getMessage(), e);
-        return new ResponseEntity<>("fail", HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(list, HttpStatus.INTERNAL_SERVER_ERROR);
+      } finally {
+        list.add(attachDTO);
       }
     }
-    return new ResponseEntity<>("success", HttpStatus.OK);
+    return new ResponseEntity<>(list, HttpStatus.OK);
   }
 
   /**
    * 섬네일 생성
-   *
-   * <p>MultipartFile을 명시적으로 close해줄 필요가 있었다.
    *
    * @param imageFile 이미지 파일
    */

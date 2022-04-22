@@ -328,15 +328,37 @@
 
 
 
-
-
 ### 22.3 업로드된 파일의 데이터 반환
+
+업로드된 결과를 피드백으로 보내주기에 대해 나는 간단하게 성공이면 `success`를 전달하게 해두었는데, 책은 좀 더 자세한 도메인을 반환하게 하였다. 따라해보자!
+
+ex05에서는 jackson을 사용하고, jex05는 gson을 사용해보자!
+
+
 
 #### 22.3.1 AttachFileDTO 클래스
 
 #### 22.3.2 브라우저에서 Ajax 처리
 
+fetch()를 사용했을 때도 쉽게 json 데이터를 받아올 수 있었다.
 
+```javascript
+      /*
+      fetch("/uploadAjaxAction", {
+        method: "POST",
+        body: formData
+      }).then(response => { // https://developer.mozilla.org/en-US/docs/Web/API/Response/text
+        return response.json().then(data =>
+            console.log(data)
+        )
+      })
+      */
+      fetch("/uploadAjaxAction", {
+        method: "POST",
+        body: formData
+      }).then(response => response.json())
+        .then(json => console.log(json))
+```
 
 
 

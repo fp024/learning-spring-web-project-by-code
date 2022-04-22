@@ -59,8 +59,9 @@
         contentType: false,
         data: formData,
         type: "POST",
+        dataType: "json",
         success: function (result) {
-          alert("Uploaded: " + result);
+          console.log(result);
         }
       });
     });

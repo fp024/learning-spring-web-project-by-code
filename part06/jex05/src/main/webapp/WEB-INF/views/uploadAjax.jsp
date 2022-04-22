@@ -48,14 +48,22 @@
         formData.append("uploadFile", file)
       }
 
+      /*
       fetch("/uploadAjaxAction", {
         method: "POST",
         body: formData
       }).then(response => { // https://developer.mozilla.org/en-US/docs/Web/API/Response/text
-        return response.text().then(text =>
-            alert("Uploaded: " + text)
+        return response.json().then(data =>
+            console.log(data)
         )
       })
+      */
+      fetch("/uploadAjaxAction", {
+        method: "POST",
+        body: formData
+      }).then(response => response.json())
+        .then(result => console.log(result))
+
     })
   })
 </script>
