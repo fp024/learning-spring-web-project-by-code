@@ -421,11 +421,17 @@ document.querySelector('.uploadDiv').replaceWith(cloneObj);
 
 #### 23.2.3 섬네일 이미지 보여주기
 
+* `ResponseEntity<byte[]>` 을 반환해서 업로드된 이미지를 GET요청으로 바로 보여줄 수 있는 부분 구현이 재미있었다.
 
+* 그런데, 템플릿 리터럴을 쓰려면 대상 변수가 let이나 const로 미리 선언이 되어있어야하는 것인가?
 
+  ```javascript
+  str += "<li><img src='/display?fileName=" + fileCallPath + "'><li>" + obj.fileName + "</li>";
+  // 아래처럼 바꿔서 되야할 것 같은데... 잘 안된다. 😥
+  str += `<li><img src='/display?fileName=${fileCallPath}'><li>${obj.fileName}</li>`
+  ```
 
-
-
+  
 
 
 

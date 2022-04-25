@@ -3,7 +3,9 @@ package org.fp024.controller;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
@@ -11,9 +13,11 @@ import net.coobird.thumbnailator.Thumbnailator;
 import org.fp024.config.ProjectDataUtils;
 import org.fp024.domain.AttachFileDTO;
 import org.fp024.util.CommonUtil;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -158,6 +162,33 @@ public class UploadController {
       }
     }
     return new ResponseEntity<>(list, HttpStatus.OK);
+  }
+
+  /**
+   * 업로드 파일 조회
+   *
+   * @param fileName 조회할 파일명
+   * @return 파일의 바이트 배열을 담은 응답 객체
+   */
+  @GetMapping("/display")
+  public ResponseEntity<byte[]> getFile(String fileName) {
+    LOGGER.info("fileName: {}", fileName);
+
+    File file = new File(UPLOAD_FOLDER + File.separator + fileName);
+
+    LOGGER.info("file: {}", file);
+
+    try {
+      HttpHeaders header = new HttpHeaders();
+      String contentType =
+          Files.probeContentType(file.toPath()); // 파일이 실제로 없어도 그냥 확장자 보고 컨텐트 타입을 판단하는 것 같다.
+      LOGGER.info("### Content-Type: {} ###", contentType);
+      header.add("Content-Type", contentType);
+      return new ResponseEntity<>(FileCopyUtils.copyToByteArray(file), header, HttpStatus.OK);
+    } catch (IOException e) {
+      LOGGER.error(e.getMessage(), e);
+      return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 
   /**
