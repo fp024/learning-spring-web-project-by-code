@@ -13,6 +13,12 @@
   <input type="file" name="uploadFile" multiple>
 </div>
 
+<div class="uploadResult">
+  <ul>
+
+  </ul>
+</div>
+
 <button id="uploadBtn">Upload</button>
 
 <script src="https://code.jquery.com/jquery-3.6.0.js"
@@ -23,6 +29,17 @@
   $(document).ready(function () {
     var regex = new RegExp("(.*?)\.(exe|sh|zip|alz)$");
     var maxSize = 1024 * 1024 * 5; // web.xml에 단일 파일 최대 크기를 20MB로 정의했었는데, 5MB로 해보자.
+    var uploadResult = $(".uploadResult ul");
+
+    function showUploadedFile(uploadResultArr) {
+      var str = "";
+
+      $(uploadResultArr).each(function(i, obj) {
+        str += "<li>" + obj.fileName + "</li>";
+      });
+
+      uploadResult.append(str);
+    }
 
     function checkExtension(fileName, fileSize) {
       if (fileSize > maxSize) {
@@ -64,6 +81,9 @@
         dataType: "json",
         success: function (result) {
           console.log(result);
+
+          showUploadedFile(result);
+
           $(".uploadDiv").html(cloneObj.html()); // replace 동작처럼 나타난다.
         }
       });

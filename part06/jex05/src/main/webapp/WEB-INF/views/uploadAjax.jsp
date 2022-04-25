@@ -13,12 +13,28 @@
   <input type="file" name="uploadFile" multiple>
 </div>
 
+<div class="uploadResult">
+  <ul>
+
+  </ul>
+</div>
+
 <button id="uploadBtn">Upload</button>
 
 <script>
   document.addEventListener('DOMContentLoaded', () => {
     const regex = new RegExp("(.*?)\.(exe|sh|zip|alz)$")
     const maxSize = 1024 * 1024 * 5 // web.xml에 단일 파일 최대 크기를 20MB로 정의했었는데, 5MB로 해보자.
+
+    const uploadResult = document.querySelector('.uploadResult ul')
+
+    function showUploadedFile(uploadResultArr) {
+      let str = ""
+      for(const obj of uploadResultArr) {
+        str += "<li>" + obj.fileName + "</li>"        
+      }
+      uploadResult.insertAdjacentHTML('beforeend', str)
+    }
 
     function checkExtension(fileName, fileSize) {
       if (fileSize > maxSize) {
@@ -56,6 +72,9 @@
       }).then(response => response.json())
         .then(result => {
           console.log(result)
+
+          showUploadedFile(result)
+
           document.querySelector('.uploadDiv').replaceWith(cloneObj)
       })
     })

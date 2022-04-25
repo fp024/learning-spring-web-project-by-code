@@ -388,6 +388,29 @@ document.querySelector('.uploadDiv').replaceWith(cloneObj);
 
 
 
+### 23.2 업로드된 이미지 처리
+
+#### 23.2.1 파일 이름 출력
+
+```javascript
+    const uploadResult = document.querySelector('.uploadResult ul')
+
+    function showUploadedFile(uploadResultArr) {
+      let str = ""
+      for(const obj of uploadResultArr) { // JQuery의 $.each() 대체
+        str += "<li>" + obj.fileName + "</li>"        
+      }
+      uploadResult.insertAdjacentHTML('beforeend', str) // JQuery의 $.append() 대체
+    }
+```
+
+* 참조
+  * insertAdjacentHTML: https://developer.mozilla.org/ko/docs/Web/API/Element/insertAdjacentHTML
+
+
+
+
+
 ## 24. 첨부파일의 다운로드 혹은 원본 보여주기
 
 
