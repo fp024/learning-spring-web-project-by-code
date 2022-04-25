@@ -364,7 +364,27 @@ fetch()를 사용했을 때도 쉽게 json 데이터를 받아올 수 있었다.
 
 ## 23. 브라우저에서 섬네일 처리
 
+### 23.1 `<input type='file'>`의 초기화
 
+최신자바스크립트를 사용하기로한 jex05 프로젝트에서는 JQuery 사용부분을 아래처럼 변경했다.
+
+```javascript
+// uploadDiv 의 전체 복사
+var cloneObj = $(".uploadDiv").clone();
+// --> uploadDiv 이하의 모든 요소를 복사하기 위해 cloneNode의 인자로 true를 주었다.
+const cloneObj = document.querySelector('.uploadDiv').cloneNode(true)
+
+// ...
+
+// 업로드 후, uploadDiv 를 복사해두었던 빈 내용의 uploadDiv로 교체한다.
+$(".uploadDiv").html(cloneObj.html());
+// --> 
+document.querySelector('.uploadDiv').replaceWith(cloneObj);
+```
+
+* 참조
+  * cloneNode: https://developer.mozilla.org/ko/docs/Web/API/Node/cloneNode
+  * replaceWidth: https://developer.mozilla.org/en-US/docs/Web/API/Element/replaceWith
 
 
 

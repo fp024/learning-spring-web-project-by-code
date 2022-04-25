@@ -22,16 +22,18 @@
 
     function checkExtension(fileName, fileSize) {
       if (fileSize > maxSize) {
-        alert("파일 사이즈 초과");
+        alert("파일 사이즈 초과")
         return false
       }
 
       if (regex.test(fileName)) {
-        alert("해당 종류의 파일은 업로드할 수 없습니다.");
+        alert("해당 종류의 파일은 업로드할 수 없습니다.")
         return false
       }
       return true
     }
+
+    const cloneObj = document.querySelector('.uploadDiv').cloneNode(true)
 
     document.querySelector('button').addEventListener('click', () => {
       const formData = new FormData()
@@ -43,27 +45,19 @@
       // 파일 데이터를 폼 데이터에 추가
       for (const file of files) {
         if (!checkExtension(file.name, file.size)) {
-          return false;
+          return false
         }
         formData.append("uploadFile", file)
       }
 
-      /*
-      fetch("/uploadAjaxAction", {
-        method: "POST",
-        body: formData
-      }).then(response => { // https://developer.mozilla.org/en-US/docs/Web/API/Response/text
-        return response.json().then(data =>
-            console.log(data)
-        )
-      })
-      */
       fetch("/uploadAjaxAction", {
         method: "POST",
         body: formData
       }).then(response => response.json())
-        .then(result => console.log(result))
-
+        .then(result => {
+          console.log(result)
+          document.querySelector('.uploadDiv').replaceWith(cloneObj)
+      })
     })
   })
 </script>

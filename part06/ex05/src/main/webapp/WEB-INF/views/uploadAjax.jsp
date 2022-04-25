@@ -37,6 +37,8 @@
       return true;
     }
 
+    var cloneObj = $(".uploadDiv").clone();
+
     $("#uploadBtn").on("click", function (e) {
       var formData = new FormData();
       var inputFile = $("input[name='uploadFile']");
@@ -62,6 +64,7 @@
         dataType: "json",
         success: function (result) {
           console.log(result);
+          $(".uploadDiv").html(cloneObj.html()); // replace 동작처럼 나타난다.
         }
       });
     });
