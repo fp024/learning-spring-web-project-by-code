@@ -409,6 +409,24 @@ document.querySelector('.uploadDiv').replaceWith(cloneObj);
 
 
 
+#### 23.2.2 일반 파일의 파일 처리
+
+* 파일 첨부 아이콘을 구해야하는데, 대충 사이즈(`942 x 720`)만 맞춰서 그려보자!
+
+  ![attach.png](doc-resources/attach.png)
+
+​		이번에는 JQuery 메서드를 사용한 부분은 없어서 ex05와 jex05의 코드는 동일하다.
+
+
+
+#### 23.2.3 섬네일 이미지 보여주기
+
+
+
+
+
+
+
 
 
 ## 24. 첨부파일의 다운로드 혹은 원본 보여주기

@@ -4,6 +4,28 @@
 <head>
   <meta charset="UTF-8"/>
   <title>Ajax 파일 업로드 테스트 페이지</title>
+  <style>
+    .uploadResult {
+      width: 100%;
+      background-color: gray;
+    }
+
+    .uploadResult ul {
+      display:flex;
+      flex-flow: row;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .uploadResult ul li {
+      list-style:none;
+      padding: 10px;
+    }
+
+    .uploadResult ul li img {
+      width: 20px
+    }
+  </style>
 </head>
 
 <body>
@@ -30,8 +52,12 @@
 
     function showUploadedFile(uploadResultArr) {
       let str = ""
-      for(const obj of uploadResultArr) {
-        str += "<li>" + obj.fileName + "</li>"        
+      for (const obj of uploadResultArr) {
+        if (!obj.image) {
+          str += "<li><img src='/resources/img/attach.png'>" + obj.fileName + "</li>";
+        } else {
+          str += "<li>" + obj.fileName + "</li>";
+        }
       }
       uploadResult.insertAdjacentHTML('beforeend', str)
     }
