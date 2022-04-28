@@ -285,7 +285,7 @@
       </plugin>
 
       <!-- 실제 Tomcat 9 배포 실행 테스트 -->
-      <!-- mvn clean verify cargo:run -->
+      <!-- mvn clean package -DskipTests cargo:run -->
       <plugin>
         <groupId>org.codehaus.cargo</groupId>
         <artifactId>cargo-maven3-plugin</artifactId>
