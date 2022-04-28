@@ -77,6 +77,8 @@
     <maven-compiler-plugin.version>3.10.1</maven-compiler-plugin.version>
     <maven-toolchains-plugin.version>3.0.0</maven-toolchains-plugin.version>
 
+    <!-- Jetty Http 포트 기본값 -->
+    <jetty.port>8080</jetty.port>
     <!-- Jetty Context Path 설정 기본값 -->
     <jetty-context-path>/</jetty-context-path>
     <!-- XML 컨텍스트 설정일 때는 잘 되는데, Spring Java Config 설정일 때는 예외가 난다. 일단 자동 재배포 재시작의 기본 값은 비활성화 상태로 두자 -->
@@ -84,6 +86,13 @@
 
     <!-- Embbed Jetty로 실행할 때, web.xml을 환경별로 바꿀 상황이 생겨 환경변수로 분리했다.  -->
     <web-xml-location>${project.basedir}/src/main/webapp/WEB-INF/web.xml</web-xml-location>
+
+    <!-- cargo 플러그인 설정 -->
+    <cargo.version>1.9.11</cargo.version>
+    <cargo-tomcat9x.version>9.0.62</cargo-tomcat9x.version>
+    <cargo-context-path>${jetty-context-path}</cargo-context-path>
+    <cargo-server-port>${jetty.port}</cargo-server-port>
+
   </properties>
 
 
@@ -227,6 +236,10 @@
         <artifactId>jetty-maven-plugin</artifactId>
         <version>${jetty.version}</version>
         <configuration>
+          <httpConnector>
+            <!--host>localhost</host-->
+            <port>${jetty.port}</port>
+          </httpConnector>
           <webApp>
             <contextPath>${jetty-context-path}</contextPath>
             <descriptor>${web-xml-location}</descriptor>
@@ -270,7 +283,40 @@
           </dependency>
         </dependencies>
       </plugin>
+
+      <!-- 실제 Tomcat 9 배포 실행 테스트 -->
+      <!-- mvn clean verify cargo:run -->
+      <plugin>
+        <groupId>org.codehaus.cargo</groupId>
+        <artifactId>cargo-maven3-plugin</artifactId>
+        <version>${cargo.version}</version>
+        <configuration>
+          <container>
+            <containerId>tomcat9x</containerId>
+            <zipUrlInstaller>
+              <url>https://repo.maven.apache.org/maven2/org/apache/tomcat/tomcat/${cargo-tomcat9x.version}/tomcat-${cargo-tomcat9x.version}.zip</url>
+              <downloadDir>${project.build.directory}/downloads</downloadDir>
+              <extractDir>${project.build.directory}/extracts</extractDir>
+            </zipUrlInstaller>
+          </container>
+          <configuration>
+            <type>standalone</type>
+            <properties>
+              <cargo.servlet.port>${cargo-server-port}</cargo.servlet.port>
+            </properties>
+          </configuration>
+          <deployables>
+            <deployable>
+              <groupId>${project.groupId}</groupId>
+              <artifactId>${project.artifactId}</artifactId>
+              <type>war</type>
+              <properties>
+                <context>${cargo-context-path}</context>
+              </properties>
+            </deployable>
+          </deployables>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
-
 </project>
