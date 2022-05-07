@@ -11,14 +11,14 @@
     }
 
     .uploadResult ul {
-      display:flex;
+      display: flex;
       flex-flow: row;
       justify-content: center;
       align-items: center;
     }
 
     .uploadResult ul li {
-      list-style:none;
+      list-style: none;
       padding: 10px;
     }
 
@@ -56,12 +56,17 @@
     function showUploadedFile(uploadResultArr) {
       var str = "";
 
-      $(uploadResultArr).each(function(i, obj) {
+      $(uploadResultArr).each(function (i, obj) {
         if (!obj.image) {
-          str += "<li><img src='/resources/img/attach.png'>" + obj.fileName + "</li>";
+          var fileCallPath = encodeURIComponent(
+              obj.uploadPath + "/" + obj.uuid + "_" + obj.fileName);
+          str += "<li><a href='/download?fileName=" + fileCallPath
+              + "'><img src='/resources/img/attach.png'>" + obj.fileName + "</a></li>";
         } else {
-          var fileCallPath = encodeURIComponent(obj.uploadPath + "/s_" + obj.uuid + "_" + obj.fileName);
-          str += "<li><img src='/display?fileName=" + fileCallPath + "'><li>" + obj.fileName + "</li>";
+          var fileCallPath = encodeURIComponent(
+              obj.uploadPath + "/s_" + obj.uuid + "_" + obj.fileName);
+          str += "<li><img src='/display?fileName=" + fileCallPath + "'><li>" + obj.fileName
+              + "</li>";
         }
       });
 

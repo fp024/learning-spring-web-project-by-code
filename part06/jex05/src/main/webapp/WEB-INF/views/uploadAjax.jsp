@@ -11,14 +11,14 @@
     }
 
     .uploadResult ul {
-      display:flex;
+      display: flex;
       flex-flow: row;
       justify-content: center;
       align-items: center;
     }
 
     .uploadResult ul li {
-      list-style:none;
+      list-style: none;
       padding: 10px;
     }
 
@@ -54,10 +54,15 @@
       let str = ""
       for (const obj of uploadResultArr) {
         if (!obj.image) {
-          str += "<li><img src='/resources/img/attach.png'>" + obj.fileName + "</li>"
+          const fileCallPath = encodeURIComponent(
+              obj.uploadPath + "/" + obj.uuid + "_" + obj.fileName)
+          str += "<li><a href='/download?fileName=" + fileCallPath
+              + "'><img src='/resources/img/attach.png'>" + obj.fileName + "</a></li>";
         } else {
-          const fileCallPath = encodeURIComponent(obj.uploadPath + "/s_" + obj.uuid + "_" + obj.fileName)
-          str += "<li><img src='/display?fileName=" + fileCallPath + "'><li>" + obj.fileName + "</li>"
+          const fileCallPath = encodeURIComponent(
+              obj.uploadPath + "/s_" + obj.uuid + "_" + obj.fileName)
+          str += "<li><img src='/display?fileName=" + fileCallPath + "'><li>" + obj.fileName
+              + "</li>"
         }
       }
       uploadResult.insertAdjacentHTML('beforeend', str)
@@ -97,12 +102,12 @@
         method: "POST",
         body: formData
       }).then(response => response.json())
-        .then(result => {
-          console.log(result)
+      .then(result => {
+        console.log(result)
 
-          showUploadedFile(result)
+        showUploadedFile(result)
 
-          document.querySelector('.uploadDiv').replaceWith(cloneObj)
+        document.querySelector('.uploadDiv').replaceWith(cloneObj)
       })
     })
   })

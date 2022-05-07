@@ -447,8 +447,107 @@ document.querySelector('.uploadDiv').replaceWith(cloneObj);
 
 ### 24.1 첨부파일 다운로드
 
-* 다운로드 타입 지정: MIME 타입
+* 다운로드 타입 지정: MIME 타입을 `application/octet-stream`으로 지정
 * 반환 타입에서 `ResponseEntity<T>`의  타입을 `org.springframework.core.io.Resource` 로 사용
+
+* Content-Disposition 헤더 값 지정
+
+  한글 파일명 깨지는 문제 방지를 위한 처리
+
+  ```java
+        headers.add(
+            "Content-Disposition",
+            "attachment; filename="
+                + new String(resource.getFilename().getBytes("UTF-8"), "ISO-8859-1"));
+  ```
+
+  한글을 ISO-8859-1로 인코딩 해서 설정하는 것 같은데? 왜 이렇게 해야할까?
+
+
+
+#### 24.1.1 IE/Edge 브라우저의 문제
+
+윈도우 10에서는 IE 11을 아직 사용할 수 있어서 여기서 테스트를 하는데,  다음과 같았다.
+
+```
+# 파일명을 아래로 보내면 400 응답으로 처리됨
+http://192.168.100.40:8080/download?fileName=소스.zip
+
+# URI 인코딩 해서 보내면 문제 없이 받을 수는 있음.
+http://192.168.100.40:8080/download?fileName=%EC%86%8C%EC%8A%A4.zip
+```
+
+왜이럴까? 책에서는 이런문제는 언급이 안되었었는데...😅 (다음 장에 테스트 할 때 언급이 된다..)
+
+IE 11에서 요청을 보낼 때, URL 파라미터의 한글이 깨진채로 보내서 그런 것 같다.
+
+```
+# IE11의 네트워크 탭에 fileName 부분을 보면 깨진체로 전송이 되는 것을 알 수 있다.
+http://192.168.100.40:8080/download?fileName=ìì¤.zip
+```
+
+Jetty 문제인가 싶어서, cargo를 통해 Tomcat 9로 실행시켰는데...
+
+```
+[INFO] [talledLocalContainer] 정보: HTTP 요청 헤더를 파싱하는 중 오류 발생
+[INFO] [talledLocalContainer] java.lang.IllegalArgumentException: 요청 타겟에서 유효하지 않은 문자가 발견되었습니다. 유효한 문자들은 RFC 7230과 RFC 3986에 정의되어 있습니다.
+[INFO] [talledLocalContainer]   at org.apache.coyote.http11.Http11InputBuffer.parseRequestLine(Http11InputBuffer.java:494)
+...
+```
+
+Tomcat 9도 동일하게 400오류가 발생한다.
+
+Filefox나 Chrome에서는 문제가 없음.
+
+🎇 **IE 11에서는 페이지에서 다운로드 링크 클릭 시점에 JavaScript 단에서 파라미터 부분의 한글을 URI 인코딩 해서 보내야할 것 같다.** 
+
+🎇 원래는 IE에서 URI인코딩을 자동으로 해줘야하는데,  URL 파라미터 값이 한글문자 뒤에 `.zip` 같은 확장자가 붙은 값이면 제대로 URI인코딩을 안해주는 것 같다.
+
+
+
+### Edge 브라우저의 User Agent
+
+예전 Edge는 Edge라는 문자열이 User Agent에 포함되었던 것 같은데, 크로미움으로 바뀌면서 `Edg/버전` 형식으로 바뀐 같다.
+
+```
+Mozilla/5.0 (Windows NT 10.0; Win64; x64)  
+AppleWebKit/537.36 (KHTML, like Gecko)  
+Chrome/90.0.4430.85  
+Safari/537.36  
+Edg/90.0.818.46
+```
+
+안드로이드 버전 Edge의 경우의 User Agent 예시는 아래와 같다.
+
+```
+Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N)  
+AppleWebKit/537.36 (KHTML, like Gecko)  
+Chrome/90.0.4430.85  
+Mobile Safari/537.36  
+EdgA/90.0.818.46
+```
+
+다운로드 할 때도 크롬으로 인식된다.
+
+* https://docs.microsoft.com/en-us/microsoft-edge/web-platform/user-agent-guidance
+
+* IE일 때는 \\ 문자을 전부 한칸 띄어쓰기로 바꾸는 걸까? 이 치환 처리가 없어도 딱히 문제는 없었는데.. 일단 넣었다.
+
+  ```java
+  downloadName = URLEncoder.encode(resourceName, "UTF-8").replace("\\+", " ");
+  ```
+
+  
+
+#### 24.1.2 업로드된 후 다운로드 처리
+
+
+
+
+
+
+
+
 
 
 

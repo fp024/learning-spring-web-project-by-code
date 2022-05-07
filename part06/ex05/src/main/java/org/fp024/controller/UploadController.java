@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
@@ -231,11 +232,11 @@ public class UploadController {
 
     Resource resource = new FileSystemResource(UPLOAD_FOLDER + File.separator + fileName);
 
+    LOGGER.info("resource: {}, resource filename: {}", resource, resource.getFilename());
+
     if (!resource.exists()) {
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
-
-    LOGGER.info("resource: {}, resource filename", resource, resource.getFilename());
 
     try {
       HttpHeaders headers = new HttpHeaders();
@@ -261,17 +262,20 @@ public class UploadController {
     final String downloadName;
     if (userAgent.contains("Trident")) {
       LOGGER.info("IE 브라우저");
-      downloadName = URLEncoder.encode(resourceName, "UTF-8").replace("\\+", " ");
+      downloadName = URLEncoder.encode(resourceName, StandardCharsets.UTF_8).replace("\\+", " ");
     } else if (userAgent.contains("Edge")) {
       // 최신 edge는 UserAgent가 변경되었다.
       LOGGER.info("레거시 Edge 브라우저");
-      downloadName = URLEncoder.encode(resourceName, "UTF-8");
+      downloadName = URLEncoder.encode(resourceName, StandardCharsets.UTF_8);
     } else {
       LOGGER.info("크롬 브라우저");
-      downloadName = new String(resourceName.getBytes("UTF-8"), "ISO-8859-1");
+      downloadName =
+          new String(resourceName.getBytes(StandardCharsets.UTF_8), StandardCharsets.ISO_8859_1);
     }
 
     LOGGER.info("다운로드 파일명: {}", downloadName);
-    return downloadName;
+    String resourceOriginalName = downloadName.substring(downloadName.indexOf('_') + 1);
+    LOGGER.info("UUID가 제거된 다운로드 파일명: {}", resourceOriginalName);
+    return resourceOriginalName;
   }
 }
