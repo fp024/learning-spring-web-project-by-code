@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +26,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -219,14 +221,19 @@ public class UploadController {
    * 일반 파일 다운로드
    *
    * @param fileName 다운로드할 파일명
-   * @return
+   * @return 다운로드할 파일
    */
   @GetMapping(value = "/download", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
   @ResponseBody
-  public ResponseEntity<Resource> downloadFile(String fileName) {
+  public ResponseEntity<Resource> downloadFile(
+      @RequestHeader("User-Agent") String userAgent, String fileName) {
     LOGGER.info("download file: {}", fileName);
 
     Resource resource = new FileSystemResource(UPLOAD_FOLDER + File.separator + fileName);
+
+    if (!resource.exists()) {
+      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
 
     LOGGER.info("resource: {}, resource filename", resource, resource.getFilename());
 
@@ -234,14 +241,37 @@ public class UploadController {
       HttpHeaders headers = new HttpHeaders();
       headers.add(
           "Content-Disposition",
-          "attachment; filename="
-              + new String(resource.getFilename().getBytes("UTF-8"), "ISO-8859-1"));
+          "attachment; filename=" + downloadFileName(userAgent, resource.getFilename()));
       return new ResponseEntity<>(resource, headers, HttpStatus.OK);
-      // 현재 try 블록 코드에서 FileNotFoundException에 대해서는 확인할 수 없다. 코드가 진행된 후
-      // 프레임워크에서 처리되는 시점에서야 FileNotFoundException 예외가 발생하여 HTTP 500 예외로 끝이난다.
     } catch (UnsupportedEncodingException e) {
       LOGGER.error(e.getMessage(), e);
       return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
+  }
+
+  /**
+   * 각 브라우저에 맞는 다운로드 이름 처리
+   *
+   * <p>Edge는 이제는 Chromium 기반이여서, 별도 처리가 필요 없을 것 같다.
+   *
+   * <p>다운로드 테스트를 하더라도 크롬으로 인식된다.
+   */
+  private String downloadFileName(String userAgent, String resourceName)
+      throws UnsupportedEncodingException {
+    final String downloadName;
+    if (userAgent.contains("Trident")) {
+      LOGGER.info("IE 브라우저");
+      downloadName = URLEncoder.encode(resourceName, "UTF-8").replace("\\+", " ");
+    } else if (userAgent.contains("Edge")) {
+      // 최신 edge는 UserAgent가 변경되었다.
+      LOGGER.info("레거시 Edge 브라우저");
+      downloadName = URLEncoder.encode(resourceName, "UTF-8");
+    } else {
+      LOGGER.info("크롬 브라우저");
+      downloadName = new String(resourceName.getBytes("UTF-8"), "ISO-8859-1");
+    }
+
+    LOGGER.info("다운로드 파일명: {}", downloadName);
+    return downloadName;
   }
 }
