@@ -437,7 +437,18 @@ document.querySelector('.uploadDiv').replaceWith(cloneObj);
 
 ## 24. 첨부파일의 다운로드 혹은 원본 보여주기
 
+첨부 파일의 종류에 따라 동작을 다르게 처리함.
 
+1. 이미지 > 원본이미지를 레이어로 띄워서 보여주기
+
+2. 일반파일 > 다운로드
+
+   
+
+### 24.1 첨부파일 다운로드
+
+* 다운로드 타입 지정: MIME 타입
+* 반환 타입에서 `ResponseEntity<T>`의  타입을 `org.springframework.core.io.Resource` 로 사용
 
 
 

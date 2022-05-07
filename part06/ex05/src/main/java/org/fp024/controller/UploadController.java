@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,8 +15,11 @@ import org.fp024.domain.AttachFileDTO;
 import org.fp024.util.CommonUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.FileCopyUtils;
@@ -208,6 +212,36 @@ public class UploadController {
       Thumbnailator.createThumbnail(inputStream, thumbnail, 100, 100);
     } catch (Exception e) {
       throw new IllegalStateException(e);
+    }
+  }
+
+  /**
+   * 일반 파일 다운로드
+   *
+   * @param fileName 다운로드할 파일명
+   * @return
+   */
+  @GetMapping(value = "/download", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+  @ResponseBody
+  public ResponseEntity<Resource> downloadFile(String fileName) {
+    LOGGER.info("download file: {}", fileName);
+
+    Resource resource = new FileSystemResource(UPLOAD_FOLDER + File.separator + fileName);
+
+    LOGGER.info("resource: {}, resource filename", resource, resource.getFilename());
+
+    try {
+      HttpHeaders headers = new HttpHeaders();
+      headers.add(
+          "Content-Disposition",
+          "attachment; filename="
+              + new String(resource.getFilename().getBytes("UTF-8"), "ISO-8859-1"));
+      return new ResponseEntity<>(resource, headers, HttpStatus.OK);
+      // 현재 try 블록 코드에서 FileNotFoundException에 대해서는 확인할 수 없다. 코드가 진행된 후
+      // 프레임워크에서 처리되는 시점에서야 FileNotFoundException 예외가 발생하여 HTTP 500 예외로 끝이난다.
+    } catch (UnsupportedEncodingException e) {
+      LOGGER.error(e.getMessage(), e);
+      return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 }
