@@ -20,10 +20,39 @@
     .uploadResult ul li {
       list-style: none;
       padding: 10px;
+      align-content: center;
+      text-align: center;
     }
 
     .uploadResult ul li img {
-      width: 20px
+      width: 100px
+    }
+
+    .uploadResult ul li span {
+      color: white;
+    }
+
+    .bigPictureWrapper {
+      position: absolute;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      top: 0%;
+      width: 100%;
+      height: 100%;
+      z-index: 100;
+      background: rgba(255, 255, 255, 0.5);
+    }
+
+    .bigPicture {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .bigPicture img {
+      width: 600px;
     }
   </style>
 </head>
@@ -43,8 +72,50 @@
 
 <button id="uploadBtn">Upload</button>
 
+<!-- 원본 이미지 보여주는 레이어 -->
+<div class="bigPictureWrapper">
+  <div class="bigPicture">
+
+  </div>
+</div>
+
 <script>
+  function showImage(fileCallPath) {
+    const bigPictureWrapper = document.querySelector(".bigPictureWrapper")
+    bigPictureWrapper.style.display = 'flex'
+
+    const bigPicture = document.querySelector(".bigPicture")
+
+    const img = document.createElement('img')
+    img.setAttribute('src', 'display?fileName=' + encodeURI(fileCallPath))
+    bigPicture.textContent = ''
+    bigPicture.insertAdjacentElement('beforeend', img)
+    bigPicture.animate([
+      {transform: 'scale(0)'},
+      {transform: 'scale(1)'}
+    ], {
+      duration: 1000,
+      iterations: 1,
+    })
+  }
+
   document.addEventListener('DOMContentLoaded', () => {
+
+    // 원본 이미지 보기 레이어 닫기
+    document.querySelector(".bigPictureWrapper").addEventListener("click", function (e) {
+      console.log(this)
+      document.querySelector(".bigPicture").animate([
+        {transform: 'scale(1)'},
+        {transform: 'scale(0)'}
+      ], {
+        duration: 1000,
+        iterations: 1
+      })
+      setTimeout(function () {
+        document.querySelector(".bigPictureWrapper").style.display = 'none'
+      }, 950)
+    })
+
     const regex = new RegExp("(.*?)\.(exe|sh|zip|alz)$")
     const maxSize = 1024 * 1024 * 5 // web.xml에 단일 파일 최대 크기를 20MB로 정의했었는데, 5MB로 해보자.
 
@@ -60,9 +131,15 @@
               + "'><img src='/resources/img/attach.png'>" + obj.fileName + "</a></li>";
         } else {
           const fileCallPath = encodeURIComponent(
-              obj.uploadPath + "/s_" + obj.uuid + "_" + obj.fileName)
-          str += "<li><img src='/display?fileName=" + fileCallPath + "'><li>" + obj.fileName
-              + "</li>"
+              obj.uploadPath + "/s_" + obj.uuid + "_" + obj.fileName);
+          const originPath =
+              obj.uploadPath.replace(new RegExp(/\\/g), "/") + "/" + obj.uuid + "_" + obj.fileName;
+          console.log(originPath);
+          str += "<li>"
+              + "<a href=\"javascript:showImage(\'" + originPath + "\')\">"
+              + "<img src='/display?fileName=" + fileCallPath + "'>"
+              + "</a>"
+              + "</li>";
         }
       }
       uploadResult.insertAdjacentHTML('beforeend', str)

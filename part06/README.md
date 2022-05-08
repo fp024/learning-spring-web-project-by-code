@@ -543,9 +543,84 @@ EdgA/90.0.818.46
 
 
 
+### 24.2 원본 이미지 보여주기
+
+#### 24.2.1 원본 이미지를 보여줄 `<div>` 처리
+
+IE 11에서 특이한 현상이 있다.
+
+```javascript
+ console.log(originPath);
+          str += "<li>"
+              + "<a href=\"javascript:showImage(\'" + originPath + "\')\">"
+              + "<img src='/display?fileName=" + fileCallPath + "'>"
+              + "</a>"
+              + "</li>";
+```
+
+originPath 의 내용은 URI 인코딩 된 내용이고 이걸 console.log로 찍었을 때는 이상이 없었는데, 이 값이 showImage() 함수로 전달되어 alert로 값을 띄울 때에는 한글 부분이 깨졌다..😅 얼럿에서만 그런 거면 상관은 없는데...
+
+아니다 originPath의 파일명을 미리 encode를 할 필요가 없는 것 같다. 미리 encode하면 showImage에서 한글이 깨져서, 요청시점에 하는게 맞는 것 같다... 저자님은 그렇게 하셨음..
 
 
 
+### 최신 자바스크립트 코드로 바꾸기
+
+* html() 으로 img 갱신하는 부분
+
+  * 비우고 img 엘리먼트를 추가 했다.
+
+    * https://stackoverflow.com/questions/3955229/remove-all-child-elements-of-a-dom-node-in-javascript
+
+      ```javascript
+          const img = document.createElement('img')
+          img.setAttribute('src', 'display?fileName=' + encodeURI(fileCallPath));
+          bigPicture.textContent = '';
+          bigPicture.insertAdjacentElement('beforeend',img);
+      ```
+
+* css 스타일 지정하는 것들.. show(), hide()
+
+  ```javascript
+  bigPictureWrapper.style.display = 'flex'
+  ...
+  document.querySelector(".bigPictureWrapper").style.display = 'none';
+  ```
+
+  엘리먼트의 style 속성의 display 값을 변경해줌.
+
+* animate()
+
+  이게 좀 어려운거 같았는데, 엘리먼트에 대해 바로 animate()를 사용할 수 있었다. jQuery와 동일하진 않지만.. 옵션만 다르게 전달하면 되었다.
+
+  * https://developer.mozilla.org/en-US/docs/Web/API/Element/animate
+
+    ```javascript
+    // 썸네일 클릭했을 때.. 크기 키우기
+    bigPicture.animate([
+      {transform: 'scale(0)'},
+      {transform: 'scale(1)'}
+    ], {
+      duration: 1000,
+      iterations: 1,
+    })
+    ...
+    
+    // 열려진 원본 이미지 클릭 했을 때, 크기 줄이면서 레이어 숨기기
+    document.querySelector(".bigPicture").animate([
+      {transform: 'scale(1)'},
+      {transform: 'scale(0)'}
+    ], {
+      duration: 1000,
+      iterations: 1
+    })
+    setTimeout(function () {
+      document.querySelector(".bigPictureWrapper").style.display = 'none'
+    }, 950) // 숨기는 것을 1초로 하면 깜빡임이 눈에 잘띄는 편이라 약간 시간을 줄였다.
+    
+    ```
+
+    잘 되어서 다행이긴 하다. 😄
 
 
 
