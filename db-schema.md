@@ -2,11 +2,27 @@
 
 처음부터 한번에 스키마를 완성하지 않고 진행해나가면서 만들어나가서 약간 정리가 필요했다. 
 
+##### SYS계정으로 로그인하여  book_ex 사용자 생성
+
 ```sql
+ALTER SESSION SET "_ORACLE_SCRIPT"=true;
+
+CREATE USER book_ex IDENTIFIED BY book_ex
+DEFAULT TABLESPACE USERS
+TEMPORARY TABLESPACE TEMP;
+
+GRANT CONNECT, RESOURCE TO book_ex;
+
 /*************************************
  * 0. 테이블 스페이스 공간할당 권한 주기 *
  *************************************/
 ALTER USER book_ex DEFAULT TABLESPACE USERS QUOTA UNLIMITED ON USERS;
+```
+
+##### 이후 아래 내용을 book_ex 계정으로 로그인 후 진행하자!
+
+```sql
+
 
 /******************
  * 3장 진행 스키마 *
