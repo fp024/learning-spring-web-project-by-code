@@ -108,7 +108,7 @@ class ReplyControllerTest {
   @Test
   void testModify() throws Exception {
     ReplyVO reply = new ReplyVO();
-    reply.setRno(2L);
+    reply.setRno(1L);
     reply.setReply(LocalDateTime.now().toString());
 
     String jsonBody = GsonHelper.toJson(reply);
@@ -116,7 +116,7 @@ class ReplyControllerTest {
     String responseContent =
         mockMvc
             .perform(
-                MockMvcRequestBuilders.put("/replies/2")
+                MockMvcRequestBuilders.put("/replies/1")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(jsonBody))
             .andExpect(status().isOk())
