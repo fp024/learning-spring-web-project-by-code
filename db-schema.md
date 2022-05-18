@@ -92,6 +92,20 @@ CREATE table tbl_sample1 (col1 VARCHAR2(500));
 CREATE table tbl_sample2 (col2 VARCHAR2(50));
 
 
+/******************
+ * 6장 진행 스키마 *
+ ******************/
+CREATE TABLE tbl_attach (
+  uuid        VARCHAR2(100) NOT NULL,
+  uploadPath  VARCHAR2(200) NOT NULL,
+  fileName    VARCHAR2(100) NOT NULL,
+  fileType    CHAR(1)       DEFAULT 'I',
+  bno         NUMBER(10,0)
+);
+
+ALTER TABLE tbl_attach ADD CONSTRAINT pk_attach PRIMARY KEY (uuid);
+
+ALTER TABLE tbl_attach ADD CONSTRAINT fk_board_attach FOREIGN KEY (bno) REFERENCES tbl_board(bno);
 
 ```
 
