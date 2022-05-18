@@ -2,81 +2,81 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8"/>
-  <title>Ajax 파일 업로드 테스트 페이지</title>
-  <style>
-    .uploadResult {
-      width: 100%;
-      background-color: gray;
-    }
+    <meta charset="UTF-8"/>
+    <title>Ajax 파일 업로드 테스트 페이지</title>
+    <style>
+        .uploadResult {
+            width: 100%;
+            background-color: gray;
+        }
 
-    .uploadResult ul {
-      display: flex;
-      flex-flow: row;
-      justify-content: center;
-      align-items: center;
-    }
+        .uploadResult ul {
+            display: flex;
+            flex-flow: row;
+            justify-content: center;
+            align-items: center;
+        }
 
-    .uploadResult ul li {
-      list-style: none;
-      padding: 10px;
-      align-content: center;
-      text-align: center;
-    }
+        .uploadResult ul li {
+            list-style: none;
+            padding: 10px;
+            align-content: center;
+            text-align: center;
+        }
 
-    .uploadResult ul li img {
-      width: 100px
-    }
+        .uploadResult ul li img {
+            width: 100px
+        }
 
-    .uploadResult ul li span {
-      color: white;
-    }
+        .uploadResult ul li span {
+            color: white;
+        }
 
-    .bigPictureWrapper {
-      position: absolute;
-      display: none;
-      justify-content: center;
-      align-items: center;
-      top: 0%;
-      width: 100%;
-      height: 100%;
-      z-index: 100;
-      background: rgba(255, 255, 255, 0.5);
-    }
+        .bigPictureWrapper {
+            position: absolute;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            top: 0%;
+            width: 100%;
+            height: 100%;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.5);
+        }
 
-    .bigPicture {
-      position: relative;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
+        .bigPicture {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
 
-    .bigPicture img {
-      width: 600px;
-    }
-  </style>
+        .bigPicture img {
+            width: 600px;
+        }
+    </style>
 </head>
 
 <body>
 <h1>Upload with Ajax</h1>
 
 <div class="uploadDiv">
-  <input type="file" name="uploadFile" multiple>
+    <input type="file" name="uploadFile" multiple>
 </div>
 
 <div class="uploadResult">
-  <ul>
+    <ul>
 
-  </ul>
+    </ul>
 </div>
 
 <button id="uploadBtn">Upload</button>
 
 <!-- 원본 이미지 보여주는 레이어 -->
 <div class="bigPictureWrapper">
-  <div class="bigPicture">
+    <div class="bigPicture">
 
-  </div>
+    </div>
 </div>
 
 <script>
@@ -126,20 +126,22 @@
       for (const obj of uploadResultArr) {
         if (!obj.image) {
           const fileCallPath = encodeURIComponent(
-              obj.uploadPath + "/" + obj.uuid + "_" + obj.fileName)
+            obj.uploadPath + "/" + obj.uuid + "_" + obj.fileName)
           str += "<li><a href='/download?fileName=" + fileCallPath
-              + "'><img src='/resources/img/attach.png'>" + obj.fileName + "</a></li>";
+            + "'><img src='/resources/img/attach.png'>" + obj.fileName + "</a>"
+            + "<span data-file=\'" + fileCallPath + "\' data-type='file'> x </span>"
+            + "</li>";
         } else {
           const fileCallPath = encodeURIComponent(
-              obj.uploadPath + "/s_" + obj.uuid + "_" + obj.fileName);
+            obj.uploadPath + "/s_" + obj.uuid + "_" + obj.fileName);
           const originPath =
-              obj.uploadPath.replace(new RegExp(/\\/g), "/") + "/" + obj.uuid + "_" + obj.fileName;
+            obj.uploadPath.replace(new RegExp(/\\/g), "/") + "/" + obj.uuid + "_" + obj.fileName;
           console.log(originPath);
           str += "<li>"
-              + "<a href=\"javascript:showImage(\'" + originPath + "\')\">"
-              + "<img src='/display?fileName=" + fileCallPath + "'>"
-              + "</a>"
-              + "</li>";
+            + "<a href=\"javascript:showImage(\'" + originPath + "\')\">"
+            + "<img src='/display?fileName=" + fileCallPath + "'></a>"
+            + "<span data-file=\'" + fileCallPath + "\' data-type='image'> x </span>"
+            + "</li>";
         }
       }
       uploadResult.insertAdjacentHTML('beforeend', str)
@@ -179,13 +181,40 @@
         method: "POST",
         body: formData
       }).then(response => response.json())
-      .then(result => {
-        console.log(result)
+        .then(result => {
+          console.log(result)
 
-        showUploadedFile(result)
+          showUploadedFile(result)
 
-        document.querySelector('.uploadDiv').replaceWith(cloneObj)
-      })
+          document.querySelector('.uploadDiv').replaceWith(cloneObj)
+        })
+    })
+
+
+    document.querySelector('.uploadResult').addEventListener('click', function (e) {
+      const target = e.target
+
+      if (target.tagName.toLowerCase() !== 'span') {
+        return
+      }
+
+      // https://developer.mozilla.org/ko/docs/Learn/HTML/Howto/Use_data_attributes
+      const param = new URLSearchParams({"fileName": target.dataset.file, "type": target.dataset.type})
+      console.log(param)
+
+      // https://developer.mozilla.org/ko/docs/Web/API/Fetch_API/Using_Fetch#%EC%9A%94%EC%B2%AD_%EC%98%B5%EC%85%98_%EC%A0%9C%EA%B3%B5
+      // https://developer.mozilla.org/ko/docs/Web/API/URLSearchParams
+      fetch("/deleteFile", {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: param
+      }).then(response => response.text())
+        .then(result => {
+          alert(result)
+          target.closest("li").remove()
+        })
     })
   })
 </script>

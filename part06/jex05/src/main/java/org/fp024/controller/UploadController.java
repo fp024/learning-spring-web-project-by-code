@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -26,6 +27,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
@@ -272,5 +274,32 @@ public class UploadController {
     String resourceOriginalName = downloadName.substring(downloadName.indexOf('_') + 1);
     LOGGER.info("UUID가 제거된 다운로드 파일명: {}", resourceOriginalName);
     return resourceOriginalName;
+  }
+
+  /**
+   * 첨부파일 삭제
+   *
+   * @param fileName 삭제할 파일명
+   * @param type 삭제할 파일 타입
+   * @return 삭제 결과
+   */
+  @PostMapping("/deleteFile")
+  @ResponseBody
+  public ResponseEntity<String> deleteFile(String fileName, String type) {
+    LOGGER.info("deleteFile: {}", fileName);
+
+    File file =
+        new File(
+            UPLOAD_FOLDER + File.separator + URLDecoder.decode(fileName, StandardCharsets.UTF_8));
+
+    if (type.equals("image")) {
+      String largeFileName = file.getAbsolutePath().replace("s_", "");
+      LOGGER.info("largeFileName: ", largeFileName);
+      File largeFile = new File(largeFileName);
+      largeFile.delete();
+    }
+
+    file.delete();
+    return new ResponseEntity<>("deleted", HttpStatus.OK);
   }
 }

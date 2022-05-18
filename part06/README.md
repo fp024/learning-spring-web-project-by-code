@@ -635,13 +635,66 @@ originPath 의 내용은 URI 인코딩 된 내용이고 이걸 console.log로 �
 
 #### 24.3.1 일반 파일과 이미지 파일의 삭제
 
+* 첨부 파일 삭제를 위한 `<span>` x가 업로드 후에 생성되기 때문에 이벤트 위임 방식으로 처리해야함.
+  * `<span>` 상위에 `.uploadResult` 에 click을 걸지만 하위 span가 span일 경우에만 삭제 함수가 실행되도록 함.
+  * jQuery를 사용하지 않고 순수 자바스크립트로 사용할 때는 `event.target.tagName`을 검사해서 span일 때만 삭제함수가 동작하도록 하면 될 것 같다.
 
+* 서버에서 첨부파일의 삭제
+
+  
+
+* 최신 Java에서 URLDecoder 의 선언 중 Charset 타입으로 문자셋정보를 전달하면 [UnsupportedEncodingException](https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/io/UnsupportedEncodingException.html)을 던지지 않는 메서드가 추가되어있다.
+
+  * Java 8
+    * https://docs.oracle.com/javase/8/docs/api/java/net/URLDecoder.html
+  * Java 17
+    * https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/net/URLDecoder.html
+
+*  x 누를때... 이미지를 감싸는 `<li>`도 삭제되도록 개선했다.
+
+* 최신 JavaScript 코드로 개선
+
+  ```javascript
+  document.querySelector('.uploadResult').addEventListener('click', function (e) {
+    const target = e.target
+  
+    if (target.tagName.toLowerCase() !== 'span') {
+      return
+    }
+  
+    const param = new URLSearchParams({"fileName": target.dataset.file, "type": target.dataset.type})
+    console.log(param)
+  
+    fetch("/deleteFile", {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: param
+    }).then(response => response.text())
+      .then(result => {
+      alert(result)
+      target.closest("li").remove()
+    })
+  })
+  ```
+  
+  * data 속성을 사용하는 방법
+    * https://developer.mozilla.org/ko/docs/Learn/HTML/Howto/Use_data_attributes
+  * ajax form 전송
+    * https://developer.mozilla.org/ko/docs/Web/API/Fetch_API/Using_Fetch#%EC%9A%94%EC%B2%AD_%EC%98%B5%EC%85%98_%EC%A0%9C%EA%B3%B5
+    * https://developer.mozilla.org/ko/docs/Web/API/URLSearchParams
+    * jQuery.ajax에서는 별도 옵션을 지정하지 않으면 알아서 key=value form 데이터로 전송하는데, fetch를 사용할 때는 명시적으로 지정을 해줘야했다.
+  * 부모 요소 찾기
+    * https://developer.mozilla.org/ko/docs/Web/API/Element/closest
 
 
 
 #### 24.3.2 첨부파일의 삭제 고민
 
-
+* 사용자가 비정상적으로 브라우저를 종료하고 나가는 행위에 대처하는 방법?
+  * 실제 최종적인 결과와 서버에 업로드된 파일의 목로글 비교해서 처리하기
+  * spring-batch 또는 Quartz 라이브러리를 사용해 스캐줄 배치 처리
 
 
 
@@ -700,5 +753,6 @@ originPath 의 내용은 URI 인코딩 된 내용이고 이걸 console.log로 �
 
 ## 정오표
 
-* 
+* p546
+  * `"<div></li>"` : div가 빠져야할 것 같다.
 
