@@ -1,12 +1,12 @@
 package org.fp024.domain;
 
-import java.time.LocalDateTime;
-
-import org.apache.ibatis.type.Alias;
-
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.apache.ibatis.type.Alias;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -21,4 +21,6 @@ public class BoardVO {
   private LocalDateTime updateDate;
 
   private int replyCount;
+
+  private List<BoardAttachVO> attachList;
 }

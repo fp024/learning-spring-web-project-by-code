@@ -705,6 +705,81 @@ originPath 의 내용은 URI 인코딩 된 내용이고 이걸 console.log로 �
 * uuid와 파일명, 파일 경로등을 저장할 필요가 있으므로, 테이블 생성이 필요하다
   * [DB 스키마 정리](../db-schema.md) 문서의 `6장 진행스키마`를 참고할 것!
 
+* 단순 예제 프로젝트는 jQuery 사용처를 최신 순수 자바스크립트 코드로 바꾸는 작업을 진행했는데, 프로젝트는 그대로 jQuery 유지하는 것이 낫겠다. 그 부분이 이 스터디의 핵심 주제가 아니기도하고 바꾸려면 시간이 많이 걸릴듯 😓...
+
+### 25.1 첨부파일 정보를 위한 준비
+
+* BoardAttachVO의 fileType 필드는 boolean으로 되어있던데, FileType이라는 Enum으로 바꿨음.
+
+  * DB 컬럼에는 이미지일 경우 "I"로 저장하기로 한 것 같은데, mybatis의 EnumTypeHandler를 상속받아 FileTypeEnumHandler를 만들어서 저장할 때는 FileType의 코드 값으로 저장하고 불러올 때는 코드 값으로 FileType Enum이 만들어지도록 처리함.
+
+    ```java
+    /**
+     * 파일 타입 구분 Enum
+     * 일반 파일 또는 이미지 파일 등등..
+     */
+    public enum FileType {
+      NORMAL("N"),
+      IMAGE("I");
+    
+      @Getter private final String code;
+    
+      FileType(String code) {
+        this.code = code;
+      }
+    
+      public static FileType valueByCode(String code) {
+        for (FileType fileType : FileType.values()) {
+          if (fileType.code.equals(code)) {
+            return fileType;
+          }
+        }
+        throw new IllegalArgumentException("잘못된 파일 타입 코드 입니다. 코드:" + code);
+      }
+    }
+    
+    
+    /**
+     * FileType 핸들러
+     */
+    @MappedTypes(FileType.class)
+    public class FileTypeEnumHandler extends EnumTypeHandler<FileType> {
+      public FileTypeEnumHandler(Class<FileType> type) {
+        super(type);
+      }
+    
+      @Override
+      public void setNonNullParameter(
+          PreparedStatement ps, int i, FileType parameter, JdbcType jdbcType) throws SQLException {
+        if (jdbcType == null) {
+          ps.setString(i, parameter.getCode());
+        } else {
+          ps.setObject(i, parameter.getCode(), jdbcType.TYPE_CODE);
+        }
+      }
+    
+      @Override
+      public FileType getNullableResult(ResultSet rs, String columnName) throws SQLException {
+        String s = rs.getString(columnName);
+        return s == null ? null : FileType.valueByCode(s);
+      }
+    
+      @Override
+      public FileType getNullableResult(ResultSet rs, int columnIndex) throws SQLException {
+        String s = rs.getString(columnIndex);
+        return s == null ? null : FileType.valueByCode(s);
+      }
+    
+      @Override
+      public FileType getNullableResult(CallableStatement cs, int columnIndex) throws SQLException {
+        String s = cs.getString(columnIndex);
+        return s == null ? null : FileType.valueByCode(s);
+      }
+    }
+    ```
+
+    핸들러를 잘 써본적이 없어서 mybatis 내장된 기본 열거형 핸들러 상속해서 약간 수정했는데... 동작에는 문제 없었다. 기본 열거형은 Enum의 name() 기준으로 저장하는데... 위와 같이 Handler를 사용자정의하지 않으면 "IMAGE"라는 문자열을 그대로 저장하려하기 때문에... code로 저장 및 조회되도록 바꿔줘야했다.
+
 
 
 ## 26. 게시물의 조회와 첨부파일
@@ -737,7 +812,7 @@ originPath 의 내용은 URI 인코딩 된 내용이고 이걸 console.log로 �
 
 ## jex05-board 프로젝트 진행 특이사항
 
-
+* 신규 테이블 `TBL_ATTACH`가 추가 되었으므로 mybatis generator로 도메인과 매퍼를 자동생성 하도록 수정해야한다.
 
 
 

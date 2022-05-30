@@ -97,11 +97,12 @@ CREATE table tbl_sample2 (col2 VARCHAR2(50));
  ******************/
 CREATE TABLE tbl_attach (
   uuid        VARCHAR2(100) NOT NULL,
-  uploadPath  VARCHAR2(200) NOT NULL,
-  fileName    VARCHAR2(100) NOT NULL,
-  fileType    CHAR(1)       DEFAULT 'I',
+  uploadpath  VARCHAR2(200) NOT NULL,
+  filename    VARCHAR2(100) NOT NULL,
+  filetype    CHAR(1)       DEFAULT 'I',
   bno         NUMBER(10,0)
 );
+/* Oracle 에서는 컬럼의 대소문자를 구분하지 않으므로, 위의 컬럼 명에 CamelCase로 되어있던 것을 전부 소문자로 바꿨다. */
 
 ALTER TABLE tbl_attach ADD CONSTRAINT pk_attach PRIMARY KEY (uuid);
 
