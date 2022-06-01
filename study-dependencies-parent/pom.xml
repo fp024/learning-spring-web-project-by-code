@@ -61,7 +61,7 @@
 
     <json-path.version>2.7.0</json-path.version>
 
-    <mockito.version>4.5.1</mockito.version>
+    <mockito.version>4.6.0</mockito.version>
 
     <hamcrest.version>2.2</hamcrest.version>
 
@@ -89,7 +89,7 @@
 
     <!-- cargo 플러그인 설정 -->
     <cargo.version>1.9.11</cargo.version>
-    <cargo-tomcat9x.version>9.0.62</cargo-tomcat9x.version>
+    <cargo-tomcat9x.version>9.0.63</cargo-tomcat9x.version>
     <cargo-context-path>${jetty-context-path}</cargo-context-path>
     <cargo-server-port>${jetty.port}</cargo-server-port>
 
