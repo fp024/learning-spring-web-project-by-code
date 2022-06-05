@@ -782,6 +782,45 @@ originPath 의 내용은 URI 인코딩 된 내용이고 이걸 console.log로 �
 
 
 
+### 25.2 등록을 위한 화면 처리
+
+#### 25.2.1 JavaScript 처리
+
+* CSS 확인사항
+  아래 부분은 X 아이콘 표시 스타일인데... 나는 fontawesome의 버전 5를 CDN을 통해 사용하므로 아래 URL의 내용대로 사용해보자. 부트 스트랩도 아이콘 사용하기 편하게 되어있는 것 같다.
+  
+  * fontawesome :  https://fontawesome.com/v5/icons/times?s=solid
+  
+    ```html
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <!-- ... -->
+    <i class='fas fa-times'></i>
+    ```
+  
+  * bootstrap : https://icons.getbootstrap.com/icons/x/
+  
+    ```html
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css">
+    <!-- ... -->
+    <i class='bi bi-x'></i>
+    ```
+    
+
+
+
+#### 25.2.2 첨부파일의 변경 처리
+
+* **TODO**: 첨부 파일을 삭제해도, 파일 선택 버튼 옆에  파일 명이나 파일 선택 갯수가 남는데, 이거 어떻게 해야할까?
+  * 먼저 예제에서는 Upload 버튼을 따로 둬서, input file을 복사해서 사용하면 됬던 것 같은데, 이부분 어떻해해야할지?
+
+
+
+
+
+
+
+
+
 ## 26. 게시물의 조회와 첨부파일
 
 
