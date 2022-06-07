@@ -36,4 +36,14 @@ public class CommonUtil {
     }
     return false;
   }
+
+  /** Windows 경로를 Unix 경로로 변환 */
+  public static String winPathToUnixPath(String path) {
+    return path.replace("\\", "/");
+  }
+
+  /** Unix 경로를 Windows 경로로 변환 */
+  public static String unixPathToWinPath(String path) {
+    return path.replace("/", "\\");
+  }
 }

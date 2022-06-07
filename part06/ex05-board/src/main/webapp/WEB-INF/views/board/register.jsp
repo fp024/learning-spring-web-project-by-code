@@ -95,6 +95,19 @@
       $("button[type='submit']").on("click", function (e) {
         e.preventDefault();
         console.log("submit clicked");
+
+        var str = "";
+
+        $(".uploadResult ul li").each(function (i, obj) {
+          var jobj = $(obj);
+          console.dir(jobj);
+          str += "<input type='hidden' name='attachList[" + i + "].fileName' value='" + jobj.data("filename") + "'>";
+          str += "<input type='hidden' name='attachList[" + i + "].uuid' value='" + jobj.data("uuid") + "'>";
+          str += "<input type='hidden' name='attachList[" + i + "].uploadPath' value='" + jobj.data("path") + "'>";
+          str += "<input type='hidden' name='attachList[" + i + "].fileType' value='" + jobj.data("type") + "'>";
+        });
+        formObj.append(str).submit();
+
       });
 
       var regex = new RegExp("(.*?)\.(exe|sh|zip|alz)$");
@@ -124,24 +137,24 @@
         $(uploadResultArr).each(function (i, obj) {
           if (obj.fileType === 'IMAGE') {
             var fileCallPath = encodeURIComponent(
-                    obj.uploadPath + "/s_" + obj.uuid + "_" + obj.fileName);
+              obj.uploadPath + "/s_" + obj.uuid + "_" + obj.fileName);
             var originPath =
-                    obj.uploadPath.replace(new RegExp(/\\/g), "/") + "/" + obj.uuid + "_" + obj.fileName;
+              obj.uploadPath.replace(new RegExp(/\\/g), "/") + "/" + obj.uuid + "_" + obj.fileName;
             console.log(originPath);
-            str += "<li><div>"
-                    + "<span>" + obj.fileName + "</span>"
-                    + "<button type='button' data-file=\'" + fileCallPath + "\' data-type='IMAGE' class='btn btn-warning btn-circle'><i class='fas fa-times'></i></button><br>"
-                    + "<img src='/display?fileName=" + fileCallPath + "'></a>"
-                    + "</div></li>";
+            str += "<li data-path='" + obj.uploadPath + "' data-uuid='" + obj.uuid + "' data-filename='" + obj.fileName + "' data-type='" + obj.fileType + "'><div>"
+              + "<span>" + obj.fileName + "</span>"
+              + "<button type='button' data-file=\'" + fileCallPath + "\' data-type='IMAGE' class='btn btn-warning btn-circle'><i class='fas fa-times'></i></button><br>"
+              + "<img src='/display?fileName=" + fileCallPath + "'></a>"
+              + "</div></li>";
           } else {
             var fileCallPath = encodeURIComponent(
-                    obj.uploadPath + "/" + obj.uuid + "_" + obj.fileName);
-            str += "<li><div>"
-                    + "<span>" + obj.fileName + "</span>"
-                    + "<button type='button' data-file=\'" + fileCallPath + "\' data-type='NORMAL' class='btn btn-warning btn-circle'><i class='fas fa-times'></i></button><br>"
-                    + "<a href='/download?fileName=" + fileCallPath
-                    + "'><img src='/resources/img/attach.png'></a>"
-                    + "</div></li>";
+              obj.uploadPath + "/" + obj.uuid + "_" + obj.fileName);
+            str += "<li data-path='" + obj.uploadPath + "' data-uuid='" + obj.uuid + "' data-filename='" + obj.fileName + "' data-type='" + obj.fileType + "'><div>"
+              + "<span>" + obj.fileName + "</span>"
+              + "<button type='button' data-file=\'" + fileCallPath + "\' data-type='NORMAL' class='btn btn-warning btn-circle'><i class='fas fa-times'></i></button><br>"
+              + "<a href='/download?fileName=" + fileCallPath
+              + "'><img src='/resources/img/attach.png'></a>"
+              + "</div></li>";
           }
         });
 

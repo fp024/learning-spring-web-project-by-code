@@ -1,7 +1,7 @@
 package org.fp024.controller;
 
-import java.util.List;
-
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.fp024.domain.BoardVO;
 import org.fp024.domain.Criteria;
 import org.fp024.domain.PageDTO;
@@ -16,8 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.util.List;
 
 @Slf4j
 @Controller
@@ -53,12 +52,15 @@ public class BoardController {
 
   @PostMapping("/register")
   public String register(BoardVO board, RedirectAttributes rttr) {
+    LOGGER.info("====================================");
     LOGGER.info("register: {}", board);
 
+    if (board.getAttachList() != null) {
+      board.getAttachList().forEach(attach -> LOGGER.info(attach.toString()));
+    }
+    LOGGER.info("====================================");
     service.register(board);
-
     rttr.addFlashAttribute("result", board.getBno());
-
     // Spring MVC가 내부적으로 response.sendRedirect()처리를 함
     return "redirect:/board/list";
   }

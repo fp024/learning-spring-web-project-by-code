@@ -1,12 +1,17 @@
 package org.fp024.service;
 
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.fp024.domain.BoardVO;
 import org.fp024.domain.Criteria;
+import org.fp024.mapper.BoardAttachMapper;
 import org.fp024.mapper.BoardMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+
+import static org.fp024.util.CommonUtil.winPathToUnixPath;
 
 @Slf4j
 @Service
@@ -16,10 +21,29 @@ public class BoardServiceImpl implements BoardService {
   // 모든 인자에 대한 생성자를 자동으로 만들도록 lombok에서 정의했음.
   private final BoardMapper mapper;
 
+  private final BoardAttachMapper attachMapper;
+
+  @Transactional
   @Override
   public void register(BoardVO board) {
     LOGGER.info("register..... {}", board);
     mapper.insertSelectKey(board);
+
+    if (board.getAttachList() == null || board.getAttachList().isEmpty()) {
+      return;
+    }
+
+    board
+        .getAttachList()
+        .forEach(
+            attach -> {
+              attach.setBno(
+                  board.getBno()); // 신규 등록시는 최초에 bno가 없지만 insert 이후로 board에다 bno를 MyBatis가 넣어줄 것 임.
+              // 업로드 경로를 DB에 저장을 할 때만, Unix 경로로 사용해보자!,
+              // 요즘 윈도우에서는 Unix 경로를 쓰더라도 잘 될 것 같은데... 조회 추가해보면서 확인해보자.
+              attach.setUploadPath(winPathToUnixPath(attach.getUploadPath()));
+              attachMapper.insert(attach);
+            });
   }
 
   @Override
