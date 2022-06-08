@@ -1,17 +1,17 @@
 package org.fp024.service;
 
+import static org.fp024.util.CommonUtil.winPathToUnixPath;
+
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.fp024.domain.BoardAttachVO;
 import org.fp024.domain.BoardVO;
 import org.fp024.domain.Criteria;
 import org.fp024.mapper.BoardAttachMapper;
 import org.fp024.mapper.BoardMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-
-import static org.fp024.util.CommonUtil.winPathToUnixPath;
 
 @Slf4j
 @Service
@@ -74,5 +74,11 @@ public class BoardServiceImpl implements BoardService {
   public long getTotal(Criteria criteria) {
     LOGGER.info("get total count");
     return mapper.getTotalCount(criteria).get("count");
+  }
+
+  @Override
+  public List<BoardAttachVO> getAttachList(Long bno) {
+    LOGGER.info("get Attach list by bno {}", bno);
+    return attachMapper.findByBno(bno);
   }
 }

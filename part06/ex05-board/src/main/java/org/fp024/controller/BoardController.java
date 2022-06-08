@@ -2,11 +2,15 @@ package org.fp024.controller;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.fp024.domain.BoardAttachVO;
 import org.fp024.domain.BoardVO;
 import org.fp024.domain.Criteria;
 import org.fp024.domain.PageDTO;
 import org.fp024.domain.SearchType;
 import org.fp024.service.BoardService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +18,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
@@ -94,5 +99,12 @@ public class BoardController {
       rttr.addFlashAttribute("result", "success");
     }
     return "redirect:/board/list" + criteria.getLink();
+  }
+
+  @GetMapping(value = "/getAttachList", produces = MediaType.APPLICATION_JSON_VALUE)
+  @ResponseBody
+  public ResponseEntity<List<BoardAttachVO>> getAttachList(Long bno) {
+    LOGGER.info("getAttachList: {}", bno);
+    return new ResponseEntity<>(service.getAttachList(bno), HttpStatus.OK);
   }
 }

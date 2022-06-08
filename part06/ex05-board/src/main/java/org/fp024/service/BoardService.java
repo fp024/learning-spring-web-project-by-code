@@ -2,6 +2,7 @@ package org.fp024.service;
 
 import java.util.List;
 
+import org.fp024.domain.BoardAttachVO;
 import org.fp024.domain.BoardVO;
 import org.fp024.domain.Criteria;
 
@@ -17,4 +18,7 @@ public interface BoardService {
   List<BoardVO> getList(Criteria criteria);
 
   long getTotal(Criteria criteria);
+
+  List<BoardAttachVO> getAttachList(Long bno);
+
 }
