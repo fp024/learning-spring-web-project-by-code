@@ -26,4 +26,10 @@
     WHERE bno = #{bno}
   </select>
 
+  <select id="getOldFiles" resultType="boardAttachVO">
+    SELECT uuid, uploadpath, filename, filetype, bno
+    FROM tbl_attach
+    WHERE uploadpath = TO_CHAR(SYSDATE - 1, 'yyyy/mm/dd')
+  </select>
+
 </mapper>

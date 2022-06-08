@@ -940,19 +940,81 @@ originPath 의 내용은 URI 인코딩 된 내용이고 이걸 console.log로 �
 
 
 
-
-
-
-
-
-
-
-
 ## 29. 잘못 업로드된 파일 삭제
 
+지금 까지 구현에서 더 고려해야할 점.
+
+파일이 업로드만 되어있고, 연관이 없는 상태 ( DB에 첨부파일 정보가 없지만, 업로드 경로에는 파일이 남아있는 상태 )
+
+1. 첨부 파일만 등록하고 게시물 등록을 하지 않았을 때.
+2. 게시물 수정시 기존 파일을 삭제하고 등록 할 때, 연관만 해제되고 파일은 서버에 그대로 있음
+
+### 29.1 잘못 업로드된 파일의 정리
+
+이런 파일들을 찾을 때, 어제 기준으로 찾아야함. 오늘 기준으로 찾을 경우 현재 작성 및 수정하고 있는 게시물에 영향을 줄 수 있음.
 
 
 
+### 29.2 Quzrtz 라이브러리 설정
+
+* 현재 프로젝트는 `Quartz` 사용해보고, `jex05-board`에서는 `Spring Scheduler` 사용해보자!
+
+#### 29.2.1 Java 설정을 이용하는 경우
+
+* jex05-board에서 진행할 예정.
+
+#### 29.2.2 Task 작업의 처리
+
+🎃 일단 띄어 봤는데... HikariCP-java7 클래스 중복이 일어난다. Quartz가 끌어오는 것 중이 중복이 있는지 살펴보자!
+
+```
+[INFO] +- org.quartz-scheduler:quartz:jar:2.3.2:compile
+[INFO] |  +- com.mchange:c3p0:jar:0.9.5.4:compile
+[INFO] |  +- com.mchange:mchange-commons-java:jar:0.2.15:compile
+[INFO] |  \- com.zaxxer:HikariCP-java7:jar:2.4.13:compile
+```
+
+quartz가 끌고 오는데, 나는 HikariCP 상위 버전을 사용하고 있으므로 이부분은 제외처리를 하자!
+
+```xml
+    <dependency>
+      <groupId>org.quartz-scheduler</groupId>
+      <artifactId>quartz</artifactId>
+      <version>${quartz.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>com.zaxxer</groupId>
+          <artifactId>HikariCP-java7</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+```
+
+
+
+
+
+###  29.3 BoardAttachMapper 수정
+
+```sql
+SELECT TO_CHAR(SYSDATE - 1, 'yyyy/mm/dd') FROM DUAL
+```
+
+어제 날짜를 구할 수 있긴한데... 웹서버 기준 날짜로 Java에서 하루전 날짜 String 을 DB에 전달해주는 것이 테스트가 편할 수 있을 것 같은데... jex05에서는 그렇게 해봅시다 🎈
+
+
+
+### 29.4 cron 설정과 삭제 처리
+
+```java
+// 매일 새벽 두시 실행
+@Scheduled(cron="0 0 2 * * *")
+public void checkFiles() throws Exception { ... }
+```
+
+* Java 코드에서 하루전 날짜 구하는 코드 개정판에서는 Java 8 날짜 함수로 바꿔주시면 좋을 것 같다.
+
+* `.collect(Collectors.toList());` 를 그냥 `.toList()`로 바꿀 수 있는데 Java 16 부터 메서드가 추가된 것 같다.
 
 
 

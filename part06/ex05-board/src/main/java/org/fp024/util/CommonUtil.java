@@ -15,8 +15,28 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 public class CommonUtil {
+
+  /**
+   * 현재 폴더 경로명 가져오기
+   *
+   * @return 현재 폴더 경로명
+   */
   public static String getFolder() {
+    return getFolderBeforeDays(0);
+  }
+
+  /**
+   * 하루전 폴더 경로명 가져오기
+   *
+   * @return 하루전 폴더 경로명
+   */
+  public static String getFolderYesterday() {
+    return getFolderBeforeDays(1);
+  }
+
+  private static String getFolderBeforeDays(int days) {
     return LocalDateTime.now()
+        .minusDays(days)
         .format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
         .replace("-", File.separator);
   }

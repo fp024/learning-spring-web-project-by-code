@@ -32,4 +32,7 @@ public interface BoardAttachMapper {
    * @param bno 게시물 번호
    */
   void deleteAll(Long bno);
+
+  /** 어제 등록된 모든 파일의 목록을 가져오기 */
+  List<BoardAttachVO> getOldFiles();
 }

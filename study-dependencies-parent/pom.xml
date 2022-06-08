@@ -23,6 +23,8 @@
 
     <org.aspectj-version>1.9.9.1</org.aspectj-version>
 
+    <quartz.version>2.3.2</quartz.version>
+
     <jackson.version>2.13.3</jackson.version>
     <!-- 마이크로 보안 패치가 있을때, jackson-databind 만 패치되기도 함. 
          jackson-databind는 별도로 분리해두는게 낫겠다. -->
