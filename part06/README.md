@@ -843,13 +843,30 @@ originPath 의 내용은 URI 인코딩 된 내용이고 이걸 console.log로 �
 
 
 
-
-
 ### 26.1 BoarService와 BoardController 수정
 
 
 
+### 26.2 BoardController의 변경과 화면 처리
 
+* `MediaType.APPLICATION_JSON_UTF8_VALUE`는 Deprecated 되었으니, `MediaType.APPLICATION_JSON_VALUE` 을 사용하자.
+
+#### 26.2.1 게시물 조회 화면의 처리
+
+* fontawesome에서 Icon 찾을 때, Free로된 것을 사용해야 잘 적용되는 것 같다.
+  * https://fontawesome.com/v5/icons/paperclip?s=solid
+
+
+
+#### 26.2.2 첨부파일 보여주기
+
+
+
+#### 26.2.3 첨부파일 클릭 시 이벤트 처리
+
+* **TODO:** 이미지를 animate로 열때 약간 화면 떨림이 나타나는데, 이부분은 잘 모르겠다.
+
+#### 26.2.4 원본 이미지 창 닫기
 
 
 
@@ -857,7 +874,31 @@ originPath 의 내용은 URI 인코딩 된 내용이고 이걸 console.log로 �
 
 ## 27. 게시물의 삭제와 첨부파일
 
+실제 파일 삭제 작업 추가이전에, 데이터 베이스에서의 첨부파일 정보 삭제 기능을 먼저 진행.
 
+
+
+### 27.1 첨부파일 삭제 처리
+
+#### 27.1.1 BoardServiceImpl의 변경
+
+
+
+#### 27.1.2 BoardController의 파일 삭제
+
+파일 삭제 작업 순서
+
+* 해당 게시물의 첨부파일 정보를 미리 준비
+* DB에서 게시물과 첨부파일 데이터 삭제
+* 첨부파일 목록을 이용해서 해당 디렉토리의 일반파일 삭제 (이미지 파일인 경우 썸네일 이미지도 삭제)
+
+##### Criteria 수정
+
+* `getListLink()` 메서드가 소개되어있는데, 이부분은 이미 `getLiink()` 메서드를 앞에서 만들었었다.
+
+##### 파일 삭제 처리
+
+* 나는 DB에 저장하는 Upload 경로는 Unix Path 구분자 기준으로만 저장하기로 했으므로, 삭제시에는 DB에서 불러온 업로드 경로 문자열 속 경로 구분자를 현재 시스템의 경로 구분자로 바뀌도록 처리했다.
 
 
 

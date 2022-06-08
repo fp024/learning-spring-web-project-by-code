@@ -1,13 +1,12 @@
 package org.fp024.util;
 
-import lombok.extern.slf4j.Slf4j;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.UUID;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 유틸리티 클래스
@@ -42,8 +41,12 @@ public class CommonUtil {
     return path.replace("\\", "/");
   }
 
-  /** Unix 경로를 Windows 경로로 변환 */
-  public static String unixPathToWinPath(String path) {
-    return path.replace("/", "\\");
+  /**
+   * Unix 경로를 현재 실행 시스탬 경로 구분자로 변환
+   *
+   * <p>DB에서의 경로는 항상 UNIX 경로 구분자로 저장하기로 했으므로, DB에서 불러온 업로드 경로는 사용할 시점에 현재 시스템 경로에 맞게 바꿔서 쓴다.
+   */
+  public static String unixPathToCurrentSystemPath(String path) {
+    return path.replace("/", File.separator);
   }
 }

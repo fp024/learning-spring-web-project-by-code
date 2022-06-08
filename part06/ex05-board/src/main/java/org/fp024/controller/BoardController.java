@@ -1,6 +1,14 @@
 package org.fp024.controller;
 
-import lombok.AllArgsConstructor;
+import static org.fp024.util.CommonUtil.unixPathToCurrentSystemPath;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.fp024.domain.BoardAttachVO;
 import org.fp024.domain.BoardVO;
@@ -8,6 +16,8 @@ import org.fp024.domain.Criteria;
 import org.fp024.domain.PageDTO;
 import org.fp024.domain.SearchType;
 import org.fp024.service.BoardService;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -21,14 +31,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.List;
-
 @Slf4j
 @Controller
 @RequestMapping("/board/*")
-@AllArgsConstructor
+@RequiredArgsConstructor
+@PropertySource("classpath:project-data.properties")
 public class BoardController {
-  private BoardService service;
+  private final BoardService service;
+
+  @Value("${multipart.uploadFolder}")
+  private String UPLOAD_FOLDER;
 
   @GetMapping("/list")
   public String list(Criteria criteria, Model model) {
@@ -95,7 +107,12 @@ public class BoardController {
       @ModelAttribute("criteria") Criteria criteria,
       RedirectAttributes rttr) {
     LOGGER.info("remove... {}", bno);
+
+    List<BoardAttachVO> attachList = service.getAttachList(bno);
+
     if (service.remove(bno)) {
+      // 첨부 파일 삭제
+      deleteFiles(attachList);
       rttr.addFlashAttribute("result", "success");
     }
     return "redirect:/board/list" + criteria.getLink();
@@ -106,5 +123,47 @@ public class BoardController {
   public ResponseEntity<List<BoardAttachVO>> getAttachList(Long bno) {
     LOGGER.info("getAttachList: {}", bno);
     return new ResponseEntity<>(service.getAttachList(bno), HttpStatus.OK);
+  }
+
+  private void deleteFiles(List<BoardAttachVO> attachList) {
+    if (attachList == null || attachList.isEmpty()) {
+      return;
+    }
+
+    LOGGER.info("delete attach files..........");
+    LOGGER.info(attachList.toString());
+
+    attachList.forEach(
+        attach -> {
+          final String uploadPath = unixPathToCurrentSystemPath(attach.getUploadPath());
+          try {
+            Path file =
+                Paths.get(
+                    UPLOAD_FOLDER
+                        + File.separator
+                        + uploadPath
+                        + File.separator
+                        + attach.getUuid()
+                        + "_"
+                        + attach.getFileName());
+            Files.deleteIfExists(file);
+
+            if (Files.probeContentType(file).startsWith("image")) {
+              Path thumbnail =
+                  Paths.get(
+                      UPLOAD_FOLDER
+                          + File.separator
+                          + uploadPath
+                          + File.separator
+                          + "s_"
+                          + attach.getUuid()
+                          + "_"
+                          + attach.getFileName());
+              Files.delete(thumbnail);
+            }
+          } catch (IOException e) {
+            LOGGER.error("delete file error {}", e.getMessage(), e);
+          }
+        });
   }
 }
