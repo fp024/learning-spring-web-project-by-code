@@ -88,7 +88,6 @@
           <div class="card-body">
             <div class="uploadResult">
               <ul>
-
               </ul>
             </div>
           </div>
@@ -182,7 +181,7 @@
           var fileCallPath = encodeURIComponent(
               attach.uploadPath + "/s_" + attach.uuid + "_" + attach.fileName);
           var originPath =
-              attach.uploadPath.replace(new RegExp(/\\/g), "/") + "/" + attach.uuid + "_"
+              attach.uploadPath + "/" + attach.uuid + "_"
               + attach.fileName;
           console.log(originPath);
           str += "<li data-path='" + attach.uploadPath + "' data-uuid='" + attach.uuid

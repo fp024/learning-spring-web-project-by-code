@@ -6,6 +6,7 @@
 <html lang="ko">
 
 <%@include file="../includes/header.jsp"%>
+<link href="/resources/css/upload-ajax.css" rel="stylesheet">
 
 <body id="page-top">
 
@@ -27,7 +28,7 @@
           <h1 class="h3 mb-2 text-gray-800">Board Modify Page</h1>
 
 
-          <!-- DataTales Example -->
+          <!-- 게시물 수정 폼 영역 -->
           <div class="card shadow mb-4">
             <div class="card-header py-3">
               <h6 class="m-0 font-weight-bold text-primary">Board Modify Page</h6>
@@ -59,6 +60,27 @@
             </div>
           </div>
 
+          <!-- 첨부파일 수정 영역 -->
+          <!-- 첨부파일 표시 영역 -->
+          <div class="card shadow mb-4">
+            <div class="card-header py-3">
+              <div>
+                <span class="font-weight-bold text-primary"><i class="fas fa-paperclip"></i>Files</span>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="form-group uploadDiv">
+                <input type="file" name="uploadFile" multiple>
+              </div>
+
+              <div class="uploadResult">
+                <ul>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+
         </div>
         <!-- /.container-fluid -->
 
@@ -77,38 +99,153 @@
   <!-- End of Page Wrapper -->
   <%@include file="../includes/dialogAndScript.jsp"%>
 
+  <!-- 첨부파일 보기/추가/삭제 -->
   <script type="text/javascript">
-      $(document).ready(function() {
-        var $formObj = $("form");
+    $(document).ready(function () {
+      var bno = '<c:out value="${board.bno}"/>';
 
-        $formObj.find("button").on("click", function(e) {
-          e.preventDefault();
-
-          var operation = $(this).data("oper"); // data-oper 속성을 이렇게 읽는구나?
-
-          console.log(operation);
-
-          if (operation === "remove") {
-            $formObj.attr("action", "/board/remove");
-
-          } else if (operation === "list") {
-            $formObj.attr("action", "/board/list").attr("method", "get");
-            var pageNumTag = $("input[name='pageNum']").clone();
-            var amountTag = $("input[name='amount']").clone();
-            var searchCodes = $("input[name='searchCodes']").clone();
-            var keyword = $("input[name='keyword']").clone();
-            
-            $formObj.empty();
-            $formObj.append(pageNumTag);
-            $formObj.append(amountTag);
-            $formObj.append(searchCodes);
-            $formObj.append(keyword);
+      function showUploadResult(attachList) {
+        var str = "";
+        $(attachList).each(function (i, attach) {
+          if (attach.fileType === 'IMAGE') {
+            var fileCallPath = encodeURIComponent(
+                attach.uploadPath + "/s_" + attach.uuid + "_" + attach.fileName);
+            var originPath =
+                attach.uploadPath + "/" + attach.uuid + "_" + attach.fileName;
+            console.log(originPath);
+            str += "<li data-path='" + attach.uploadPath + "' data-uuid='" + attach.uuid
+                + "' data-filename='" + attach.fileName + "' data-type='" + attach.fileType
+                + "'><div>"
+                + "<span>" + attach.fileName + "</span>"
+                + "<button type='button' data-file=\'" + fileCallPath
+                + "\' data-type='IMAGE' class='btn btn-warning btn-circle'><i class='fas fa-times'></i></button><br>"
+                + "<img src='/display?fileName=" + fileCallPath + "'></a>"
+                + "</div></li>";
+          } else {
+            var fileCallPath = encodeURIComponent(
+                attach.uploadPath + "/" + attach.uuid + "_" + attach.fileName);
+            str += "<li data-path='" + attach.uploadPath + "' data-uuid='" + attach.uuid
+                + "' data-filename='" + attach.fileName + "' data-type='" + attach.fileType
+                + "'><div>"
+                + "<span>" + attach.fileName + "</span>"
+                + "<button type='button' data-file=\'" + fileCallPath
+                + "\' data-type='NORMAL' class='btn btn-warning btn-circle'><i class='fas fa-times'></i></button><br>"
+                + "<img src='/resources/img/attach.png'>"
+                + "</div></li>";
           }
-          $formObj.submit();
+        });
+        $(".uploadResult ul").append(str);
+      }
+
+      $.getJSON("/board/getAttachList", {bno, bno}, function (arr) {
+        console.log(arr);
+        showUploadResult(arr);
+      });
+
+      // 삭제 버튼 이벤트, 화면에서만 삭제함.
+      $(".uploadResult").on("click", "button", function (e) {
+        console.log("delete file");
+        if (confirm("이 파일을 삭제하시겠습니까?")) {
+          var targetLi = $(this).closest("li");
+          targetLi.remove();
+        }
+      });
+
+      // 첨부 파일 추가
+      var regex = new RegExp("(.*?)\.(exe|sh|zip|alz)$");
+      var maxSize = 5242880;
+
+      function checkExtension(fileName, fileSize) {
+        if (fileSize > maxSize) {
+          alert("파일 사이즈 초과");
+          return false;
+        }
+
+        if (regex.test(fileName)) {
+          alert("해당 종류의 파일은 업로드할 수 없습니다.");
+          return false;
+        }
+        return true;
+      }
+
+      $("input[type='file']").change(function () {
+        var formData = new FormData();
+        var inputFile = $("input[name='uploadFile']");
+        var files = inputFile[0].files;
+
+        for (var i = 0; i < files.length; i++) {
+          if (!checkExtension(files[i].name, files[i].size)) {
+            return false;
+          }
+          formData.append("uploadFile", files[i]);
+        }
+
+        $.ajax({
+          url: '/uploadAjaxAction',
+          processData: false,
+          contentType: false,
+          data: formData,
+          type: 'POST',
+          dataType: 'json',
+          success: function (result) {
+            console.log(result);
+            showUploadResult(result);
+          }
         });
       });
-    </script>
+    });
+  </script>
 
+  <!-- 게시물 폼 등록 처리 -->
+  <script type="text/javascript">
+    $(document).ready(function () {
+      var $formObj = $("form");
+
+      $formObj.find("button").on("click", function (e) {
+        e.preventDefault();
+
+        var operation = $(this).data("oper"); // data-oper 속성을 이렇게 읽는구나?
+
+        console.log(operation);
+
+        if (operation === "remove") {
+          $formObj.attr("action", "/board/remove");
+
+        } else if (operation === "list") {
+          $formObj.attr("action", "/board/list").attr("method", "get");
+          var pageNumTag = $("input[name='pageNum']").clone();
+          var amountTag = $("input[name='amount']").clone();
+          var searchCodes = $("input[name='searchCodes']").clone();
+          var keyword = $("input[name='keyword']").clone();
+
+          $formObj.empty();
+          $formObj.append(pageNumTag);
+          $formObj.append(amountTag);
+          $formObj.append(searchCodes);
+          $formObj.append(keyword);
+        } else if (operation === "modify") {
+          console.log("submit clicked");
+
+          var str = "";
+
+          $(".uploadResult ul li").each(function (i, obj) {
+            var jobj = $(obj);
+            console.dir(jobj);
+            str += "<input type='hidden' name='attachList[" + i + "].fileName' value='" + jobj.data(
+                "filename") + "'>";
+            str += "<input type='hidden' name='attachList[" + i + "].uuid' value='" + jobj.data(
+                "uuid") + "'>";
+            str += "<input type='hidden' name='attachList[" + i + "].uploadPath' value='"
+                + jobj.data("path") + "'>";
+            str += "<input type='hidden' name='attachList[" + i + "].fileType' value='" + jobj.data(
+                "type") + "'>";
+          });
+          $formObj.append(str).submit();
+        }
+        $formObj.submit();
+      });
+    });
+  </script>
 </body>
 
 </html>

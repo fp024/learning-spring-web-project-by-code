@@ -139,7 +139,7 @@
             var fileCallPath = encodeURIComponent(
               obj.uploadPath + "/s_" + obj.uuid + "_" + obj.fileName);
             var originPath =
-              obj.uploadPath.replace(new RegExp(/\\/g), "/") + "/" + obj.uuid + "_" + obj.fileName;
+              obj.uploadPath + "/" + obj.uuid + "_" + obj.fileName;
             console.log(originPath);
             str += "<li data-path='" + obj.uploadPath + "' data-uuid='" + obj.uuid + "' data-filename='" + obj.fileName + "' data-type='" + obj.fileType + "'><div>"
               + "<span>" + obj.fileName + "</span>"
