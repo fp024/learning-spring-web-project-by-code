@@ -1,12 +1,25 @@
 package org.fp024.controller;
 
-import java.util.List;
+import static org.fp024.util.CommonUtil.unixPathToCurrentSystemPath;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.fp024.domain.BoardAttachVO;
 import org.fp024.domain.BoardVO;
 import org.fp024.domain.Criteria;
 import org.fp024.domain.PageDTO;
 import org.fp024.domain.SearchType;
 import org.fp024.service.BoardService;
+import org.fp024.util.ProjectDataUtil;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,17 +27,15 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Controller
 @RequestMapping("/board/*")
 @AllArgsConstructor
 public class BoardController {
-
+  private static final String UPLOAD_FOLDER = ProjectDataUtil.getProperty("multipart.uploadFolder");
   private BoardService service;
 
   @GetMapping("/list")
@@ -54,12 +65,15 @@ public class BoardController {
 
   @PostMapping("/register")
   public String register(BoardVO board, RedirectAttributes rttr) {
+    LOGGER.info("====================================");
     LOGGER.info("register: {}", board);
 
+    if (board.getAttachList() != null) {
+      board.getAttachList().forEach(attach -> LOGGER.info(attach.toString()));
+    }
+    LOGGER.info("====================================");
     service.register(board);
-
     rttr.addFlashAttribute("result", board.getBno());
-
     // Spring MVC가 내부적으로 response.sendRedirect()처리를 함
     return "redirect:/board/list";
   }
@@ -82,15 +96,69 @@ public class BoardController {
     return "redirect:/board/list" + criteria.getLink();
   }
 
+  @GetMapping(value = "/getAttachList", produces = MediaType.APPLICATION_JSON_VALUE)
+  @ResponseBody
+  public ResponseEntity<List<BoardAttachVO>> getAttachList(Long bno) {
+    LOGGER.info("getAttachList: {}", bno);
+    return new ResponseEntity<>(service.getAttachList(bno), HttpStatus.OK);
+  }
+
   @PostMapping("/remove")
   public String remove(
       @RequestParam("bno") Long bno,
       @ModelAttribute("criteria") Criteria criteria,
       RedirectAttributes rttr) {
     LOGGER.info("remove... {}", bno);
+
+    List<BoardAttachVO> attachList = service.getAttachList(bno);
+
     if (service.remove(bno)) {
+      // 첨부 파일 삭제
+      deleteFiles(attachList);
       rttr.addFlashAttribute("result", "success");
     }
     return "redirect:/board/list" + criteria.getLink();
+  }
+
+  private void deleteFiles(List<BoardAttachVO> attachList) {
+    if (attachList == null || attachList.isEmpty()) {
+      return;
+    }
+
+    LOGGER.info("delete attach files..........");
+    LOGGER.info(attachList.toString());
+
+    attachList.forEach(
+        attach -> {
+          final String uploadPath = unixPathToCurrentSystemPath(attach.getUploadPath());
+          try {
+            Path file =
+                Paths.get(
+                    UPLOAD_FOLDER
+                        + File.separator
+                        + uploadPath
+                        + File.separator
+                        + attach.getUuid()
+                        + "_"
+                        + attach.getFileName());
+            Files.deleteIfExists(file);
+
+            if (Files.probeContentType(file).startsWith("image")) {
+              Path thumbnail =
+                  Paths.get(
+                      UPLOAD_FOLDER
+                          + File.separator
+                          + uploadPath
+                          + File.separator
+                          + "s_"
+                          + attach.getUuid()
+                          + "_"
+                          + attach.getFileName());
+              Files.delete(thumbnail);
+            }
+          } catch (IOException e) {
+            LOGGER.error("delete file error {}", e.getMessage(), e);
+          }
+        });
   }
 }

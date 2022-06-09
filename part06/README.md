@@ -1125,20 +1125,22 @@ public void checkFiles() throws Exception { ... }
          * <p>1:N 관계를 Mybatis Generator 로 만들어낼 수 없어서, 수동으로 기입한 필드
          */
         private List<BoardAttachVO> attachList;
-        ...
+        // ...
+        // ...
         public void setAttachList(List<BoardAttachVO> attachList) {
           this.attachList = attachList;
         }
-      
         public List<BoardAttachVO> getAttachList() {
           return attachList;
         }
-      
+        // ...
+        // ...
         @Override
         @Generated("org.mybatis.generator.api.MyBatisGenerator")
         public String toString() {
           StringBuilder sb = new StringBuilder();
-          ...
+          // ...
+          // ...
           sb.append(", attachList=").append(attachList);
           sb.append("]");
           return sb.toString();
@@ -1146,7 +1148,15 @@ public void checkFiles() throws Exception { ... }
       }
       ```
 
-    
+* View는 먼저 했던 것 그래도 옮겨서 별 문제가 없었다.
+
+* 그런데... 예전에 작성한 매퍼 테스트에서 Spring Test의 `ReflectionTestUtils`로 private 메서드 실행하는 부분에서 메서드를 제대로 못찾아서 별도 Support 클래스로 분리하고 테스트 코드에서는 그 클래스를 주입받아 실행하게 했다.
+
+  * 원래 잘 되었었는데, Java 17로 바꾸고 잘되는 건가?
+
+* quartz 디펜던시 넣지 않아도 잘 동작한다. 어차피 예제에서도 스프링에서만 제공하는 어노테이션 코드만 쓰기 때문에 quartz를 제거 했어도 소스코드 변경도 필요없었다.
+
+
 
 
 
@@ -1154,13 +1164,30 @@ public void checkFiles() throws Exception { ... }
 
 ## 의견
 
-* 
+* Part 6을 너무 오랫동안 진행한 느낌이 들긴하지만, 첨부파일 처리 재미있었습니다. 😄😄😄
 
-
+  
 
 
 ## 정오표
 
 * p546
   * `"<div></li>"` : div가 빠져야할 것 같다.
+
+
+
+## 기타
+
+IntelliJ는 최신 스프링 어노테이션 인식을 잘 못한다. 🎃🎃🎃
+
+```java
+@SpringJUnitConfig(classes = {RootConfig.class}) // 인식 못함...
+@SpringJUnitWebConfig(classes = {RootConfig.class, ServletConfig.class}) // 인식 못함
+
+
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration(classes = {RootConfig.class}) // 인식함.
+```
+
+그래서 `자동 주입을 할 수 없습니다. 'ReplyService' 타입의 bean을 찾을 수 없습니다. ` 경고가 나오는데.. 무시하자!
 

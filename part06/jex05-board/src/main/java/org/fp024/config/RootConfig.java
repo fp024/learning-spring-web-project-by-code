@@ -12,12 +12,14 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
-@ComponentScan(basePackages = {"org.fp024.service"})
+@ComponentScan(basePackages = {"org.fp024.service", "org.fp024.task"})
 @MapperScan(basePackages = {"org.fp024.mapper"})
 @PropertySource({"classpath:database.properties"})
+@EnableScheduling
 @EnableTransactionManagement
 public class RootConfig {
 

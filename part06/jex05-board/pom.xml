@@ -178,6 +178,8 @@
       <version>${org.springframework-version}</version>
     </dependency>
 
+    <!-- 이 프로젝트에서는 quartz 를 사용하지 말아보자.. 디펜던시를 안걸면 그냥 Spring Scheduler 사용할 것 같음. -->
+    <!--
     <dependency>
       <groupId>org.quartz-scheduler</groupId>
       <artifactId>quartz</artifactId>
@@ -195,6 +197,7 @@
       <artifactId>quartz-jobs</artifactId>
       <version>${quartz.version}</version>
     </dependency>
+    -->
 
     <dependency>
       <groupId>com.google.code.gson</groupId>

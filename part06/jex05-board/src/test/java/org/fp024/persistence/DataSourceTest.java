@@ -3,22 +3,16 @@ package org.fp024.persistence;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.sql.Connection;
-
 import javax.sql.DataSource;
-
+import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.fp024.config.RootConfig;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
-import lombok.extern.slf4j.Slf4j;
-
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {RootConfig.class})
+@SpringJUnitConfig(classes = {RootConfig.class})
 @Slf4j
 class DataSourceTest {
   @Autowired private DataSource dataSource;

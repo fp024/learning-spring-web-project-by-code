@@ -2,6 +2,7 @@ package org.fp024.task;
 
 import static org.fp024.util.CommonUtil.getFolderYesterday;
 import static org.fp024.util.CommonUtil.unixPathToCurrentSystemPath;
+import static org.mybatis.dynamic.sql.SqlBuilder.isEqualTo;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -14,18 +15,21 @@ import lombok.extern.slf4j.Slf4j;
 import org.fp024.domain.BoardAttachVO;
 import org.fp024.domain.FileType;
 import org.fp024.mapper.BoardAttachMapper;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
+import org.fp024.mapper.BoardAttachVODynamicSqlSupport;
+import org.fp024.util.ProjectDataUtil;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+/**
+ * 업로드 파일 정리 테스크
+ *
+ * <p>자동생성된 Mapper에 대한 서비스를 구현하지않아서, 여기서 getOldFiles() 를 구현하자!
+ */
 @Slf4j
 @Component
 @RequiredArgsConstructor
-@PropertySource("classpath:project-data.properties")
 public class FileCheckTask {
-  @Value("${multipart.uploadFolder}")
-  private String UPLOAD_FOLDER;
+  private static final String UPLOAD_FOLDER = ProjectDataUtil.getProperty("multipart.uploadFolder");
 
   private final BoardAttachMapper attachMapper;
 
@@ -37,7 +41,7 @@ public class FileCheckTask {
         LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
 
     // DB의 전일 첨부파일 등록 목록
-    List<BoardAttachVO> fileList = attachMapper.getOldFiles();
+    List<BoardAttachVO> fileList = getOldFiles();
 
     // DB 파일과 디렉토리 파일의 확인 준비
     List<Path> fileListPaths =
@@ -76,12 +80,23 @@ public class FileCheckTask {
 
     LOGGER.warn("----------------------------------");
     for (File file : removeFiles) {
-      LOGGER.warn(file.getAbsolutePath());
       if (file.delete()) {
         LOGGER.warn("삭제 성공 파일: {}", file.getAbsolutePath());
       } else {
         LOGGER.error("삭제 실패 파일: {}", file.getAbsolutePath());
       }
     }
+  }
+
+  /**
+   * 어제 추가된 첨부파일 목록 조회
+   *
+   * <p>ex05프로젝트에서는 Oracle 함수로 날짜 계산해서 어제 디렉토리 경로를 알아냈는데, 여기서는 웹 서버에서 확인해서 전달하자!
+   *
+   * @return 어제 추가된 첨부파일 목록
+   */
+  private List<BoardAttachVO> getOldFiles() {
+    return attachMapper.select(
+        c -> c.where(BoardAttachVODynamicSqlSupport.uploadPath, isEqualTo(getFolderYesterday())));
   }
 }

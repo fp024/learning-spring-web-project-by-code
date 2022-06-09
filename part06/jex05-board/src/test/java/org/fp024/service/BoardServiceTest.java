@@ -25,7 +25,6 @@ import org.fp024.domain.PageSize;
 import org.fp024.mapper.BoardMapper;
 import org.fp024.mapper.BoardVODynamicSqlSupport;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mybatis.dynamic.sql.Constant;
 import org.mybatis.dynamic.sql.DerivedColumn;
 import org.mybatis.dynamic.sql.render.RenderingStrategies;
@@ -33,15 +32,14 @@ import org.mybatis.dynamic.sql.select.QueryExpressionDSL;
 import org.mybatis.dynamic.sql.select.SelectModel;
 import org.mybatis.dynamic.sql.select.render.SelectStatementProvider;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {RootConfig.class})
+@SpringJUnitConfig(classes = {RootConfig.class})
 @Slf4j
 class BoardServiceTest {
   @Autowired private BoardService service;
+
+  @Autowired private BoardMapperSupport boardMapperSupport;
 
   @Test
   void testExist() {
@@ -145,23 +143,11 @@ class BoardServiceTest {
     QueryExpressionDSL<SelectModel>.QueryExpressionWhereBuilder selectDSL;
 
     selectDSL =
-        ((QueryExpressionDSL<SelectModel>)
-                Objects.requireNonNull(
-                    ReflectionTestUtils.invokeMethod(
-                        service,
-                        "addSearchWhereClause",
-                        select(
-                                hint,
-                                rn,
-                                bno,
-                                title,
-                                content,
-                                writer,
-                                regdate,
-                                updateDate,
-                                replyCount)
-                            .from(BoardVODynamicSqlSupport.boardVO),
-                        criteria)))
+        boardMapperSupport
+            .addSearchWhereClause(
+                select(hint, rn, bno, title, content, writer, regdate, updateDate, replyCount)
+                    .from(BoardVODynamicSqlSupport.boardVO),
+                criteria)
             .where()
             .and(rn, isLessThanOrEqualTo(criteria.getPageNum() * criteria.getAmount()));
 
@@ -195,7 +181,7 @@ class BoardServiceTest {
         select(count()).from(BoardVODynamicSqlSupport.boardVO);
 
     QueryExpressionDSL<SelectModel> addedSearchWhereClause =
-        ReflectionTestUtils.invokeMethod(service, "addSearchWhereClause", selectDSL, criteria);
+        boardMapperSupport.addSearchWhereClause(selectDSL, criteria);
     return Objects.requireNonNull(addedSearchWhereClause)
         .where()
         .and(bno, isGreaterThan(0L))

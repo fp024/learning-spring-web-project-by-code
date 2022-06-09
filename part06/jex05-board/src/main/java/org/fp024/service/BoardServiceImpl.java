@@ -7,31 +7,31 @@ import static org.fp024.mapper.BoardVODynamicSqlSupport.replyCount;
 import static org.fp024.mapper.BoardVODynamicSqlSupport.title;
 import static org.fp024.mapper.BoardVODynamicSqlSupport.updateDate;
 import static org.fp024.mapper.BoardVODynamicSqlSupport.writer;
+import static org.fp024.util.CommonUtil.winPathToUnixPath;
 import static org.mybatis.dynamic.sql.SqlBuilder.count;
 import static org.mybatis.dynamic.sql.SqlBuilder.isEqualTo;
 import static org.mybatis.dynamic.sql.SqlBuilder.isGreaterThan;
 import static org.mybatis.dynamic.sql.SqlBuilder.isLessThanOrEqualTo;
-import static org.mybatis.dynamic.sql.SqlBuilder.isLikeWhenPresent;
-import static org.mybatis.dynamic.sql.SqlBuilder.or;
 import static org.mybatis.dynamic.sql.SqlBuilder.select;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.fp024.domain.BoardAttachVO;
 import org.fp024.domain.BoardVO;
 import org.fp024.domain.Criteria;
-import org.fp024.domain.SearchType;
+import org.fp024.mapper.BoardAttachMapper;
+import org.fp024.mapper.BoardAttachVODynamicSqlSupport;
 import org.fp024.mapper.BoardMapper;
 import org.fp024.mapper.BoardVODynamicSqlSupport;
-import org.mybatis.dynamic.sql.AndOrCriteriaGroup;
 import org.mybatis.dynamic.sql.Constant;
 import org.mybatis.dynamic.sql.DerivedColumn;
 import org.mybatis.dynamic.sql.render.RenderingStrategies;
 import org.mybatis.dynamic.sql.select.QueryExpressionDSL;
 import org.mybatis.dynamic.sql.select.SelectModel;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 쿼리 DSL 작성 참조 링크
@@ -52,11 +52,15 @@ import org.springframework.stereotype.Service;
  */
 @Slf4j
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class BoardServiceImpl implements BoardService {
   // Spring 4.3이상에서 자동처리 (단일 파라미터 생성자에 대해서는 자동 주입)
   // 모든 인자에 대한 생성자를 자동으로 만들도록 lombok에서 정의했음.
-  private BoardMapper mapper;
+  private final BoardMapper mapper;
+
+  private final BoardMapperSupport boardMapperSupport;
+
+  private final BoardAttachMapper attachMapper;
 
   @Override
   public void register(BoardVO board) {
@@ -69,7 +73,6 @@ public class BoardServiceImpl implements BoardService {
     /*
     mapper.insert(
         SqlBuilder.insert(board)
-            .into(BoardVODynamicSqlSupport.boardVO)
             .map(BoardVODynamicSqlSupport.bno)
             .toProperty(BoardVODynamicSqlSupport.bno.name())
             .map(BoardVODynamicSqlSupport.title)
@@ -85,6 +88,22 @@ public class BoardServiceImpl implements BoardService {
     board.setRegdate(null);
     board.setUpdateDate(null);
     mapper.insertSelective(board);
+
+    if (board.getAttachList() == null || board.getAttachList().isEmpty()) {
+      return;
+    }
+
+    board
+        .getAttachList()
+        .forEach(
+            attach -> {
+              attach.setBno(
+                  board.getBno()); // 신규 등록시는 최초에 bno가 없지만 insert 이후로 board에다 bno를 MyBatis가 넣어줄 것 임.
+              // 업로드 경로를 DB에 저장을 할 때만, Unix 경로로 사용해보자!,
+              // 요즘 윈도우에서는 Unix 경로를 쓰더라도 잘 될 것 같은데... 조회 추가해보면서 확인해보자.
+              attach.setUploadPath(winPathToUnixPath(attach.getUploadPath()));
+              attachMapper.insert(attach);
+            });
   }
 
   @Override
@@ -93,25 +112,43 @@ public class BoardServiceImpl implements BoardService {
     return mapper.selectByPrimaryKey(bno).orElse(null);
   }
 
+  @Transactional
   @Override
   public boolean modify(BoardVO board) {
     LOGGER.info("modify..... {}", board);
 
-    return mapper.update(
-            c ->
-                c.set(BoardVODynamicSqlSupport.title)
-                    .equalTo(board.getTitle())
-                    .set(BoardVODynamicSqlSupport.content)
-                    .equalTo(board.getContent())
-                    .set(BoardVODynamicSqlSupport.updateDate)
-                    .equalTo(LocalDateTime.now())
-                    .where(BoardVODynamicSqlSupport.bno, isEqualTo(board.getBno())))
-        == 1;
+    attachMapper.delete(c -> c.where(BoardAttachVODynamicSqlSupport.bno, isEqualTo(bno)));
+
+    boolean modifyResult =
+        mapper.update(
+                c ->
+                    c.set(BoardVODynamicSqlSupport.title)
+                        .equalTo(board.getTitle())
+                        .set(BoardVODynamicSqlSupport.content)
+                        .equalTo(board.getContent())
+                        .set(BoardVODynamicSqlSupport.updateDate)
+                        .equalTo(LocalDateTime.now())
+                        .where(BoardVODynamicSqlSupport.bno, isEqualTo(board.getBno())))
+            == 1;
+
+    if (modifyResult && board.getAttachList() != null && !board.getAttachList().isEmpty()) {
+      board
+          .getAttachList()
+          .forEach(
+              attach -> {
+                attach.setBno(board.getBno());
+                attachMapper.insert(attach);
+              });
+    }
+
+    return modifyResult;
   }
 
+  @Transactional
   @Override
   public boolean remove(Long bno) {
     LOGGER.info("remove..... {}", bno);
+    attachMapper.delete(c -> c.where(BoardAttachVODynamicSqlSupport.bno, isEqualTo(bno)));
     return mapper.deleteByPrimaryKey(bno) == 1;
   }
 
@@ -130,7 +167,8 @@ public class BoardServiceImpl implements BoardService {
     Constant<String> hint = Constant.of("/*+ INDEX_DESC(tbl_board pk_board) */ 'dummy'");
 
     QueryExpressionDSL<SelectModel>.QueryExpressionWhereBuilder select =
-        addSearchWhereClause(
+        boardMapperSupport
+            .addSearchWhereClause(
                 select(hint, rn, bno, title, content, writer, regdate, updateDate, replyCount)
                     .from(BoardVODynamicSqlSupport.boardVO),
                 criteria)
@@ -154,7 +192,7 @@ public class BoardServiceImpl implements BoardService {
         select(count()).from(BoardVODynamicSqlSupport.boardVO);
 
     QueryExpressionDSL<SelectModel> addedSearchWhereClause =
-        addSearchWhereClause(selectDSL, criteria);
+        boardMapperSupport.addSearchWhereClause(selectDSL, criteria);
 
     return mapper.count(
         addedSearchWhereClause
@@ -162,37 +200,6 @@ public class BoardServiceImpl implements BoardService {
             .and(bno, isGreaterThan(0L))
             .build()
             .render(RenderingStrategies.MYBATIS3));
-  }
-
-  private QueryExpressionDSL<SelectModel> addSearchWhereClause(
-      QueryExpressionDSL<SelectModel> selectDSL, Criteria criteria) {
-    List<SearchType> searchTypeList = criteria.getSearchTypeSet().stream().toList();
-    List<AndOrCriteriaGroup> subCriteriaList = new ArrayList<>();
-
-    for (int i = 0; i < searchTypeList.size(); i++) {
-      if (i > 0) {
-        subCriteriaList.add(
-            or(
-                searchTypeList.get(i).getColumn(),
-                isLikeWhenPresent(criteria.getKeyword()).map(this::addWildcards)));
-      }
-    }
-    if (searchTypeList.size() == 1) {
-      selectDSL.where(
-          searchTypeList.get(0).getColumn(),
-          isLikeWhenPresent(criteria.getKeyword()).map(this::addWildcards));
-    } else if (searchTypeList.size() > 1) {
-      selectDSL.where(
-          searchTypeList.get(0).getColumn(),
-          isLikeWhenPresent(criteria.getKeyword()).map(this::addWildcards),
-          subCriteriaList);
-    }
-
-    return selectDSL;
-  }
-
-  private String addWildcards(String keyword) {
-    return "%" + keyword + "%";
   }
 
   @Override
@@ -203,5 +210,11 @@ public class BoardServiceImpl implements BoardService {
                 .equalToConstant(
                     String.format("%s + %d", BoardVODynamicSqlSupport.replyCount.name(), amount))
                 .where(BoardVODynamicSqlSupport.bno, isEqualTo(bno)));
+  }
+
+  @Override
+  public List<BoardAttachVO> getAttachList(Long bno) {
+    LOGGER.info("get Attach list by bno {}", bno);
+    return attachMapper.select(c -> c.where(BoardAttachVODynamicSqlSupport.bno, isEqualTo(bno)));
   }
 }

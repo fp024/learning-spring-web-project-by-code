@@ -6,6 +6,7 @@
 <html lang="ko">
 
 <%@include file="../includes/header.jsp" %>
+<link href="/resources/css/upload-ajax.css" rel="stylesheet">
 
 <body id="page-top">
 
@@ -71,6 +72,28 @@
           </div>
         </div>
 
+        <!-- 첨부파일이 이미지일 때 크게 보여줄 Wrapper 영역 -->
+        <div class="bigPictureWrapper">
+          <div class="bigPicture">
+          </div>
+        </div>
+
+        <!-- 첨부파일 표시 영역 -->
+        <div class="card shadow mb-4">
+          <div class="card-header py-3">
+            <div>
+              <span class="font-weight-bold text-primary"><i class="fas fa-paperclip"></i>Files</span>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="uploadResult">
+              <ul>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- 댓글 영역 -->
         <div class="card shadow mb-4">
           <div class="card-header py-3">
             <div>
@@ -143,6 +166,79 @@
   </div>
 </div>
 
+<!-- 첨부파일 Ajax 처리 -->
+<script>
+  $(document).ready(function () {
+    var bno = '<c:out value="${board.bno}" />'
+
+    $.getJSON("/board/getAttachList", {bno: bno}, function (arr) {
+      console.log(arr);
+
+      var str = "";
+
+      $(arr).each(function (i, attach) {
+        if (attach.fileType === 'IMAGE') {
+          var fileCallPath = encodeURIComponent(
+              attach.uploadPath + "/s_" + attach.uuid + "_" + attach.fileName);
+          var originPath =
+              attach.uploadPath + "/" + attach.uuid + "_"
+              + attach.fileName;
+          console.log(originPath);
+          str += "<li data-path='" + attach.uploadPath + "' data-uuid='" + attach.uuid
+              + "' data-filename='" + attach.fileName + "' data-type='" + attach.fileType
+              + "'><div>"
+              + "<img src='/display?fileName=" + fileCallPath + "'></a>"
+              + "</div></li>";
+        } else {
+          var fileCallPath = encodeURIComponent(
+              attach.uploadPath + "/" + attach.uuid + "_" + attach.fileName);
+          str += "<li data-path='" + attach.uploadPath + "' data-uuid='" + attach.uuid
+              + "' data-filename='" + attach.fileName + "' data-type='" + attach.fileType
+              + "'><div>"
+              + "<span>" + attach.fileName + "</span><br>"
+              + "<a href='/download?fileName=" + fileCallPath
+              + "'><img src='/resources/img/attach.png'></a>"
+              + "</div></li>";
+        }
+      });
+      $(".uploadResult ul").append(str);
+    });
+
+    $(".uploadResult").on("click", "li", function (e) {
+      console.log("view image");
+
+      var liObj = $(this);
+
+      var path = encodeURIComponent(
+          liObj.data("path") + "/" + liObj.data("uuid") + "_" + liObj.data("filename"));
+
+      if (liObj.data("type") === "IMAGE") {
+        showImage(path.replace(new RegExp(/\\/g), "/"));
+      } else {
+        self.location = "/download?fileName=" + path;
+      }
+
+    });
+
+    function showImage(fileCallPath) {
+      console.log(fileCallPath);
+      $(".bigPictureWrapper").css("display", "flex").show();
+      $(".bigPicture")
+      .html("<img src='/display?fileName=" + fileCallPath + "'>")
+      .animate({width: '100%', height: '100%'}, 1000);
+    }
+
+    $(".bigPictureWrapper").on("click", function (e) {
+      $(".bigPicture").animate({width: '0%', height: '0%'}, 1000);
+      setTimeout(function () {
+        $(".bigPictureWrapper").hide();
+      }, 1000);
+    });
+
+  });
+</script>
+
+<!-- 댓글 Ajax 처리 -->
 <script type="text/javascript" src="/resources/js/reply.js"></script>
 <script type="text/javascript">
   var bnoValue = '<c:out value="${board.bno}"/>';
@@ -152,7 +248,6 @@
 
   /** 페이지 네비게이션 그리기 */
   function showReplyPage(pageNum, pageSize, pageNavigationSize, replyCount) {
-    console.log("pageNum:", pageNum, "pageSize", pageSize, "pageNavigationSize", pageNavigationSize, "replyCount", replyCount);
     var endNum = Math.ceil(pageNum / pageNavigationSize) * pageNavigationSize;
     var startNum = endNum - (pageNavigationSize - 1);
 
@@ -200,8 +295,7 @@
       console.log(list);
 
       if (page == -1) {
-        var pageNum = Math.ceil(replyCount / pageSize); // 페이지 사이즈를 서버의 데이터로 받아왔다., Javascript는 정수 나눗셈이 이나여서 실수를 곱해주지 않아도 되겠다.
-        showList(pageNum);
+        showList(Math.ceil(replyCount / pageSize)); // // 페이지 사이즈를 서버의 데이터로 받아왔다., Javascript는 정수 나눗셈이 이나여서 실수를 곱해주지 않아도 되겠다.
         return;
       }
 
