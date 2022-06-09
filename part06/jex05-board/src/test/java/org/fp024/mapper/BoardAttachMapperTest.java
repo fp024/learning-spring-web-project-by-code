@@ -1,9 +1,12 @@
 package org.fp024.mapper;
 
+import static org.fp024.mapper.BoardAttachVODynamicSqlSupport.bno;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mybatis.dynamic.sql.SqlBuilder.isEqualTo;
 
 import java.util.List;
 import java.util.UUID;
+import org.fp024.config.RootConfig;
 import org.fp024.domain.BoardAttachVO;
 import org.fp024.domain.FileType;
 import org.junit.jupiter.api.Test;
@@ -11,7 +14,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.transaction.annotation.Transactional;
 
-@SpringJUnitConfig(locations = "file:src/main/webapp/WEB-INF/spring/root-context.xml")
+/**
+ * 첨부파일 매퍼 테스트
+ *
+ * <p>이 프로젝트에서는 mapper를 직접 사용하기보단 서비스 클래스를 만들어서 사용하는 것이 나을 수도 있다.
+ */
+@SpringJUnitConfig(classes = {RootConfig.class})
 class BoardAttachMapperTest {
 
   @Autowired private BoardAttachMapper mapper;
@@ -40,14 +48,18 @@ class BoardAttachMapperTest {
   @Test
   void testDelete() {
     testInsert();
-    mapper.delete(TEST_UUID);
+    mapper.deleteByPrimaryKey(TEST_UUID);
   }
 
   @Transactional
   @Test
   void testFindBno() {
     testInsert();
-    List<BoardAttachVO> list = mapper.findByBno(1L);
+
+    List<BoardAttachVO> list =
+        mapper.select(
+            selectModelQueryExpressionDSL ->
+                selectModelQueryExpressionDSL.where(bno, isEqualTo(1L)));
 
     assertEquals(TEST_UUID, list.get(0).getUuid());
     assertEquals(UPLOAD_PATH, list.get(0).getUploadPath());

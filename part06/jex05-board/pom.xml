@@ -13,6 +13,51 @@
   <name>${project.artifactId}</name>
   <packaging>war</packaging>
 
+  <!-- web.xml에서 경로 변화를 주기위해, profile을 윈도우와 리눅스 환경으로 나눠보았다. -->
+  <profiles>
+    <profile>
+      <id>win</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+        <os>
+          <family>windows</family>
+        </os>
+      </activation>
+      <properties>
+        <env>win</env>
+        <web-xml-location>${project.basedir}/src/main/webapp/WEB-INF/web.xml</web-xml-location>
+      </properties>
+    </profile>
+
+    <profile>
+      <id>linux</id>
+      <activation>
+        <os>
+          <family>linux</family>
+        </os>
+      </activation>
+      <properties>
+        <env>linux</env>
+        <web-xml-location>${project.basedir}/src/main/webapp/WEB-INF/web-${env}.xml
+        </web-xml-location>
+      </properties>
+
+      <build>
+        <resources>
+          <resource>
+            <directory>src/main/resources/${env}</directory>
+          </resource>
+          <resource>
+            <directory>src/main/resources</directory>
+            <excludes>
+              <exclude>project-data.properties</exclude>
+            </excludes>
+          </resource>
+        </resources>
+      </build>
+    </profile>
+  </profiles>
+
   <dependencies>
     <!-- Spring -->
     <dependency>
@@ -132,11 +177,37 @@
       <artifactId>spring-jdbc</artifactId>
       <version>${org.springframework-version}</version>
     </dependency>
+
+    <dependency>
+      <groupId>org.quartz-scheduler</groupId>
+      <artifactId>quartz</artifactId>
+      <version>${quartz.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>com.zaxxer</groupId>
+          <artifactId>HikariCP-java7</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+
+    <dependency>
+      <groupId>org.quartz-scheduler</groupId>
+      <artifactId>quartz-jobs</artifactId>
+      <version>${quartz.version}</version>
+    </dependency>
+
     <dependency>
       <groupId>com.google.code.gson</groupId>
       <artifactId>gson</artifactId>
       <version>${gson.version}</version>
     </dependency>
+
+    <dependency>
+      <groupId>net.coobird</groupId>
+      <artifactId>thumbnailator</artifactId>
+      <version>${thumbnailator.version}</version>
+    </dependency>
+
     <!-- lombok -->
     <dependency>
       <groupId>org.projectlombok</groupId>

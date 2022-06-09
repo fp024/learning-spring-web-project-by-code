@@ -1026,6 +1026,128 @@ public void checkFiles() throws Exception { ... }
 
 
 
+### 1. BoardAttachVO 도메인 , 매퍼 자동 생성
+
+* 일반적인 필드는 자동 매핑 되므로, 이름 변경 또는 타임 지정이 명시적으로 필요한 경우만 XML파일에 작성한다.
+
+  * https://mybatis.org/generator/configreference/columnOverride.html
+
+    ```xml
+    <!-- 타켓 테이블 - 첨부파일 정보 테이블 -->
+    <table tableName="tbl_attach" domainObjectName="BoardAttachVO"
+    mapperName="BoardAttachMapper">
+      <columnOverride column="uploadpath" property="uploadPath" />
+      <columnOverride column="filename" property="fileName" />
+      <columnOverride column="filetype" property="fileType" jdbcType="CHAR" javaType="org.fp024.domain.FileType" typeHandler="org.fp024.typehandler.FileTypeEnumHandler" />
+      <columnOverride column="bno" property="bno" jdbcType='BIGINT' javaType='java.lang.Long' />
+    </table>
+    ```
+
+* 생성 커맨드
+
+  ```bash
+  $ mvn mybatis-generator:generate
+  ```
+
+  ```bash
+  === Java 17, Maven 3.8.x Command Prompt ===
+  JAVA_HOME=C:\JDK\17
+  MAVEN_HOME=C:\Maven\3.8.x
+  
+  C:\git\learning-spring-web-project-by-code\part06\jex05-board>mvn mybatis-generator:generate
+  [INFO] Scanning for projects...
+  [INFO]
+  [INFO] -----------------------< org.fp024:jex05-board >------------------------
+  [INFO] Building jex05-board 1.0.0-BUILD-SNAPSHOT
+  [INFO] --------------------------------[ war ]---------------------------------
+  [INFO]
+  [INFO] --- mybatis-generator-maven-plugin:1.4.1:generate (default-cli) @ jex05-board ---
+  [INFO] Connecting to the Database
+  [INFO] Introspecting table tbl_board
+  [INFO] Introspecting table tbl_reply
+  [INFO] Introspecting table tbl_attach
+  [INFO] Generating Record class for table TBL_BOARD
+  [INFO] Generating Mapper Interface for table TBL_BOARD
+  [INFO] Generating Record class for table TBL_REPLY
+  [INFO] Generating Mapper Interface for table TBL_REPLY
+  [INFO] Generating Record class for table TBL_ATTACH
+  [INFO] Generating Mapper Interface for table TBL_ATTACH
+  [INFO] Saving file BoardVO.java
+  [INFO] Saving file BoardMapper.java
+  [INFO] Saving file BoardVODynamicSqlSupport.java
+  [INFO] Saving file ReplyVO.java
+  [INFO] Saving file ReplyMapper.java
+  [INFO] Saving file ReplyVODynamicSqlSupport.java
+  [INFO] Saving file BoardAttachVO.java
+  [INFO] Saving file BoardAttachMapper.java
+  [INFO] Saving file BoardAttachVODynamicSqlSupport.java
+  [WARNING] Existing file C:\git\learning-spring-web-project-by-code\part06\jex05-board\src\main\java\org\fp024\domain\BoardVO.java was overwritten
+  [WARNING] Existing file C:\git\learning-spring-web-project-by-code\part06\jex05-board\src\main\java\org\fp024\mapper\BoardMapper.java was overwritten
+  [WARNING] Existing file C:\git\learning-spring-web-project-by-code\part06\jex05-board\src\main\java\org\fp024\mapper\BoardVODynamicSqlSupport.java was overwritten
+  [WARNING] Existing file C:\git\learning-spring-web-project-by-code\part06\jex05-board\src\main\java\org\fp024\domain\ReplyVO.java was overwritten
+  [WARNING] Existing file C:\git\learning-spring-web-project-by-code\part06\jex05-board\src\main\java\org\fp024\mapper\ReplyMapper.java was overwritten
+  [WARNING] Existing file C:\git\learning-spring-web-project-by-code\part06\jex05-board\src\main\java\org\fp024\mapper\ReplyVODynamicSqlSupport.java was overwritten
+  [INFO] ------------------------------------------------------------------------
+  [INFO] BUILD SUCCESS
+  [INFO] ------------------------------------------------------------------------
+  [INFO] Total time:  10.480 s
+  [INFO] Finished at: 2022-06-10T03:21:14+09:00
+  [INFO] ------------------------------------------------------------------------
+  
+  C:\git\learning-spring-web-project-by-code\part06\jex05-board>
+  ```
+
+* 🎇 여기까진 했는데... 약간 더 봐야할 부분이 있다. BoardVO가 BoardAttachVO의 목록을 가지게 하는 모양으로 자동으로 어떻게 만들도록 처리할지?
+
+  * 1:N 관계의 도메인 모양을 만들어야하는데, mybatis generator로는 만들수 없을 것 같다.
+
+    * https://groups.google.com/g/mybatis-user/c/56fyjJ0yngI
+    * https://github.com/mybatis/generator/issues/226
+
+  * 자동으로 만들어진 모델 클래스에 필드를 추가하면 되긴하는데... 
+
+    * 별도 도메인 클래스를 만들자니, 클래스만 늘어나는 것 같고, 결국은 필드를 추가할 수 밖에 없겠다.
+
+      * 그러면 generate 할 때마다 이 모델은 변경사항을 다시 맞춰 줘야한다.
+
+      ```java
+      package org.fp024.domain;
+      
+      import java.time.LocalDateTime;
+      import java.util.List;
+      import javax.annotation.Generated;
+      
+      public class BoardVO {
+        ...
+        /**
+         * 첨부파일 목록
+         *
+         * <p>1:N 관계를 Mybatis Generator 로 만들어낼 수 없어서, 수동으로 기입한 필드
+         */
+        private List<BoardAttachVO> attachList;
+        ...
+        public void setAttachList(List<BoardAttachVO> attachList) {
+          this.attachList = attachList;
+        }
+      
+        public List<BoardAttachVO> getAttachList() {
+          return attachList;
+        }
+      
+        @Override
+        @Generated("org.mybatis.generator.api.MyBatisGenerator")
+        public String toString() {
+          StringBuilder sb = new StringBuilder();
+          ...
+          sb.append(", attachList=").append(attachList);
+          sb.append("]");
+          return sb.toString();
+        }
+      }
+      ```
+
+    
+
 
 
 ---

@@ -12,7 +12,7 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 
 @EnableWebMvc
-@ComponentScan(basePackages = {"org.fp024.controller", "org.fp024.exception"})
+@ComponentScan(basePackages = {"org.fp024.controller"})
 public class ServletConfig implements WebMvcConfigurer {
 
   @Override
