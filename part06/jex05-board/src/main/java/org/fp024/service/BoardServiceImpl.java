@@ -117,7 +117,8 @@ public class BoardServiceImpl implements BoardService {
   public boolean modify(BoardVO board) {
     LOGGER.info("modify..... {}", board);
 
-    attachMapper.delete(c -> c.where(BoardAttachVODynamicSqlSupport.bno, isEqualTo(bno)));
+    attachMapper.delete(
+        c -> c.where(BoardAttachVODynamicSqlSupport.bno, isEqualTo(board.getBno())));
 
     boolean modifyResult =
         mapper.update(
