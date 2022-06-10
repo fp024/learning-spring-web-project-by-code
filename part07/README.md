@@ -112,6 +112,90 @@ Java Config 기반 설정은 이후에 따로 설명해주시니, 지금 고려�
 
 
 
+## 31. 로그인과 로그아웃 처리
+
+
+
+### 31.1 접근제한 설정
+
+
+
+### 31.2 단순로그인 처리
+
+* 주의사항
+  * 일반 시스템에서의 `userid`는 스프링 시큐리티에서 `username` 에 해당함, 사용자의 이름으로 혼동하지 말것!
+  * 스프링 시큐리티의 User
+    * 인증 정보와 권한을 가진 객체, 일반적인 사용자 정보와는 다름.
+
+* PasswordEncoder 없이 로그인을 하려할 때.. 다음과 같은 예외가 나올 수 있음.
+
+  ```
+  java.lang.IllegalArgumentException: There is no PasswordEncoder mapped for the id "null"
+  ```
+
+  * Spring Security 5 부터 암호에 대해 PasswordEncoder를 기본으로 사용하도록 설정되었기 때문이고, 연습용으로서 필요없다면 아래처럼 패스워드 문자열 앞부분에 `{noop}` 문자열을 삽입한다.
+
+    ```xml
+     <security:user name="member" password="{noop}member" authorities="ROLE_MEMBER" />
+    ```
+
+    
+
+#### 31.2.1 로그아웃 확인
+
+* 개발 학습을 하면서 로그인 로그아웃을 자주해야하는데, 로그아웃을 위해서 기능구현을 아직 하지 않았다면, 브라우저에서 세션과 관련된 정보를 지우는 것이 확실함.
+
+  * 로그인 상태에서 Cookie Editor 로 보았을 때, `JSESSIONID` 쿠키에 값이 할당 되어있는 것을 확인했다. 해당 쿠키를 지우면 로그인이 풀림.
+
+    ![JSESSIONID](doc-resources/cookie-editor.png)
+
+
+
+### 31.2.2 여러 권한을 가지는 사용자 설정
+
+* admin 관련 설정추가하고, member로 로그인후 admin 페이지 접근시 403 응답 확인했음.
+
+
+
+### 31.2.3 접근 제한 메시지의 처리
+
+접근 제한에 대해서 AccessDeniedHandler를 직접 구현 또는 특정 URI를 지정할 수 있음.
+
+* Access Denied의 경우 403 에러 메시지가 발생함.
+* JSP에서는 HttpServletRequest 안에 `SPRING_SECURITY_403_EXCEPTION`이라는 이름으로 `AccessDeniedException` 객체가 전달됨
+
+
+
+### 31.2.4 AccessDeniedHandler 인터페이스를 구현하는 경우
+
+* 접근이 제한 되었을 때, 쿠키나 세션에 특정한 작업을 하거나 HttpServletResponse에 특정한 헤더정보를 추가하는 등의 행위를 할 경우는 직접 구현하는 방식이 권장됨.
+
+* CustomAccessDeniedHandler 에서 리다이렉트를 하긴했는데...
+
+  accessDeniedException 에 대한 정보를 리다이렉트 페이지로 전달하지 않았으므로... SPRING_SECURITY_403_EXCEPTION 관련 메시지는 표시되지 않는다.
+
+  * 기본 내장 AccessDeniedHandlerImpl 에서는  예외정보를 request에 속성으로 설정하고 포워딩을 한다.
+
+    ```java
+    // Put exception into request scope (perhaps of use to a view)
+    		request.setAttribute(WebAttributes.ACCESS_DENIED_403, accessDeniedException);
+    		// Set the 403 status code.
+    		response.setStatus(HttpStatus.FORBIDDEN.value());
+    		// forward to error page.
+    		if (logger.isDebugEnabled()) {
+    			logger.debug(LogMessage.format("Forwarding to %s with status code 403", this.errorPage));
+    		}
+    		request.getRequestDispatcher(this.errorPage).forward(request, response);
+    ```
+
+    
+
+  
+
+
+
+
+
 
 
 ---
@@ -133,7 +217,9 @@ Java Config 기반 설정은 이후에 따로 설명해주시니, 지금 고려�
 
 ## 정오표
 
-* 
+* p628 
+  * Custom`e`AccessDeniedHandler -> CustomAccessDeniedHandler
+
 
 
 
