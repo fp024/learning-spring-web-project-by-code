@@ -21,6 +21,8 @@
 
     <org.springframework-version>5.3.20</org.springframework-version>
 
+    <spring-security.version>5.7.1</spring-security.version>
+
     <org.aspectj-version>1.9.9.1</org.aspectj-version>
 
     <quartz.version>2.3.2</quartz.version>
