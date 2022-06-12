@@ -143,9 +143,9 @@ Java Config 기반 설정은 이후에 따로 설명해주시니, 지금 고려�
 
 #### 31.2.1 로그아웃 확인
 
-* 개발 학습을 하면서 로그인 로그아웃을 자주해야하는데, 로그아웃을 위해서 기능구현을 아직 하지 않았다면, 브라우저에서 세션과 관련된 정보를 지우는 것이 확실함.
+* 개발 학습을 하면서 로그인 로그아웃을 자주해야하는데, 로그아웃을 위해서 기능 구현을 아직 하지 않았다면, 브라우저에서 세션과 관련된 정보를 지우는 것이 확실함.
 
-  * 로그인 상태에서 Cookie Editor 로 보았을 때, `JSESSIONID` 쿠키에 값이 할당 되어있는 것을 확인했다. 해당 쿠키를 지우면 로그인이 풀림.
+  * 로그인 상태에서 Cookie Editor로 보았을 때, `JSESSIONID` 쿠키에 값이 할당 되어있는 것을 확인했다. 해당 쿠키를 지우면 로그인이 풀림.
 
     ![JSESSIONID](doc-resources/cookie-editor.png)
 
@@ -178,19 +178,74 @@ Java Config 기반 설정은 이후에 따로 설명해주시니, 지금 고려�
 
     ```java
     // Put exception into request scope (perhaps of use to a view)
-    		request.setAttribute(WebAttributes.ACCESS_DENIED_403, accessDeniedException);
-    		// Set the 403 status code.
-    		response.setStatus(HttpStatus.FORBIDDEN.value());
-    		// forward to error page.
-    		if (logger.isDebugEnabled()) {
-    			logger.debug(LogMessage.format("Forwarding to %s with status code 403", this.errorPage));
-    		}
-    		request.getRequestDispatcher(this.errorPage).forward(request, response);
+    request.setAttribute(WebAttributes.ACCESS_DENIED_403, accessDeniedException);
+    // Set the 403 status code.
+    response.setStatus(HttpStatus.FORBIDDEN.value());
+    // forward to error page.
+    if (logger.isDebugEnabled()) {
+        logger.debug(LogMessage.format("Forwarding to %s with status code 403", this.errorPage));
+    }
+    request.getRequestDispatcher(this.errorPage).forward(request, response);
     ```
 
     
 
-  
+
+### 31.3 커스텀 로그인 페이지
+
+* CSRF 토큰 
+
+  ```html
+  <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
+  ```
+
+  * 브라우저에서 확인
+    ```html
+    <input type="hidden" name="_csrf" value="363f36a0-4bd4-42b2-a100-ad021c217135">
+    <!-- 로그아웃 후 다시 확인하니 값이 바뀌어 있다. -->
+    <input type="hidden" name="_csrf" value="b2901297-935d-4b22-a8b3-5392da1d26ef">
+    ```
+
+보안 처리를 위해 넣어둔 것 같은데 아직은 잘 모르겠다.
+
+
+
+### 31.4 CSRF(Cross-site request forgery) 공격과 토큰
+
+* 사이트간 위조 방지를 목적으로 특정한 값의 토큰을 사용하는 방식
+* CSRF 공격
+  * 서버에서 받아들이는 요청을 해석하고 처리할 때 어떤 출처에서 호출이 진행 되었는지는 따지지 않기 때문에 생기는 허점을 노리는 공격방식
+* 대응 방법
+  * referer 헤더 체크
+  * REST 방식에서 사용되는 PUT 또는 DELETE 사용
+
+
+
+#### 31.4.1 CRSF 토큰
+
+1. 서버에서 브라우저에 데이터를 전송할 때, CSRF 토큰을 전송
+2. 사용자가 POST등으로 요청할 때, 요청내용의 CSRF값을 검사
+   * 제공한 CSRF 토큰과 다르다면 처리하지 않음.
+
+
+
+#### 31.4.2 스프링 시큐리티의 CSRF 설정
+
+* CSRF 토큰은 세션을 통해 보관하고 브라우저에서 전송된 CSRF 토큰 값을 검사하는 방식으로 처리.
+* 비활성화 할 수도 있음.
+
+
+
+### 31.5 로그인 성공과 AuthenticationSuccessHandler
+
+* 브라우저에서 단지 뒤로가기해서 CSRF 토큰이 갱신되지 않은 상태라면 로그인이 안된다, 새로고침을 눌러줘야함.
+
+
+
+### 31.6 로그아웃의 처리와 LogoutSuccessHandler
+
+* POST 방식으로 처리되기 때문에, CSRF 토큰값을 지정함.
+* 추가적인 작업을 원한다면 logoutSucessHandler을 정의해야함.
 
 
 

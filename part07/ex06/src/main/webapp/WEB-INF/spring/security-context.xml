@@ -6,6 +6,8 @@
 
   <bean id="customAccessDenied" class="org.fp024.security.CustomAccessDeniedHandler"/>
 
+  <bean id="customLoginSuccess" class="org.fp024.security.CustomLoginSuccessHandler"/>
+
   <security:http>
     <security:intercept-url pattern="/sample/all" access="permitAll"/>
 
@@ -13,10 +15,13 @@
 
     <security:intercept-url pattern="/sample/admin" access="hasRole('ROLE_ADMIN')"/>
 
-    <security:form-login/>
-
     <!--<security:access-denied-handler error-page="/accessError"/>-->
     <security:access-denied-handler ref="customAccessDenied"/>
+
+    <security:form-login login-page="/customLogin"
+      authentication-success-handler-ref="customLoginSuccess"/>
+
+    <security:logout logout-url="/customLogout" invalidate-session="true"/>
 
   </security:http>
 
