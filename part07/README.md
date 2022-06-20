@@ -331,7 +331,7 @@ Java Config 기반 설정은 이후에 따로 설명해주시니, 지금 고려�
 
     
 
-### 32.1.1 PasswordEncoder 문제 해결
+#### 32.1.1 PasswordEncoder 문제 해결
 
 `/sample/admin` 에 접근하여 로그인 페이지에 ID와 암호를 정상 입력하고 접근해보면, 아래와 같은 예외가 발생한다.
 
@@ -348,6 +348,22 @@ java.lang.IllegalArgumentException: There is no PasswordEncoder mapped for the i
 이후 다시 로그인 시도해보면 잘 수행됨.
 
 
+
+
+
+### 32.2 기존 테이블을 이용하는 경우
+
+기존 회원관련 데이터 베이스가 구축되어있을 때, 스프링 시큐리티의 기본 테이블 구조를 섞어 사용하는 것은 오히려 복잡해질 수 있음.
+
+* JDBC를 이용하고 기존에 테이블이 있다면 지정된 결과를 반환하는 쿼리를 작성해주는 작업으로도 처리가 가능함.
+
+* `<security:jdbc-user-service> 의 아래 속성에 적당한 쿼리 지정`
+  * `users-by-username-query`
+  * `authorities-by-user-name-query`
+
+
+
+#### 32.2.1 인증/권한을 위한 테이블 설계
 
 
 
