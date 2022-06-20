@@ -108,16 +108,6 @@
     <dependency>
       <groupId>com.zaxxer</groupId>
       <artifactId>HikariCP</artifactId>
-      <version>${hikaricp.version}</version>
-      <exclusions>
-        <exclusion>
-          <!-- slf4j-api 2.0.0-alpha1 버전을 가져오는데... -->
-          <!-- log4j-slf4j-impl 가 가져오는 slf4j-api 1.7.25 버전과 충돌로 사용자정의 로깅이 뜨지 않는다. -->
-          <!-- HikariCP의 slf4j-api 디펜던시는 제외시켰다. -->
-          <groupId>org.slf4j</groupId>
-          <artifactId>slf4j-api</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
 
     <dependency>
