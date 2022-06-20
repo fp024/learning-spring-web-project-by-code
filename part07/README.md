@@ -251,6 +251,108 @@ Java Config 기반 설정은 이후에 따로 설명해주시니, 지금 고려�
 
 
 
+## 32. JDBC를 이용하는 간편 인증/권한 처리
+
+
+
+* UserDetailsService는 다음 구현 클래스를 제공함
+  * CachingUserDetailsService
+  * InMemoryUserDetailsManager
+  * JdbcDaoImpl
+  * JdbcUserDetailsManager
+  * LdapUserDetailsManager
+  * LdapUserDetailsService
+
+
+
+### 32.1 JDBC를 이용하기 위한 테이블 설정
+
+* JdbcUserDetailsManager
+
+  * https://github.com/spring-projects/spring-security/blob/5.7.1/core/src/main/java/org/springframework/security/provisioning/JdbcUserDetailsManager.java
+
+* 스프링 시큐리티에서 지정된 SQL을 그대로 사용하고 싶을 때, 아래와 같이 테이블을 생성해줌.
+
+  ```sql
+  -- 기본 User 스키마
+  create table users(
+  	username varchar_ignorecase(50) not null primary key,
+  	password varchar_ignorecase(500) not null,
+  	enabled boolean not null
+  );
+  
+  create table authorities (
+  	username varchar_ignorecase(50) not null,
+  	authority varchar_ignorecase(50) not null,
+  	constraint fk_authorities_users foreign key(username) references users(username)
+  );
+  create unique index ix_auth_username on authorities (username,authority);
+  
+  
+  
+  -- Oracle DB를 위한 기본 User 스키마
+  CREATE TABLE USERS (
+      USERNAME NVARCHAR2(128) PRIMARY KEY,
+      PASSWORD NVARCHAR2(128) NOT NULL,
+      ENABLED CHAR(1) CHECK (ENABLED IN ('Y','N') ) NOT NULL
+  );
+  
+  
+  CREATE TABLE AUTHORITIES (
+      USERNAME NVARCHAR2(128) NOT NULL,
+      AUTHORITY NVARCHAR2(128) NOT NULL
+  );
+  ALTER TABLE AUTHORITIES ADD CONSTRAINT AUTHORITIES_UNIQUE UNIQUE (USERNAME, AUTHORITY);
+  ALTER TABLE AUTHORITIES ADD CONSTRAINT AUTHORITIES_FK1 FOREIGN KEY (USERNAME) REFERENCES USERS (USERNAME) ENABLE;
+  
+  
+  -- ORACLE 기준 테스트 유저 데이터 입력
+  INSERT INTO USERS (USERNAME, PASSWORD, ENABLED) VALUES ('user00', 'pw00', 'Y');
+  INSERT INTO USERS (USERNAME, PASSWORD, ENABLED) VALUES ('member00', 'pw00', 'Y');
+  INSERT INTO USERS (USERNAME, PASSWORD, ENABLED) VALUES ('admin00', 'pw00', 'Y');
+  
+  INSERT INTO AUTHORITIES (USERNAME, AUTHORITY) VALUES ('user00', 'ROLE_USER');
+  INSERT INTO AUTHORITIES (USERNAME, AUTHORITY) VALUES ('member00', 'ROLE_MANAGER');
+  INSERT INTO AUTHORITIES (USERNAME, AUTHORITY) VALUES ('admin00', 'ROLE_MANAGER');
+  INSERT INTO AUTHORITIES (USERNAME, AUTHORITY) VALUES ('admin00', 'ROLE_ADMIN');
+  ```
+
+  * 클래스 리소스로도 사용할 수 있음.
+    * `org/springframework/security/core/userdetails/jdbc/users.ddl`
+  * 가이드 문서
+    * `5.7.1 버전`
+      * https://github.com/spring-projects/spring-security/blob/5.7.1/docs/modules/ROOT/pages/servlet/authentication/passwords/jdbc.adoc
+    * `main` 브랜치
+      * https://github.com/spring-projects/spring-security/blob/main/docs/modules/ROOT/pages/servlet/authentication/passwords/jdbc.adoc
+
+#### ex06 프로젝트에 datasource 추가
+
+ *  spring-jdbc만 써서 mybatis 설정을 할필요가 없다.
+
+    
+
+### 32.1.1 PasswordEncoder 문제 해결
+
+`/sample/admin` 에 접근하여 로그인 페이지에 ID와 암호를 정상 입력하고 접근해보면, 아래와 같은 예외가 발생한다.
+
+```
+java.lang.IllegalArgumentException: There is no PasswordEncoder mapped for the id "null"
+	at org.springframework.security.crypto.password.DelegatingPasswordEncoder$UnmappedIdPasswordEncoder.matches(DelegatingPasswordEncoder.java:289)
+	...
+```
+
+* Database를 사용할 때는 PasswordEncoder를 사용해야함.
+* 현재 예제에서는 암호화 없이 처리하도록 PasswordEncoder를 구현해서 사용하기로함.
+* CustomNoOpPasswordEncoder 는 security-context.xml에 등록
+
+이후 다시 로그인 시도해보면 잘 수행됨.
+
+
+
+
+
+
+
 
 
 ---
