@@ -19,9 +19,9 @@
     <jstl.version>1.2</jstl.version>
     <javax.annotation-api.version>1.3.2</javax.annotation-api.version>
 
-    <org.springframework-version>5.3.20</org.springframework-version>
+    <org.springframework-version>5.3.21</org.springframework-version>
 
-    <spring-security.version>5.7.1</spring-security.version>
+    <spring-security.version>5.7.2</spring-security.version>
 
     <org.aspectj-version>1.9.9.1</org.aspectj-version>
 
@@ -59,7 +59,7 @@
       2. Jetty 11.x버전은 주요 서블릿 패키지명이 바뀌였기 때문에 Spring 5에서 사용할 수 없다.          
          https://stackoverflow.com/questions/66217350/deploying-spring-5-x-on-tomcat-10-x-with-jakarta-package        
     -->
-    <jetty.version>10.0.9</jetty.version>
+    <jetty.version>10.0.11</jetty.version>
 
     <junit.jupiter.version>5.8.2</junit.jupiter.version>
 
@@ -88,12 +88,12 @@
     <!-- XML 컨텍스트 설정일 때는 잘 되는데, Spring Java Config 설정일 때는 예외가 난다. 일단 자동 재배포 재시작의 기본 값은 비활성화 상태로 두자 -->
     <jetty-auto-deploy-seconds>-1</jetty-auto-deploy-seconds>
 
-    <!-- Embbed Jetty로 실행할 때, web.xml을 환경별로 바꿀 상황이 생겨 환경변수로 분리했다.  -->
+    <!-- Embedded Jetty로 실행할 때, web.xml을 환경별로 바꿀 상황이 생겨 환경변수로 분리했다.  -->
     <web-xml-location>${project.basedir}/src/main/webapp/WEB-INF/web.xml</web-xml-location>
 
     <!-- cargo 플러그인 설정 -->
-    <cargo.version>1.9.11</cargo.version>
-    <cargo-tomcat9x.version>9.0.63</cargo-tomcat9x.version>
+    <cargo.version>1.9.12</cargo.version>
+    <cargo-tomcat9x.version>9.0.64</cargo-tomcat9x.version>
     <cargo-context-path>${jetty-context-path}</cargo-context-path>
     <cargo-server-port>${jetty.port}</cargo-server-port>
 
