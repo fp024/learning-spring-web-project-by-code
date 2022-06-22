@@ -1,5 +1,5 @@
 package org.fp024.type;
 
-public interface CodeOperation<E extends Enum<E>> {
+public interface CodeOperation {
   String getCode();
 }
