@@ -523,11 +523,42 @@ java.lang.IllegalArgumentException: There is no PasswordEncoder mapped for the i
 
 
 
+### 33.2 CustomUserDetailsService 구성
+
+* `authentication-provider`에  `user-service-ref` 선언하면 `jdbc-user-service` 설정 내용은 제거해야한다.
 
 
 
+#### 33.2.1 MemberVO를 UsersDetails 타입으로 변환하기
 
+* super의 생성자를  사용하는 `public CustomUser(MemberVO vo)` 를 구현하므로 아래 기본 생성자는 빼도 될 것 같다.
 
+  ```java
+  public CustomUser(
+    String username, String password, Collection<? extends GrantedAuthority> authorities) {
+    super(username, password, authorities);
+  }
+  ```
+
+* 유저 없을 때 null을 반환하는 것이 이상해서... `UsernameNotFoundException` 예외를 던지도록 하였다.
+
+  ```java
+    @Override
+    public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
+      LOGGER.warn("Load User by userName: {}", userName);
+  
+      MemberVO member = memberMapper.read(userName);
+  
+      LOGGER.warn("queried by member mapper: {}", member);
+  
+      if (member == null) {
+        throw new UsernameNotFoundException("userName: " + userName);
+      }
+      return new CustomUser(member);
+    }
+  ```
+
+  
 
 
 

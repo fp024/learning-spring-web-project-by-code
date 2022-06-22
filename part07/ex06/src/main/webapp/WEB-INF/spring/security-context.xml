@@ -13,6 +13,9 @@
   <bean id="bCryptPasswordEncoder"
     class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
 
+  <bean id="customUserDetailsService" class="org.fp024.security.CustomUserDetailsService"/>
+
+
   <security:http>
     <security:intercept-url pattern="/sample/all" access="permitAll"/>
 
@@ -31,15 +34,15 @@
   </security:http>
 
   <security:authentication-manager>
-    <security:authentication-provider>
+    <security:authentication-provider user-service-ref="customUserDetailsService">
 
       <!--<security:jdbc-user-service data-source-ref="dataSource"/>-->
-
+      <!--
       <security:jdbc-user-service data-source-ref="dataSource"
         users-by-username-query="SELECT USERID, USERPW, ENABLED FROM TBL_MEMBER WHERE USERID = ?"
         authorities-by-username-query="SELECT USERID, AUTH FROM TBL_MEMBER_AUTH WHERE USERID = ?"
       />
-
+      -->
       <!--<security:password-encoder ref="customNoOpPasswordEncoder"/>-->
 
       <security:password-encoder ref="bCryptPasswordEncoder"/>
