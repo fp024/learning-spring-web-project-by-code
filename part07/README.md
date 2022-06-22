@@ -365,6 +365,114 @@ java.lang.IllegalArgumentException: There is no PasswordEncoder mapped for the i
 
 #### 32.2.1 인증/권한을 위한 테이블 설계
 
+책에서 제시한 테이블이 스프링 시큐리티 기본 제공 테이블 스키마와 크게 차이는 없지만, 사용자 테이블에 이름(username), 등록일시(regdate), 업데이트일시(updatedate) 등의 추가정보가 들어가 있다.
+
+* 스프링 시큐리티의 기본 스키마의 username은 ID개념임.
+
+* 사용여부(enabled)에 대해서...
+
+  스프링 시큐리티의 기본 스키마는 `ENABLED CHAR(1) CHECK (ENABLED IN ('Y','N') ) NOT NULL` 이렇게 되어있는데... 들어오는 값을 Y, N으로 고정하고 있다. 
+
+  그런데 책에서는 boolean으로 처리하려고 한 것인지 기본 값을 '1'로 하고 있다. 이부분은 스프링 시큐리티 기본 스키마 정의를 따르고, 내가 잘 조정해서 바꿔야겠다.
+
+  
+
+* 일반적인 회원 테이블과 권한 테이블
+
+  ```sql
+  CREATE TABLE TBL_MEMBER(
+    USERID        VARCHAR2(50)    NOT NULL PRIMARY KEY,
+    USERPW        VARCHAR2(100)   NOT NULL,
+    USERNAME      VARCHAR2(100)   NOT NULL,
+    REGDATE       DATE            DEFAULT SYSDATE,
+    UPDATEDATE    DATE            DEFAULT SYSDATE,
+    ENABLED       CHAR(1) CHECK (ENABLED IN ('Y','N') ) NOT NULL 
+    /* ENABLED       CHAR(1)         DEFAULT '1' 대신 위처럼 사용해보자., 유저 추가시 활성화/비활성화 여부는 서비스에서 결정하자. */
+  );
+  
+  CREATE TABLE TBL_MEMBER_AUTH (
+    USERID        VARCHAR2(50)    NOT NULL,
+    AUTH          VARCHAR2(50)    NOT NULL,
+    CONSTRAINT    FK_MEMBER_AUTH  FOREIGN KEY(USERID) REFERENCES TBL_MEMBER(USERID)
+  );
+  ```
+
+
+
+#### 32.2.2 BCryptPasswordEncoder 클래스를 이용한 패스워드 보호
+
+* bcrypt
+  * 패스워드를 저장하는 용도로 설계된 해시함수로 특정 문자열을 암호화하고, 체크하는 쪽에서는 암호화된 패스워드가 유효한 패스워드인지만 확인하고 다시 원문으로 되돌리지는 못함.
+* Password Encoder로 BCryptPasswordEncoder로 사용
+
+
+
+##### 인코딩된 패스워드를 가지는 사용자 추가
+
+* 태스트 클래스를 만들어서 인코딩된 사용자를 DB에 넣어주자!
+* `spring-test`는 이미 디펜던시에 추가되어있음.
+* 저자님께서는 `Connection`, `PreparedStatement` 등등 사용하셨는데, jdbc 템플릿 사용해보자!
+  * **MemberTest**
+    * `NamedParameterJdbcTemplate` 로 사용했고, 회원과 회원 권한에 대해 별도 도메인 클래스 만들어서 거기에 값을 설정하고 `BeanPropertySqlParameterSource` 사용해서 매핑이 쉽도록 작성했다.
+
+
+
+
+#### 사용자에 권한 추가하기
+
+* 권한을 직접 문자열로 사용하기 싫어서 enum으로 정의했는데, `BeanPropertySqlParameterSource` 를 그대로 사용할 수가 없었다. 다음과 같이 getValue()를 오버라이드 해주면 정상 입력할 수 있었다.
+
+  ```java
+  public class CustomBeanPropertySqlParameterSource extends BeanPropertySqlParameterSource {
+    public CustomBeanPropertySqlParameterSource(Object object) {
+      super(object);
+    }
+  
+    /** enum 인식을 위해 getValue() 메서드를 오버라이드 */
+    @Override
+    public Object getValue(String paramName) throws IllegalArgumentException {
+      Object value = super.getValue(paramName);
+      if (value instanceof Enum) {
+        return value.toString();
+      }
+      return value;
+    }
+  }
+  ```
+
+  
+
+### 32.2.3 쿼리를 이용하는 인증
+
+* security-context.xml에 다음과 같이 지정
+
+  ```xml
+  <!-- SELECT 컬럼 순서만 맞으면, 컬럼명이 기본과 다른 것은 상관 없는 것 같다. -->
+  <security:jdbc-user-service data-source-ref="dataSource"
+    users-by-username-query="SELECT USERID, USERPW, ENABLED FROM TBL_MEMBER WHERE USERID = ?"
+    authorities-by-username-query="SELECT USERID, AUTH FROM TBL_MEMBER_AUTH WHERE USERID = ?"/>
+  ```
+
+ *  특정 유저의 `ENABLED` 컬럼 값을 N으로 변경했을 때, 로그인이 되지 않는 것도 확인했다.
+
+    ```sql
+    UPDATE TBL_MEMBER 
+       SET ENABLED = 'N'
+    WHERE USERID = 'admin90'
+    ```
+
+    
+
+
+
+
+
+
+
+
+
+
+
 
 
 
