@@ -2,11 +2,11 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>For member page</title>
+  <title>For memberVO page</title>
 </head>
-<!-- member or admin-->
+<!-- memberVO or admin-->
 <body>
-  <h1>/sample/member page</h1>
+  <h1>/sample/memberVO page</h1>
 
   <a href="/customLogout">Logout</a>
 </body>

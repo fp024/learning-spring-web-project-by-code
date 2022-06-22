@@ -18,6 +18,7 @@
         <Logger name="org.springframework.web" level="info"/>
         <Logger name="org.springframework.security" level="info"/>
 
+
         <!-- Root Logger -->
         <Root level="warn">
             <Appender-Ref ref="STDOUT" />

@@ -1,19 +1,26 @@
 package org.fp024.domain;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.apache.ibatis.type.Alias;
+import org.fp024.type.EnabledType;
 
 /** 회원 도메인 */
 @Getter
 @Setter
 @ToString
-public class Member {
+@Alias("memberVO")
+public class MemberVO {
   private String userId;
   private String userPassword;
   private String userName;
+  private EnabledType enabled;
+
   private LocalDateTime registerDate;
   private LocalDateTime updateDate;
-  private String enabled;
+
+  private List<AuthVO> authList;
 }

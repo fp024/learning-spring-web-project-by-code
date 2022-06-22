@@ -3,7 +3,8 @@
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns:context="http://www.springframework.org/schema/context"
   xmlns:tx="http://www.springframework.org/schema/tx"
-  xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+  xmlns:mybatis-spring="http://mybatis.org/schema/mybatis-spring"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring.xsd">
 
   <!-- Root Context: defines shared resources visible to all other web components -->
   <context:property-placeholder location="classpath:database.properties"/>
@@ -29,6 +30,14 @@
     class="org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate">
     <constructor-arg name="dataSource" ref="dataSource"/>
   </bean>
+
+  <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+    <property name="dataSource" ref="dataSource"/>
+    <property name="typeAliasesPackage" value="org.fp024.domain"/>
+    <property name="typeHandlersPackage" value="org.fp024.typehandler"/>
+  </bean>
+
+  <mybatis-spring:scan base-package="org.fp024.mapper"/>
 
   <tx:annotation-driven/>
 </beans>

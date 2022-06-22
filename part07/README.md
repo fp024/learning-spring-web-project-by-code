@@ -458,10 +458,68 @@ java.lang.IllegalArgumentException: There is no PasswordEncoder mapped for the i
     ```sql
     UPDATE TBL_MEMBER 
        SET ENABLED = 'N'
-    WHERE USERID = 'admin90'
+     WHERE USERID = 'admin90'
     ```
 
     
+
+
+
+## 33. 커스텀 UserDetailsService 활용
+
+> 먼저번 장에서 JDBC 그냥 쓰는게 불편하다고 생각했는데, 이번 챕터에서는 도메인도 만들고, ORM (MyBatis)도 사용한다.  먼저 장에서 내맘대로 만들어둔 도메인은 이번장하고 이름이나 형태를 맞춰놔야겠다.
+
+* UserDetailsService 의 메서드
+
+  ```java
+  /*
+  사용자 이름을 기반으로 사용자를 찾습니다. 실제 구현에서 검색은 구현 인스턴스가 구성되는 방식에 따라 대소문자를 구분하거나 대소문자를 구분하지 않을 수 있습니다. 이 경우 반환되는 UserDetails 개체는 실제로 요청된 것과 다른 대소문자를 가진 사용자 이름을 가질 수 있습니다.
+  */
+  UserDetails loadUserByUsername(java.lang.String username) throws UsernameNotFoundException;
+  ```
+
+  * https://docs.spring.io/spring-security/site/docs/current/api/org/springframework/security/core/userdetails/UserDetailsService.html
+
+
+
+* UserDetails 인터페이스
+
+  ```
+  Package org.springframework.security.core.userdetails
+  Interface UserDetails
+  
+      All Superinterfaces:
+          java.io.Serializable
+  
+      All Known Subinterfaces:
+          LdapUserDetails
+  
+      All Known Implementing Classes:
+          InetOrgPerson, LdapUserDetailsImpl, Person, User 
+  ```
+
+  * 일반적으로 User를 상속해서 사용함.
+  * MyBatis와 사용시 MemberMapper와 서비스를 작성하고, 스프링 시큐리티와 연동해서 사용하는 방식으로 진행
+
+
+
+### 33.1 회원 도메인, 회원 Mapper 설계
+
+* 전장에서 만들었던 도메인 다시 책에 맞게 바꿨다. 😅
+* 주목한 부분 MemberVO가 권한 리스트를 갖는다는 것, 한 유저가 여러 권한을 가질 수 있으므로 그렇게 하셨다보다.
+
+
+
+#### 33.1.1 MemberMapper
+
+* MyBatis 설정을 다시 추가해야함... 필요없는줄 알고 빼놨었는데..😅
+* 회원 정보에 권한 정보를 조인해서 가져올 것이므로 ResultMap을 구성해야한다.
+
+
+
+#### 33.1.2 MemberMapper 테스트
+
+* MyBatis EnumType Handler 보고 code 기반으로 처리할 수도 있도록 클래스를 새로 만들었는데.. Enum 저장 및 변환 잘 되는 것 확인했다.
 
 
 

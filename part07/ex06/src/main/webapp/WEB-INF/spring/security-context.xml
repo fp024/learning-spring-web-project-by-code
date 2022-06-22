@@ -16,7 +16,7 @@
   <security:http>
     <security:intercept-url pattern="/sample/all" access="permitAll"/>
 
-    <security:intercept-url pattern="/sample/member" access="hasRole('ROLE_MEMBER')"/>
+    <security:intercept-url pattern="/sample/memberVO" access="hasRole('ROLE_MEMBER')"/>
 
     <security:intercept-url pattern="/sample/admin" access="hasRole('ROLE_ADMIN')"/>
 

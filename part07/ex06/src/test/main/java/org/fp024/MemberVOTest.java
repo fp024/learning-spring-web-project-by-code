@@ -2,14 +2,14 @@ package org.fp024;
 
 import java.util.stream.IntStream;
 import lombok.extern.slf4j.Slf4j;
-import org.fp024.domain.Member;
-import org.fp024.domain.MemberAuth;
-import org.fp024.domain.MemberAuthType;
+import org.fp024.domain.AuthVO;
+import org.fp024.domain.MemberVO;
 import org.fp024.helper.CustomBeanPropertySqlParameterSource;
+import org.fp024.type.EnabledType;
+import org.fp024.type.MemberAuthType;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
@@ -21,7 +21,7 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
       "file:src/main/webapp/WEB-INF/spring/root-context.xml",
       "file:src/main/webapp/WEB-INF/spring/security-context.xml"
     })
-class MemberTest {
+class MemberVOTest {
   @Autowired private PasswordEncoder passwordEncoder;
   @Autowired private NamedParameterJdbcTemplate jdbcTemplate;
 
@@ -36,22 +36,22 @@ class MemberTest {
     IntStream.range(0, 100)
         .forEach(
             i -> {
-              Member member = new Member();
+              MemberVO memberVO = new MemberVO();
 
-              member.setUserPassword(passwordEncoder.encode(String.format("pw%02d", i)));
-              member.setEnabled("Y");
+              memberVO.setUserPassword(passwordEncoder.encode(String.format("pw%02d", i)));
+              memberVO.setEnabled(EnabledType.YES);
 
               if (i < 80) {
-                member.setUserId(String.format("user%02d", i));
-                member.setUserName(String.format("일반사용자%02d", i));
+                memberVO.setUserId(String.format("user%02d", i));
+                memberVO.setUserName(String.format("일반사용자%02d", i));
               } else if (i < 90) {
-                member.setUserId(String.format("manager%02d", i));
-                member.setUserName(String.format("운영자%02d", i));
+                memberVO.setUserId(String.format("manager%02d", i));
+                memberVO.setUserName(String.format("운영자%02d", i));
               } else {
-                member.setUserId(String.format("admin%02d", i));
-                member.setUserName(String.format("관리자%02d", i));
+                memberVO.setUserId(String.format("admin%02d", i));
+                memberVO.setUserName(String.format("관리자%02d", i));
               }
-              jdbcTemplate.update(sql, new BeanPropertySqlParameterSource(member));
+              jdbcTemplate.update(sql, new CustomBeanPropertySqlParameterSource(memberVO));
             });
   }
 
@@ -64,19 +64,19 @@ class MemberTest {
     IntStream.range(0, 100)
         .forEach(
             i -> {
-              MemberAuth memberAuth = new MemberAuth();
+              AuthVO authVO = new AuthVO();
 
               if (i < 80) {
-                memberAuth.setUserId(String.format("user%02d", i));
-                memberAuth.setAuth(MemberAuthType.ROLE_USER);
+                authVO.setUserId(String.format("user%02d", i));
+                authVO.setAuth(MemberAuthType.ROLE_USER);
               } else if (i < 90) {
-                memberAuth.setUserId(String.format("manager%02d", i));
-                memberAuth.setAuth(MemberAuthType.ROLE_MEMBER);
+                authVO.setUserId(String.format("manager%02d", i));
+                authVO.setAuth(MemberAuthType.ROLE_MEMBER);
               } else {
-                memberAuth.setUserId(String.format("admin%02d", i));
-                memberAuth.setAuth(MemberAuthType.ROLE_ADMIN);
+                authVO.setUserId(String.format("admin%02d", i));
+                authVO.setAuth(MemberAuthType.ROLE_ADMIN);
               }
-              jdbcTemplate.update(sql, new CustomBeanPropertySqlParameterSource(memberAuth));
+              jdbcTemplate.update(sql, new CustomBeanPropertySqlParameterSource(authVO));
             });
   }
 }
