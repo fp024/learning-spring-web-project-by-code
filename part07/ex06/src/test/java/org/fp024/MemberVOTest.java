@@ -1,6 +1,5 @@
 package org.fp024;
 
-import java.util.stream.IntStream;
 import lombok.extern.slf4j.Slf4j;
 import org.fp024.domain.AuthVO;
 import org.fp024.domain.MemberVO;
@@ -13,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
+
+import java.util.stream.IntStream;
 
 /** 회원 등록 테스트 */
 @Slf4j

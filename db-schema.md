@@ -179,3 +179,5 @@ CREATE TABLE TBL_MEMBER_AUTH (
 
 
 최종장 Java Config + mybatis-dymamic-sql 사용한 프로젝트는 Embedded HSQLDB로 사용하려하는데, 잘될지 모르겠다. 😓😓😓
+
+* 이후 계속생각해보았는데, 기존 상태에서 Embedded HSQLDB 를 사용하는 것이 의미가 없다.  jex프로젝트를 JPA기반으로 변경한 다음에 Dialet 을 바꿔서 DB를 바꿔보는게 훨씬 의미가 있을 것 같다.
