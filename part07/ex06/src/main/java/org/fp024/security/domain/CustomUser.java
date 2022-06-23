@@ -1,11 +1,12 @@
 package org.fp024.security.domain;
 
+import lombok.Getter;
 import org.fp024.domain.MemberVO;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 
 public class CustomUser extends User {
-  private final MemberVO member;
+  @Getter private final MemberVO member;
 
   public CustomUser(MemberVO vo) {
     super(

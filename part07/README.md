@@ -558,7 +558,38 @@ java.lang.IllegalArgumentException: There is no PasswordEncoder mapped for the i
     }
   ```
 
+
+
+
+
+## 34 스프링 시큐리티를 JSP에서 사용하기
+
+
+
+### 34.1 JSP에서 로그인한 사용자 정보 보여주기
+
+* 앞 챕터에서 CustomUser에 member 필드에 대한 Getter 설정 내가 누락해서 넣었다. 😅
+
+
+
+### 34.2 표현식을 이용하는 동적 화면 구성
+
+* 스프링 시큐리티에서 자주 사용되는 표현식
+
+  | 표현식                                                 | 설명                                                     |
+  | ------------------------------------------------------ | -------------------------------------------------------- |
+  | hasRole(\[role])<br />hasAuthority(\[authority])       | 해당 권한이 있으면 true                                  |
+  | hasAnyRole(\[role])<br />hasAnyAuthority(\[authority]) | 여러 권한들 중에서 하나라도 해당하는 권한이 있으면 true  |
+  | principal                                              | 현재 사용자 정보를 의미                                  |
+  | permitAll                                              | 모든 사용자에게 허용                                     |
+  | denyAll                                                | 모든 사용자에게 거부                                     |
+  | isAnonymous()                                          | 익명의 사용자의 경우 (로그인을 하지 않은 경우도 해당)    |
+  | isAuthenticated()                                      | 인증된 사용자면 true                                     |
+  | isFullyAuthenticated()                                 | Remember-me로 인증된 것이 아닌 인증된 사용자인 경우 true |
+
   
+
+
 
 
 
