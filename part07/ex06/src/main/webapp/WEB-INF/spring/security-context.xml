@@ -17,6 +17,7 @@
 
 
   <security:http>
+    <!-- 아래 URL 접근 규칙들을 어노테이션 기반으로 바꿀 수 있는 것 같다. -->
     <security:intercept-url pattern="/sample/all" access="permitAll"/>
 
     <security:intercept-url pattern="/sample/memberVO" access="hasRole('ROLE_MEMBER')"/>

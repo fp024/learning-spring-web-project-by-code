@@ -591,6 +591,12 @@ java.lang.IllegalArgumentException: There is no PasswordEncoder mapped for the i
 
 
 
+## 35 자동 로그인 (remember-me)
+
+
+
+
+
 
 
 
