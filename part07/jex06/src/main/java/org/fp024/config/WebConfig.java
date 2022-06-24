@@ -1,10 +1,11 @@
 package org.fp024.config;
 
-import java.nio.charset.StandardCharsets;
-import javax.servlet.Filter;
-import javax.servlet.ServletRegistration;
 import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
+
+import javax.servlet.Filter;
+import javax.servlet.ServletRegistration;
+import java.nio.charset.StandardCharsets;
 
 /** web.xml 대체 */
 public class WebConfig extends AbstractAnnotationConfigDispatcherServletInitializer {

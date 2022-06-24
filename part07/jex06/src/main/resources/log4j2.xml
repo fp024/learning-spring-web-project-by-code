@@ -16,6 +16,9 @@
         <Logger name="org.springframework.beans" level="info"/>     
         <Logger name="org.springframework.context" level="info"/>           
         <Logger name="org.springframework.web" level="info"/>
+        <Logger name="org.springframework.security" level="info"/>
+
+        <Logger name="org.fp024.mapper" level="trace"/>
 
         <!-- Root Logger -->
         <Root level="warn">

@@ -14,7 +14,7 @@ import org.springframework.web.servlet.view.JstlView;
 import java.io.IOException;
 
 @EnableWebMvc
-@ComponentScan(basePackages = {"org.fp024.controller", "org.fp024.exception"})
+@ComponentScan(basePackages = {"org.fp024.controller"})
 public class ServletConfig implements WebMvcConfigurer {
 
   @Override

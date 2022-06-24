@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration PUBLIC
+    "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+    "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+  <!-- MyBatis Dynamic SQL Library를 사용. XML매퍼는 생성하지 않음. -->
+  <!-- 참조: https://mybatis.org/generator/quickstart.html -->
+  <context id="MyBatis3DynamicSqlTest" targetRuntime="MyBatis3DynamicSql">
+    <property name="javaFileEncoding" value="UTF-8"/>
+
+    <!-- https://mybatis.org/generator/reference/plugins.html -->
+    <plugin type="org.mybatis.generator.plugins.ToStringPlugin"/>
+
+    <!-- 자동생성 주석 금지 -->
+    <commentGenerator>
+      <property name="suppressAllComments" value="true"/>
+    </commentGenerator>
+
+    <jdbcConnection
+        connectionURL="jdbc:oracle:thin:@localvmdb.oracle_xe_18c:1521:XE"
+        driverClass="oracle.jdbc.OracleDriver"
+        password="book_ex"
+        userId="book_ex"
+    />
+
+    <!-- Java 도메인 모델 생성 -->
+    <javaModelGenerator
+        targetPackage="org.fp024.domain"
+        targetProject="src/main/java"> <!-- eclipse의 generator에서는 프로젝트 폴더명부터 시작해야하지만, Maven 플러그인으로 실행시는 src부터 시작한다. -->
+      <property name="enableSubPackages" value="true"/>
+      <property name="trimStrings" value="true"/>
+    </javaModelGenerator>
+
+    <!-- 메퍼 인터페이스 (레파지토리 인터페이스 ) -->
+    <javaClientGenerator
+        targetPackage="org.fp024.mapper"
+        targetProject="src/main/java">
+      <property name="enableSubPackages" value="true"/>
+    </javaClientGenerator>
+
+
+    <!--
+      타켓 테이블 - 회원 테이블
+      회원과 권한의 1:N 관계를 표현하는 List<AuthVO> 는 MyBatis Generator로 표현할 수 없기 때문에,
+      그 부분은 자동생성 이후 수동으로 클래스 소스를 수정해야한다.
+    -->
+    <table tableName="TBL_MEMBER" domainObjectName="MemberVO"
+           mapperName="MemberMapper">
+      <columnOverride column="USERID" property="userId"/>
+      <columnOverride column="USERPW" property="userPassword"/>
+      <columnOverride column="USERNAME" property="userName"/>
+
+      <columnOverride column="REGDATE" property="registerDate" jdbcType='DATE'
+                      javaType='java.time.LocalDateTime'/>
+      <columnOverride column="UPDATEDATE" property="updateDate" jdbcType='DATE'
+                      javaType='java.time.LocalDateTime'/>
+
+      <columnOverride column="ENABLED" property="enabled" jdbcType="CHAR"
+                      javaType="org.fp024.type.EnabledType"
+                      typeHandler="org.fp024.typehandler.CustomEnumTypeHandler"/>
+    </table>
+
+
+
+    <!--
+      타켓 테이블 - 권한 테이블
+      ex06 프로젝트에서는 회원테이블과 권한테이블을 JOIN해서 회원정보를 가져왔기 때문에,
+      권한 테이블에 대해서는 별도로 Mapper를 만들지 않았다.
+
+      그리고 회원이나, 권한에 대한 Create, Update, Delete를 기능상으로 구현을 안해서 그렇기도 한데...
+      여기선 자동생성되는 부분이니 일단 AuthMapper를 만들게 하자.
+    -->
+    <table tableName="TBL_MEMBER_AUTH" domainObjectName="AuthVO"
+           mapperName="AuthMapper">
+      <columnOverride column="USERID" property="userId"/>
+      <columnOverride column="AUTH" property="auth" jdbcType="VARCHAR"
+                      javaType="org.fp024.type.MemberAuthType"
+                      typeHandler="org.fp024.typehandler.CustomEnumTypeHandler"/>
+    </table>
+
+  </context>
+</generatorConfiguration>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.fp024.mapper.MemberMapper">
+  <!--
+      JOIN의 결과로는 ReulstMap을 XML로 만들어야한다고 한다.
+      https://mybatis.org/mybatis-dynamic-sql/docs/select.html#xml-mapper-for-join-statements
+  -->
+  <resultMap id="MemberResultMap" type="memberVO">
+    <id property="userId" column="userid"/>
+    <result property="userPassword" column="userpw"/>
+    <result property="userName" column="username"/>
+    <result property="enabled" column="enabled" typeHandler="org.fp024.typehandler.CustomEnumTypeHandler"/>
+    <result property="registerDate" column="regdate"/>
+    <result property="updateDate" column="updateDate"/>
+    <collection property="authList" resultMap="AuthResultMap"/>
+  </resultMap>
+
+  <resultMap id="AuthResultMap" type="authVO">
+    <result property="userId" column="userId"/>
+    <result property="auth" column="auth" typeHandler="org.fp024.typehandler.CustomEnumTypeHandler"/>
+  </resultMap>
+
+</mapper>
