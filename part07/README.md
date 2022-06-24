@@ -685,10 +685,25 @@ java.lang.IllegalArgumentException: There is no PasswordEncoder mapped for the i
 * 부모 POM.xml에 cargo를 적용해 두었으니 톰캣으로 확인하고 싶을 때는... 아래와 같이 해보자.
 
   ```bash
-  mvn clean package -DskipTests cargo:run
+  # 시작
+  $ mvn clean package -DskipTests cargo:run
+  # 정지
+  $ mvn cargo:stop
   ```
 
   * cargo 플러그인을 통해 `Tomcat 9.x`로 실행시도 JSESSIONID로 쿠키를 만들었다. `JSESSION_ID` 의 삭제설정은 빼도 될 것 같다.
+
+
+
+
+
+## 36 Java 설정을 이용하는 경우의 스프링 시큐리티 설정
+
+
+
+
+
+
 
 
 
