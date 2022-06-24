@@ -593,15 +593,102 @@ java.lang.IllegalArgumentException: There is no PasswordEncoder mapped for the i
 
 ## 35 자동 로그인 (remember-me)
 
+* 자동로그인 `remember-me`라고도 하고, Cookie를 이용해서 구현함.
+* 스프링 시큐리티에서는 `remember-me`를 메모리 또는 DB를 이용하는 형태로 약간의 설정만으로 구현 가능함.
 
 
 
+### 35.1 데이터베이스를 이용하는 자동로그인
+
+##### 동작 방식
+
+1. 로그인 할 때, 로그인이 되었던 정보를 DB에 저장
+2. 사용자 재방문시 세션에 정보가 없으면 데이터 베이스를 조회
 
 
 
+##### 세션 방식보다 좋은점
+
+* 보통 웹서버가 다중 서버로 구성되는데, 세션으로하게 하려면 웹서버간 메모리가 공유되야 제대로 쓸 수 있지 않을지?
+  * 저장소가 DB라면 다중 웹서버라도 하나의 DB를 바라보므로 더 간편하고 안정적일 것 같다.
 
 
 
+#### 테이블 정의
+
+* https://docs.spring.io/spring-security/reference/servlet/authentication/rememberme.html#remember-me-persistent-token
+
+  ```sql
+  CREATE TABLE PERSISTENT_LOGINS (
+    USERNAME   VARCHAR2(64)  NOT NULL,
+    SERIES     VARCHAR2(64)  PRIMARY KEY,
+    TOKEN      VARCHAR2(64)  NOT NULL,
+    LAST_USED  TIMESTAMP     NOT NULL
+  );
+  ```
+  
+  * `VARCHAR` 만 `VARCHAR2`로 변경
+
+
+
+#### security-context.xml 수정
+
+```xml
+<security:http>
+  ...
+  <security:remember-me data-source-ref="dataSource" token-validity-seconds="604800"/>
+  ...
+</security:http>
+```
+
+* `token-validity-seconds`: Remember-me 쿠키가 유효한 기간(초) 설정
+  * 예제에서는 1주일(7일)을 초로 입력했다.
+
+
+
+### 35.1.1 로그인 화면에 자동 로그인 설정
+
+* 로그인 화면에서 체크박스 형태로 구현
+
+`remember-me`란 name을 갖는 체크 박스를 만들어 체크한후 로그인을 해보면, 아래와 같은 쿠키가 만들어진 것을 확인할 수 있다.
+
+![remember-me 쿠키](doc-resources/remember-me-cookie.png)
+
+* `PERSISTENT_LOGINS` 테이블을 확인해보았을 때, 다음 행이 추가된 것을 확인함.
+
+  | USERNAME | SERIES                   | TOKEN                    | LAST\_USED                 |
+  | :------- | :----------------------- | :----------------------- | :------------------------- |
+  | admin90  | pyHk7AZQeomj7v3+JJOmiQ== | ZMT58zvKWF9tyTdtUtdd5Q== | 2022-06-24 09:27:00.879000 |
+
+* 자동 로그인이 될 때마다 `TOKEN`과 `LAST_USED` 값은 갱신됨
+
+
+
+### 35.1.2  로그아웃 시 쿠키 삭제
+
+* 로그아웃을 할 때, 자동 로그인 쿠키를 삭제해주는 내용을 `security-context.xml`에 추가
+
+  ```xml
+    <security:http>
+      <security:logout logout-url="/customLogout"
+                       invalidate-session="true"
+                       delete-cookies="remember-me,JSESSION_ID,JSESSIONID"/>
+  		...
+    </security:http>
+  ```
+
+  * 별도 설정이 없으면 자동 로그인에서 사용하는 쿠키명이 `remember-me` 이므로 그것을 삭제할 쿠키명으로 지정해주면 되고, Tomcat 등이 발행하는 쿠키도삭제해주는 것이 좋다고 하신다. (Jetty도 `JSESSIONID`란 쿠키를 만듬)
+    * remember-me가 없어지는 것은 확인이 되는데... JSESSIONID같은 경우는 서버에 접근하면 새로만들어서인지 몰라도 남아있다.
+
+
+
+* 부모 POM.xml에 cargo를 적용해 두었으니 톰캣으로 확인하고 싶을 때는... 아래와 같이 해보자.
+
+  ```bash
+  mvn clean package -DskipTests cargo:run
+  ```
+
+  * cargo 플러그인을 통해 `Tomcat 9.x`로 실행시도 JSESSIONID로 쿠키를 만들었다. `JSESSION_ID` 의 삭제설정은 빼도 될 것 같다.
 
 
 
