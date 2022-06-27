@@ -1,5 +1,6 @@
 package org.fp024.config;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.fp024.security.CustomLoginSuccessHandler;
 import org.fp024.security.CustomUserDetailsService;
@@ -13,11 +14,19 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
+import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
+
+import javax.sql.DataSource;
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 @Slf4j
 public class SecurityConfig {
+
+  private final DataSource dataSource;
+
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     http.authorizeHttpRequests(
@@ -39,6 +48,11 @@ public class SecurityConfig {
         .logoutUrl("/customLogout")
         .invalidateHttpSession(true)
         .deleteCookies("remember-me", "JSESSIONID");
+
+    http.rememberMe()
+        .key("fp024")
+        .tokenRepository(persistentTokenRepository())
+        .tokenValiditySeconds(604800);
 
     return http.build();
   }
@@ -84,5 +98,12 @@ public class SecurityConfig {
   @Bean
   public PasswordEncoder passwordEncoder() {
     return new BCryptPasswordEncoder();
+  }
+
+  @Bean
+  public PersistentTokenRepository persistentTokenRepository() {
+    JdbcTokenRepositoryImpl jdbcTokenRepository = new JdbcTokenRepositoryImpl();
+    jdbcTokenRepository.setDataSource(dataSource);
+    return jdbcTokenRepository;
   }
 }
