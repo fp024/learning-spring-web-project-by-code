@@ -977,6 +977,32 @@ admin은 패스워드 인코딩 처리가 되지않아 로그인이 안될 테�
 
 
 
+### 36.6 커스텀 UserDetailsService 설정
+
+* AuthenticationManagerBuilder에 customUserService, passwordEncoder의 설정은 어떻게 하나? 했는데, 그냥 빈으로 지정해두면 알아서 `AuthenticationManager` 를 생성하는 것 같다.
+
+  괜히 따로 메서드를 만들면 빈 중복 오류가 남.
+
+  ```
+  DaoAuthenticationConfigurer to already built object
+  ```
+
+* 아래 2개만 빈으로 설정되어있으면 됨
+
+  ```java
+   @Bean
+    public UserDetailsService customUserDetailsService() {
+      return new CustomUserDetailsService();
+    }
+  
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+      return new BCryptPasswordEncoder();
+    }
+  ```
+
+
+
 
 
 

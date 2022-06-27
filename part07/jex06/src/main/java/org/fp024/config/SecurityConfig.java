@@ -2,19 +2,17 @@ package org.fp024.config;
 
 import lombok.extern.slf4j.Slf4j;
 import org.fp024.security.CustomLoginSuccessHandler;
+import org.fp024.security.CustomUserDetailsService;
 import org.fp024.type.MemberAuthType;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.JdbcUserDetailsManager;
-import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-
-import javax.sql.DataSource;
 
 @Configuration
 @EnableWebSecurity
@@ -60,6 +58,7 @@ public class SecurityConfig {
   }
   */
 
+  /*
   @Bean
   public UserDetailsManager users(DataSource dataSource) {
     JdbcUserDetailsManager users = new JdbcUserDetailsManager(dataSource);
@@ -67,7 +66,14 @@ public class SecurityConfig {
         "SELECT USERID, USERPW, ENABLED FROM TBL_MEMBER WHERE USERID = ?");
     users.setAuthoritiesByUsernameQuery(
         "SELECT USERID, AUTH FROM TBL_MEMBER_AUTH WHERE USERID = ?");
+
     return users;
+  }
+  */
+
+  @Bean
+  public UserDetailsService customUserDetailsService() {
+    return new CustomUserDetailsService();
   }
 
   @Bean
