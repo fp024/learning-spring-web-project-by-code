@@ -1003,11 +1003,40 @@ admin은 패스워드 인코딩 처리가 되지않아 로그인이 안될 테�
 
 
 
-
-
 ### 36.7 자동 로그인 설정
 
 
+
+
+
+## 37 어노테이션을 이용하는 스프링 시큐리티 설정
+
+#### 주로 사용되는 어노테이션
+
+* `@Secured`: 스프링 시큐리티 초기부터 사용됨, ()안에 `ROLE_ADMIN`과 같은 문자열 혹은 문자열 배열을 이용함.
+* `@PreAuthorize`, `@PostAuthorize`: 3버전 부터 지원, ()안에 표현식을 사용할 수 있음
+
+기존에 `MemberAuthType`으로 `enum`으로 만들어둔 것이 있어서,  `@PreAuthorize` 와 `@Secured`에 인식이되도록 static final String 으로 접근할 수 있는 내부 클래스를 만들었다.
+
+
+
+#### 설정 추가 위치
+
+스프링 시큐리티의 어노테이션을 활성화하기 위해서는 스프링 MVC 설정을 담당하는 servlet-context.xml에 관련 설정이 추가되야한다.
+
+```xml
+<security:global-method-security pre-post-annotations="enabled" secured-annotations="enabled"/>
+```
+
+
+
+### Java 설정일 경우...
+
+ServletConfig 클래스에 아래 어노테이션을 추가해주자.
+
+```java
+@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
+```
 
 
 

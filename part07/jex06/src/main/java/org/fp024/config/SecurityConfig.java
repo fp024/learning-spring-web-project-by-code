@@ -35,9 +35,9 @@ public class SecurityConfig {
                 .antMatchers("/sample/all")
                 .permitAll()
                 .antMatchers("/sample/admin")
-                .hasRole(MemberAuthType.ROLE_ADMIN.getRoleUserName())
+                .hasRole(MemberAuthType.ROLE_ADMIN.getGroupName())
                 .antMatchers("/sample/member")
-                .hasRole(MemberAuthType.ROLE_MEMBER.getRoleUserName()));
+                .hasRole(MemberAuthType.ROLE_MEMBER.getGroupName()));
 
     http.formLogin()
         .loginPage("/customLogin")
