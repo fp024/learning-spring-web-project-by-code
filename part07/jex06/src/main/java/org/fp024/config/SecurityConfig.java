@@ -9,6 +9,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
@@ -33,18 +35,23 @@ public class SecurityConfig {
         .loginPage("/customLogin")
         .loginProcessingUrl("/login")
         .successHandler(loginSuccessHandler());
+
+    http.logout()
+        .logoutUrl("/customLogout")
+        .invalidateHttpSession(true)
+        .deleteCookies("remember-me", "JSESSIONID");
+
     return http.build();
   }
 
   @Bean
   public InMemoryUserDetailsManager userDetailsService() {
     UserDetails user =
-        User.withDefaultPasswordEncoder()
-            .username("admin")
+        User.withUsername("admin")
             .password("admin")
             .roles(MemberAuthType.ROLE_ADMIN.getRoleUserName())
             .username("member")
-            .password("member")
+            .password("$2a$10$cwpVKNhU4h1P4xPT0h1ss.yfLTwZT9PjcCpAAMEZ3ZAwwxNCuoXSS")
             .roles(MemberAuthType.ROLE_MEMBER.getRoleUserName())
             .build();
     return new InMemoryUserDetailsManager(user);
@@ -53,5 +60,10 @@ public class SecurityConfig {
   @Bean
   public AuthenticationSuccessHandler loginSuccessHandler() {
     return new CustomLoginSuccessHandler();
+  }
+
+  @Bean
+  public PasswordEncoder passwordEncoder() {
+    return new BCryptPasswordEncoder();
   }
 }

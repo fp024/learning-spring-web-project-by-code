@@ -912,7 +912,45 @@ WebConfig 클래스에 SecurityConfig.class도 추가를 해줘야한다.
 
 
 
+### 36.3 로그아웃 처리
 
+```
+로그인 전 JSESSIONID 값
+node01u2nn77dlc7e51kmmxk6j6eq400.node0
+로그인 후 JSESSIONID 값, 달라진 것을 확인했다.
+node0ivqaqpeh7z1554cdjlafanxt1.node0
+```
+
+
+
+### 36.4 PasswordEncoder 지정
+
+PasswordEncoder를 빈으로 지정해서 테스트 했을 때... 아래와 같은 식으로 인코딩 된 문자열로 잘 나타났다.
+
+```
+encoded text: $2a$10$cwpVKNhU4h1P4xPT0h1ss.yfLTwZT9PjcCpAAMEZ3ZAwwxNCuoXSS
+```
+
+실제로 확인하기 위해서 
+
+.withDefaultPasswordEncoder() 를 제거하고 실행하자
+
+```java
+  @Bean
+  public InMemoryUserDetailsManager userDetailsService() {
+    UserDetails user =
+        User.withUsername("admin")
+            .password("admin")
+            .roles(MemberAuthType.ROLE_ADMIN.getRoleUserName())
+            .username("member")
+            .password("$2a$10$cwpVKNhU4h1P4xPT0h1ss.yfLTwZT9PjcCpAAMEZ3ZAwwxNCuoXSS")
+            .roles(MemberAuthType.ROLE_MEMBER.getRoleUserName())
+            .build();
+    return new InMemoryUserDetailsManager(user);
+  }
+```
+
+admin은 안될 테지만, member는 로그인이 되야한다.
 
 
 
