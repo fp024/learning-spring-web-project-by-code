@@ -133,7 +133,6 @@ class BoardServiceTest {
         selectStatementProvider.getParameters().toString());
   }
 
-  @SuppressWarnings("unchecked")
   private SelectStatementProvider getListSqlDSL(Criteria criteria) {
     DerivedColumn<Long> rownum = DerivedColumn.of("ROWNUM");
     DerivedColumn<Long> rn = rownum.as("rn");

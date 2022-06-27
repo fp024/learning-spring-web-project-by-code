@@ -703,6 +703,217 @@ java.lang.IllegalArgumentException: There is no PasswordEncoder mapped for the i
 
 
 
+---
+
+## jex06 프로젝트 진행 특이사항
+
+* 그런데 진행을 하면 할 수록 `mybatis-dymamic-sql` 대신 `JPA`를 제대로 배워서 사용하는 것이 나을 것 같다는 생각도 들지만, 내가 이 모듈의 사용에 여전히 익숙하지 않아서 그런 것이기도 하니 의미 없게 보지는 말자...😑
+
+
+
+### mybatis-dynamic-sql에서 JOIN  처리
+
+* MemberService에다 만든 JOIN 쿼리 생성문
+
+  ```java
+    public Optional<MemberVO> read(String userId) {
+      return memberMapper.selectOne(
+          select(
+                  MemberVODynamicSqlSupport.userId,
+                  MemberVODynamicSqlSupport.userPassword,
+                  MemberVODynamicSqlSupport.userName,
+                  MemberVODynamicSqlSupport.enabled,
+                  MemberVODynamicSqlSupport.registerDate,
+                  MemberVODynamicSqlSupport.updateDate,
+                  AuthVODynamicSqlSupport.auth)
+              .from(MemberVODynamicSqlSupport.memberVO, "m")
+              .leftJoin(
+                  AuthVODynamicSqlSupport.authVO,
+                  "a",
+                  on(MemberVODynamicSqlSupport.userId, equalTo(AuthVODynamicSqlSupport.userId)))
+              .where(MemberVODynamicSqlSupport.userId, isEqualTo(userId))
+              .build()
+              .render(RenderingStrategies.MYBATIS3));
+    }
+  ```
+
+  * m과 a로 쓴 것은 단순 alias이다. 실행로그보면 제대로 적용된 것을 볼 수 있다.
+
+    ```
+    DEBUG: org.fp024.mapper.MemberMapper.selectOne - ==>  Preparing: select m.USERID, m.USERPW, m.USERNAME, m.ENABLED, m.REGDATE, m.UPDATEDATE, a.AUTH from TBL_MEMBER m left join TBL_MEMBER_AUTH a on m.USERID = a.USERID where m.USERID = ?
+    DEBUG: org.fp024.mapper.MemberMapper.selectOne - ==> Parameters: admin90(String)
+    ```
+
+    
+
+* ResultMap 처리
+
+  * 회원과 권한이 1:N 관계여서 ResultMap을 설정해 줄 수 밖에 없는데, 라이브러리 개발자분이 매퍼XML에 ResultMap을 정의해서 사용하라고 한다.
+
+  * https://mybatis.org/mybatis-dynamic-sql/docs/select.html#xml-mapper-for-join-statements
+
+  * MemberMapper 인터페이스
+
+    ```java
+    @Generated("org.mybatis.generator.api.MyBatisGenerator")
+    @SelectProvider(type = SqlProviderAdapter.class, method = "select")
+    @ResultMap("MemberResultMap")
+    Optional<MemberVO> selectOne(SelectStatementProvider selectStatement);
+    ```
+
+  * MemberMapper.xml에 MemberResultMap을 정의
+
+    ```xml
+    ...
+    <mapper namespace="org.fp024.mapper.MemberMapper">
+      <resultMap id="MemberResultMap" type="memberVO">
+        <id property="userId" column="userid"/>
+        <result property="userPassword" column="userpw"/>
+        <result property="userName" column="username"/>
+        <result property="enabled" column="enabled" typeHandler="org.fp024.typehandler.CustomEnumTypeHandler"/>
+        <result property="registerDate" column="regdate"/>
+        <result property="updateDate" column="updateDate"/>
+        <collection property="authList" resultMap="AuthResultMap"/>
+      </resultMap>
+    
+      <resultMap id="AuthResultMap" type="authVO">
+        <result property="userId" column="userId"/>
+        <result property="auth" column="auth" typeHandler="org.fp024.typehandler.CustomEnumTypeHandler"/>
+      </resultMap>
+    
+    </mapper>
+    ```
+
+    여기서는 타입핸들러 클래스를 풀패키지이름으로 적어줘야만 했다. 😓
+
+  
+
+이 모듈로 JOIN을 어떻게 처리 해야하나 했는데, 그래도 잘 적용한 것 같다. 😄
+
+
+
+
+
+### 36.1 Java 설정 추가 및 동작 확인
+
+web.xml이 없고 WebCofnig 클래스를 추가해서 사용하는 경우 2가지 방법 중 하나로 설정
+
+1. getServletfilters()를 이용해서 직접 스프링 시큐리티 관련 필터 추가
+2. AbstractSecurityWebApplicationInitializer 클래스를 사용하는 클래스 추가
+
+
+
+### WebSecurityConfigurerAdapter 의 지원중단
+
+Spring Security 5.7.2 에서는 `WebSecurityConfigurerAdapter` 가 Deprecated 되었다고 나온다.
+
+```
+Use a org.springframework.security.web.SecurityFilterChain Bean to configure HttpSecurity or a WebSecurityCustomizer Bean to configure WebSecurity
+```
+
+
+
+* 최신 가이드
+  * https://spring.io/blog/2022/02/21/spring-security-without-the-websecurityconfigureradapter
+
+    ```java
+    @Configuration
+    @EnableWebSecurity
+    @Slf4j
+    public class SecurityConfig {
+      @Bean
+      public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http.authorizeHttpRequests(
+            (auths) ->
+                auths
+                    .antMatchers("/sample/all")
+                    .permitAll()
+                    .antMatchers("/sample/admin")
+                    .hasRole(MemberAuthType.ROLE_ADMIN.name())
+                    .antMatchers("/sample/member")
+                    .hasRole(MemberAuthType.ROLE_MEMBER.name()));
+        return http.build();
+      }
+    }
+    ```
+
+WebSecurityConfigurerAdapter 상속하지 않고 SecurityFilterChain를 빈으로 구성해서 쓰는 것을 추천하라고 해서 책에 내용을 요즘 기준에 맞춰서 바꿔 적었다.
+
+* 그런데 lambda 안쓰다보니 많이 잊어버림 😓😓😓, 좀만 복잡해지면 뭔말인지 모르겠음...
+
+
+
+#### 36.1.1 WebConfig 클래스의 변경
+
+여기까지 해서 실행해보면 아래 예외가 발생
+
+```
+org.springframework.beans.factory.NoSuchBeanDefinitionException: No bean named 'springSecurityFilterChain' available
+```
+
+WebConfig 클래스에 SecurityConfig.class도 추가를 해줘야한다.
+
+```java
+// ...
+  @Override
+  protected Class<?>[] getRootConfigClasses() {
+    return new Class<?>[] {RootConfig.class, SecurityConfig.clas};
+  }
+// ...
+```
+
+
+
+### 36.2 로그인 페이지 관련 설정
+
+* 인메모리 유저 처리하는 방식도 최신 가이드가 있는데... 책의 내용을 아래와 같이 수정했다.
+
+  ```java
+    @Bean
+    public InMemoryUserDetailsManager userDetailsService() {
+      UserDetails user =
+          User.withDefaultPasswordEncoder()
+              .username("admin")
+              .password("admin")
+              .roles(MemberAuthType.ROLE_ADMIN.name())
+              .username("member")
+              .password("member")
+              .roles(MemberAuthType.ROLE_MEMBER.name())
+              .build();
+      return new InMemoryUserDetailsManager(user);
+    }
+  ```
+
+  `withDefaultPasswordEncoder()` 메서드는 Deprecated로 되어있지만, 프로덕션에 올라가면 위험하다는 것을 나타내기 위해 표시한 것이고 실제로 제거하진 않을 거라고 함.
+
+
+
+#### 36.2.1 로그인 성공 처리
+
+* ex06 프로젝트에서 만들었던 CustomLoginSuccessHandler를 빈으로 등록
+
+* 그런데.. `ROLE_` 은 자동으로 추가되므로 쓸필요가 없다는 오류가나는데...
+
+  * 일단 MemberAuthType을 ROLE에 대한 유저명만 가져올 수도 있게 변경했다.
+
+    ```java
+    public enum MemberAuthType {
+      ROLE_USER("USER"),
+      ROLE_MEMBER("MEMBER"),
+      ROLE_ADMIN("ADMIN");
+    
+      @Getter() private String roleUserName;
+    
+      MemberAuthType(String roleUserName) {
+        this.roleUserName = roleUserName;
+      }
+    }
+    ```
+
+
+
+
+
 
 
 

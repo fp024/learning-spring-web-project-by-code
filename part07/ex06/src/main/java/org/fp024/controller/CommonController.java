@@ -34,6 +34,4 @@ public class CommonController {
   public void logoutGet() {
     LOGGER.info("custom logout");
   }
-
-
 }
