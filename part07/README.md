@@ -933,7 +933,7 @@ encoded text: $2a$10$cwpVKNhU4h1P4xPT0h1ss.yfLTwZT9PjcCpAAMEZ3ZAwwxNCuoXSS
 
 실제로 확인하기 위해서 
 
-.withDefaultPasswordEncoder() 를 제거하고 실행하자
+`.withDefaultPasswordEncoder()` 를 제거하고 실행하자!
 
 ```java
   @Bean
@@ -950,7 +950,34 @@ encoded text: $2a$10$cwpVKNhU4h1P4xPT0h1ss.yfLTwZT9PjcCpAAMEZ3ZAwwxNCuoXSS
   }
 ```
 
-admin은 안될 테지만, member는 로그인이 되야한다.
+admin은 패스워드 인코딩 처리가 되지않아 로그인이 안될 테지만, member는 로그인이 되야한다. > 잘 됨을 확인했다.
+
+
+
+### 36.5 JDBC를 이용하는 Java 설정
+
+* JSP 에서 예외발생시 JSP 내용중 한글이 깨져보여서 인코딩 필터 순서를 조절해보았는데, 결과는 같았다.
+
+  ```java
+  public class SecurityInitializer extends AbstractSecurityWebApplicationInitializer {
+    @Override
+    protected void beforeSpringSecurityFilterChain(ServletContext servletContext) {
+      FilterRegistration.Dynamic encodingFilter =
+          servletContext.addFilter(
+              "encodingFilter", new CharacterEncodingFilter(StandardCharsets.UTF_8.name(), true));
+      encodingFilter.addMappingForUrlPatterns(
+          null, false, "/*"); // 첫번째 인자 dispatcherTypes를 null로 두면 REQUEST로 인식 한다고 함.
+    }
+  }
+  ```
+
+  그래도 Spring Security 의 필터보다 인코딩 필터가 먼저 수행되는 것을 JSP 예외발생시 스택 추적 로그로 확인하여서, 이대로 두자~
+
+  * 참조: https://stackoverflow.com/questions/20863489/characterencodingfilter-dont-work-together-with-spring-security-3-2-0
+
+
+
+
 
 
 

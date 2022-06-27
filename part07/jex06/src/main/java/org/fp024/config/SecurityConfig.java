@@ -7,13 +7,14 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.provisioning.JdbcUserDetailsManager;
+import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+
+import javax.sql.DataSource;
 
 @Configuration
 @EnableWebSecurity
@@ -44,6 +45,7 @@ public class SecurityConfig {
     return http.build();
   }
 
+  /*
   @Bean
   public InMemoryUserDetailsManager userDetailsService() {
     UserDetails user =
@@ -55,6 +57,17 @@ public class SecurityConfig {
             .roles(MemberAuthType.ROLE_MEMBER.getRoleUserName())
             .build();
     return new InMemoryUserDetailsManager(user);
+  }
+  */
+
+  @Bean
+  public UserDetailsManager users(DataSource dataSource) {
+    JdbcUserDetailsManager users = new JdbcUserDetailsManager(dataSource);
+    users.setUsersByUsernameQuery(
+        "SELECT USERID, USERPW, ENABLED FROM TBL_MEMBER WHERE USERID = ?");
+    users.setAuthoritiesByUsernameQuery(
+        "SELECT USERID, AUTH FROM TBL_MEMBER_AUTH WHERE USERID = ?");
+    return users;
   }
 
   @Bean

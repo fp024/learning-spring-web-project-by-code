@@ -1,11 +1,8 @@
 package org.fp024.config;
 
-import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
-import javax.servlet.Filter;
 import javax.servlet.ServletRegistration;
-import java.nio.charset.StandardCharsets;
 
 /** web.xml 대체 */
 public class WebConfig extends AbstractAnnotationConfigDispatcherServletInitializer {
@@ -25,6 +22,8 @@ public class WebConfig extends AbstractAnnotationConfigDispatcherServletInitiali
     return new String[] {"/"};
   }
 
+  // Spring Security 설정보다 맨 먼저 실행되게 SecurityInitializer 클레스에 선언해서 여기는 주석으로 둔다.
+  /*
   @Override
   protected Filter[] getServletFilters() {
     CharacterEncodingFilter encodingFilter = new CharacterEncodingFilter();
@@ -32,6 +31,7 @@ public class WebConfig extends AbstractAnnotationConfigDispatcherServletInitiali
     encodingFilter.setForceEncoding(true);
     return new Filter[] {encodingFilter};
   }
+  */
 
   /** 처리할 수 있는 핸들러를 찾을 수 없을 때, 404를 예외로 처리하는 사용자 정의 설정 서블릿 3.0 이상에서 설정 가능. */
   @Override
