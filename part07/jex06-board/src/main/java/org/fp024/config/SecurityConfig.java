@@ -1,5 +1,6 @@
 package org.fp024.config;
 
+import java.util.concurrent.TimeUnit;
 import javax.sql.DataSource;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -46,7 +47,7 @@ public class SecurityConfig {
     http.rememberMe()
         .key("fp024")
         .tokenRepository(persistentTokenRepository())
-        .tokenValiditySeconds(604800);
+        .tokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(7));
 
     return http.build();
   }

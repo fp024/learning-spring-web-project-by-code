@@ -1,7 +1,8 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
-<%@ taglib prefix="javatime" uri="http://sargue.net/jsptags/time"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="javatime" uri="http://sargue.net/jsptags/time" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <!DOCTYPE html>
 <html lang="ko">
 
@@ -35,6 +36,7 @@
             </div>
             <div class="card-body">
               <form role="form" action="/board/register" method="post">
+                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
                 <div class="form-group">
                   <label>Title</label> <input class="form-control" name="title">
                 </div>
@@ -43,7 +45,10 @@
                   <textarea class="form-control" rows="5" name="content"></textarea>
                 </div>
                 <div class="form-group">
-                  <label>Writer</label> <input class="form-control" name="writer">
+                  <label>Writer</label>
+                  <input class="form-control" name="writer"
+                         value="<sec:authentication property="principal.username"/>"
+                         readonly="readonly">
                 </div>
                 <button type="submit" class="btn btn-primary">Submit Button</button>
                 <button type="reset" class="btn btn-secondary">Reset Button</button>

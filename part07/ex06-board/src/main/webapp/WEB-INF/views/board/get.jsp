@@ -2,6 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="javatime" uri="http://sargue.net/jsptags/time" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <!DOCTYPE html>
 <html lang="ko">
 
@@ -59,7 +60,12 @@
               <label>Update Date</label> <input class="form-control" name="regDate" readonly="readonly"
                                                 value="<javatime:format value="${board.updateDate}" pattern="yyyy-MM-dd HH:mm:ss" />">
             </div>
-            <button data-oper="modify" class="btn btn-primary">Modify</button>
+            <sec:authentication property="principal" var="pinfo" />
+            <sec:authorize access="isAuthenticated()">
+              <c:if test="${pinfo.username eq board.writer}">
+                <button data-oper="modify" class="btn btn-primary">Modify</button>
+              </c:if>
+            </sec:authorize>
             <button data-oper="list" class="btn btn-secondary">List</button>
 
             <form id="operForm" action="/board/modify" method="get">
@@ -98,7 +104,9 @@
           <div class="card-header py-3">
             <div>
               <span class="font-weight-bold text-primary"><i class="fa fa-comments fa-fw"></i>Reply</span>
-              <button id="addReplyBtn" class="btn btn-primary btn-sm float-md-right">New Reply</button>
+              <sec:authorize access="isAuthenticated()">
+                <button id="addReplyBtn" class="btn btn-primary btn-sm float-md-right">New Reply</button>
+              </sec:authorize>
             </div>
           </div>
           <div class="card-body">

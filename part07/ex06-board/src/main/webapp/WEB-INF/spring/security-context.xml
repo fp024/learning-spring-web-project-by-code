@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:security="http://www.springframework.org/schema/security"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/security https://www.springframework.org/schema/security/spring-security.xsd">
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:security="http://www.springframework.org/schema/security"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/security https://www.springframework.org/schema/security/spring-security.xsd">
 
   <bean id="customAccessDenied" class="org.fp024.security.CustomAccessDeniedHandler"/>
 
@@ -11,7 +11,7 @@
   <!--<bean id="customNoOpPasswordEncoder" class="org.fp024.security.CustomNoOpPasswordEncoder"/>-->
 
   <bean id="bCryptPasswordEncoder"
-        class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
+    class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
 
   <bean id="customUserDetailsService" class="org.fp024.security.CustomUserDetailsService"/>
 
@@ -27,16 +27,16 @@
     <!--<security:access-denied-handler error-page="/accessError"/>-->
     <security:access-denied-handler ref="customAccessDenied"/>
 
-    <security:form-login login-page="/customLogin" />
+    <security:form-login login-page="/customLogin"/>
 
     <security:remember-me
-        data-source-ref="dataSource"
-        token-validity-seconds="604800"
-        remember-me-cookie="remember-me"/>
+      data-source-ref="dataSource"
+      token-validity-seconds="604800"
+      remember-me-cookie="remember-me"/>
 
     <security:logout logout-url="/customLogout"
-                     invalidate-session="true"
-                     delete-cookies="remember-me,JSESSIONID"/>
+      invalidate-session="true"
+      delete-cookies="remember-me,JSESSIONID"/>
 
   </security:http>
 

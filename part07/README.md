@@ -1052,10 +1052,69 @@ ServletConfig 클래스에 아래 어노테이션을 추가해주자.
 
 * SB Admin 2의 v4.14 태깅의 로그인 페이지 사용
   * https://github.com/StartBootstrap/startbootstrap-sb-admin-2/blob/v4.1.4/login.html
+  
+  * 기본으로 제공되는 멍멍이 그림이 슬퍼보여서 이미지 바꿈. 😀
+  
+    ```html
+    <style>
+      /* SB Admin2 로그인 페이지의 기본 멍멍이 사진이 슬퍼보여서 바꿈... */
+      .custom-bg-login-image {
+        background: url(https://avatars.githubusercontent.com/u/42864970?v=4) center;
+        background-size: cover;
+      }
+    </style>
+    ```
+  
+    
+
+### 38.2 게시물 작성 시 스프링 시큐티리 처리
+
+* 게시물 목록은 권한 요구 사항 없이 모두 공개
+* 게시물 작성시에는 로그인한 사용자에 한해서 처리
+
+##### 게시물 등록 메서드위에 아래 어노테이션 붙임
+
+```java
+@PreAuthorize("isAuthenticated()")
+```
 
 
 
+#### 38.2.1 게시물 작성 시 로그인한 사용자의 아이디 출력
 
+
+
+#### 38.2.2 CSRF 토큰 설정
+
+```html
+<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
+```
+
+`<form>`안에 위의 내용이 포함되지 않으면 Access Denied 된다.
+
+
+
+#### 38.2.3 스프링 시큐리티 한글 처리
+
+* 이부분은 ex06-board, jex06-board 에 이미 처리 했음
+* 스프링 시큐리티의 필터 실행전에 UTF-8강제 인코딩 필터 설정을 했음.
+
+
+
+### 38.3 게시물 조회와 로그인 처리
+
+* 게시물 조회 자체는 모든 사용자가 가능
+* 그러나 조회 화면에서 수정/삭제는 작성자만 가능하게 하도록 한다.
+
+
+
+#### 38.3.1 조회 화면에서 댓글 추가 버튼
+
+* 댓글 추가 버튼에도 `<sec:authorize access="isAuthenticated()">` 으로 감싸서 인증된 사용자만 등록할 수 있게 만든다.
+
+
+
+### 38.4 게시물 수정/삭제
 
 
 
