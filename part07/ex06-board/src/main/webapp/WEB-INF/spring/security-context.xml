@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:security="http://www.springframework.org/schema/security"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/security https://www.springframework.org/schema/security/spring-security.xsd">
+
+  <bean id="customAccessDenied" class="org.fp024.security.CustomAccessDeniedHandler"/>
+
+  <!-- <bean id="customLoginSuccess" class="org.fp024.security.CustomLoginSuccessHandler"/> -->
+
+  <!--<bean id="customNoOpPasswordEncoder" class="org.fp024.security.CustomNoOpPasswordEncoder"/>-->
+
+  <bean id="bCryptPasswordEncoder"
+        class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
+
+  <bean id="customUserDetailsService" class="org.fp024.security.CustomUserDetailsService"/>
+
+
+  <security:http>
+    <!-- 아래 URL 접근 규칙들을 어노테이션 기반으로 바꿀 수 있는 것 같다. -->
+    <security:intercept-url pattern="/sample/all" access="permitAll"/>
+
+    <security:intercept-url pattern="/sample/memberVO" access="hasRole('ROLE_MEMBER')"/>
+
+    <security:intercept-url pattern="/sample/admin" access="hasRole('ROLE_ADMIN')"/>
+
+    <!--<security:access-denied-handler error-page="/accessError"/>-->
+    <security:access-denied-handler ref="customAccessDenied"/>
+
+    <security:form-login login-page="/customLogin" />
+
+    <security:remember-me
+        data-source-ref="dataSource"
+        token-validity-seconds="604800"
+        remember-me-cookie="remember-me"/>
+
+    <security:logout logout-url="/customLogout"
+                     invalidate-session="true"
+                     delete-cookies="remember-me,JSESSIONID"/>
+
+  </security:http>
+
+  <security:authentication-manager>
+    <security:authentication-provider user-service-ref="customUserDetailsService">
+
+      <!--<security:jdbc-user-service data-source-ref="dataSource"/>-->
+      <!--
+      <security:jdbc-user-service data-source-ref="dataSource"
+        users-by-username-query="SELECT USERID, USERPW, ENABLED FROM TBL_MEMBER WHERE USERID = ?"
+        authorities-by-username-query="SELECT USERID, AUTH FROM TBL_MEMBER_AUTH WHERE USERID = ?"
+      />
+      -->
+      <!--<security:password-encoder ref="customNoOpPasswordEncoder"/>-->
+
+      <security:password-encoder ref="bCryptPasswordEncoder"/>
+    </security:authentication-provider>
+  </security:authentication-manager>
+
+</beans>

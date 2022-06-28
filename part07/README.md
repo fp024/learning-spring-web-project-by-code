@@ -1048,6 +1048,19 @@ ServletConfig 클래스에 아래 어노테이션을 추가해주자.
 
 
 
+### 38.1 로그인 페이지 처리
+
+* SB Admin 2의 v4.14 태깅의 로그인 페이지 사용
+  * https://github.com/StartBootstrap/startbootstrap-sb-admin-2/blob/v4.1.4/login.html
+
+
+
+
+
+
+
+
+
 
 
 
