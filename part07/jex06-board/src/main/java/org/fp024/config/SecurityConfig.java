@@ -4,7 +4,6 @@ import javax.sql.DataSource;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.fp024.domain.MemberAuthType;
-import org.fp024.security.CustomLoginSuccessHandler;
 import org.fp024.security.CustomUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,7 +13,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 
@@ -38,10 +36,7 @@ public class SecurityConfig {
                 .antMatchers("/sample/member")
                 .hasRole(MemberAuthType.ROLE_MEMBER.getGroupName()));
 
-    http.formLogin()
-        .loginPage("/customLogin")
-        .loginProcessingUrl("/login")
-        .successHandler(loginSuccessHandler());
+    http.formLogin().loginPage("/customLogin").loginProcessingUrl("/login");
 
     http.logout()
         .logoutUrl("/customLogout")
@@ -89,10 +84,12 @@ public class SecurityConfig {
     return new CustomUserDetailsService();
   }
 
+  /*
   @Bean
   public AuthenticationSuccessHandler loginSuccessHandler() {
     return new CustomLoginSuccessHandler();
   }
+  */
 
   @Bean
   public PasswordEncoder passwordEncoder() {
