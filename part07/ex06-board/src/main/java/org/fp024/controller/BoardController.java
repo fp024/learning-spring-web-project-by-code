@@ -92,6 +92,7 @@ public class BoardController {
     model.addAttribute("board", service.get(bno));
   }
 
+  @PreAuthorize("principal.username == #board.writer")
   @PostMapping("/modify")
   public String modify(
       BoardVO board, @ModelAttribute("criteria") Criteria criteria, RedirectAttributes rttr) {
@@ -104,9 +105,11 @@ public class BoardController {
     return "redirect:/board/list" + criteria.getLink();
   }
 
+  @PreAuthorize("principal.username == #writer")
   @PostMapping("/remove")
   public String remove(
       @RequestParam("bno") Long bno,
+      String writer,
       @ModelAttribute("criteria") Criteria criteria,
       RedirectAttributes rttr) {
     LOGGER.info("remove... {}", bno);

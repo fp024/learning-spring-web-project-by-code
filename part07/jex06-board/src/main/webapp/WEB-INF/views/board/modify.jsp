@@ -2,6 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="javatime" uri="http://sargue.net/jsptags/time"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <!DOCTYPE html>
 <html lang="ko">
 
@@ -35,6 +36,7 @@
           </div>
           <div class="card-body">
             <form role="form" action="/board/modify" method="post">
+              <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
               <input type="hidden" name="pageNum" value="<c:out value="${criteria.pageNum}"/>">
               <input type="hidden" name="amount" value="<c:out value="${criteria.amount}"/>">
               <input type="hidden" name="searchCodes" value="<c:out value="${criteria.searchCodesWithJoined}"/>">
@@ -53,8 +55,13 @@
               <div class="form-group">
                 <label>Writer</label> <input class="form-control" name="writer" readonly="readonly" value="<c:out value='${board.writer}'/>">
               </div>
-              <button type="submit" data-oper="modify" class="btn btn-warning">Modify</button>
-              <button type="submit" data-oper="remove" class="btn btn-danger">Remove</button>
+              <sec:authentication property="principal" var="pinfo" />
+              <sec:authorize access="isAuthenticated()">
+                <c:if test="${pinfo.username eq board.writer}">
+                  <button type="submit" data-oper="modify" class="btn btn-warning">Modify</button>
+                  <button type="submit" data-oper="remove" class="btn btn-danger">Remove</button>
+                </c:if>
+              </sec:authorize>
               <button type="submit" data-oper="list" class="btn btn-secondary">List</button>
             </form>
           </div>

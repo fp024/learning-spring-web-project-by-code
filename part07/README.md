@@ -562,7 +562,7 @@ java.lang.IllegalArgumentException: There is no PasswordEncoder mapped for the i
 
 
 
-## 34 스프링 시큐리티를 JSP에서 사용하기
+## 34. 스프링 시큐리티를 JSP에서 사용하기
 
 
 
@@ -591,7 +591,7 @@ java.lang.IllegalArgumentException: There is no PasswordEncoder mapped for the i
 
 
 
-## 35 자동 로그인 (remember-me)
+## 35. 자동 로그인 (remember-me)
 
 * 자동로그인 `remember-me`라고도 하고, Cookie를 이용해서 구현함.
 * 스프링 시큐리티에서는 `remember-me`를 메모리 또는 DB를 이용하는 형태로 약간의 설정만으로 구현 가능함.
@@ -697,7 +697,7 @@ java.lang.IllegalArgumentException: There is no PasswordEncoder mapped for the i
 
 
 
-## 36 Java 설정을 이용하는 경우의 스프링 시큐리티 설정
+## 36. Java 설정을 이용하는 경우의 스프링 시큐리티 설정
 
 
 
@@ -1009,7 +1009,7 @@ admin은 패스워드 인코딩 처리가 되지않아 로그인이 안될 테�
 
 
 
-## 37 어노테이션을 이용하는 스프링 시큐리티 설정
+## 37. 어노테이션을 이용하는 스프링 시큐리티 설정
 
 #### 주로 사용되는 어노테이션
 
@@ -1042,7 +1042,7 @@ ServletConfig 클래스에 아래 어노테이션을 추가해주자.
 
 
 
-## 38 기존 프로젝트에 스프링 시큐리티 접목하기
+## 38. 기존 프로젝트에 스프링 시큐리티 접목하기
 
 * ex06-board, jex06-board 프로젝트에 ex06, jex06에서 적용한 스프링 시큐리티 코드들을 적용한다.
 
@@ -1115,6 +1115,29 @@ ServletConfig 클래스에 아래 어노테이션을 추가해주자.
 
 
 ### 38.4 게시물 수정/삭제
+
+* 게시물의 수정과 삭제는 현재 로그인한 사용자와 게시물의 작성자가 동일한 경우 수행되게 함.
+
+
+
+#### 38.4.1 브라우저에서 화면 설정
+
+* modify.jsp의 form에도 CSRF 보안 토큰을 전송하도록 hidden 필드 추가
+* 수정 페이지의 수정, 삭제 실행 버튼에도 게시물 작성자일 경우일 때만 실행 될 수 있도록 조건 추가
+
+
+
+#### 38.4.2 BoardController에서의 제어
+
+* 삭제시 게시물 번호(bno)만으로 삭제했지만, 게시물 작성자 정보도 같이 받아 `@PreAuthorize`로 처리.
+
+* 수정 메서드는 이미 board 도메인으로 받고 있어서 아래와 같은 표현식으로 사용
+
+  ```java
+  @PreAuthorize("principal.username == #board.writer")
+  ```
+
+  
 
 
 

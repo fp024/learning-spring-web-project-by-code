@@ -8,7 +8,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.fp024.domain.BoardAttachVO;
 import org.fp024.domain.BoardVO;
@@ -34,10 +34,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Slf4j
 @Controller
 @RequestMapping("/board/*")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class BoardController {
   private static final String UPLOAD_FOLDER = ProjectDataUtil.getProperty("multipart.uploadFolder");
-  private BoardService service;
+  private final BoardService service;
 
   @GetMapping("/list")
   public String list(Criteria criteria, Model model) {
@@ -88,6 +88,7 @@ public class BoardController {
     model.addAttribute("board", service.get(bno));
   }
 
+  @PreAuthorize("principal.username == #board.writer")
   @PostMapping("/modify")
   public String modify(
       BoardVO board, @ModelAttribute("criteria") Criteria criteria, RedirectAttributes rttr) {
@@ -106,9 +107,11 @@ public class BoardController {
     return new ResponseEntity<>(service.getAttachList(bno), HttpStatus.OK);
   }
 
+  @PreAuthorize("principal.username == #writer")
   @PostMapping("/remove")
   public String remove(
       @RequestParam("bno") Long bno,
+      String writer,
       @ModelAttribute("criteria") Criteria criteria,
       RedirectAttributes rttr) {
     LOGGER.info("remove... {}", bno);
