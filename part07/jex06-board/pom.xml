@@ -1,0 +1,428 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.fp024</groupId>
+    <artifactId>study-dependencies-parent</artifactId>
+    <version>1.0.0-BUILD-SNAPSHOT</version>
+    <relativePath>../../study-dependencies-parent/pom.xml</relativePath>
+  </parent>
+
+  <artifactId>jex06-board</artifactId>
+  <name>${project.artifactId}</name>
+  <packaging>war</packaging>
+
+  <!-- web.xml에서 경로 변화를 주기위해, profile을 윈도우와 리눅스 환경으로 나눠보았다. -->
+  <profiles>
+    <profile>
+      <id>win</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+        <os>
+          <family>windows</family>
+        </os>
+      </activation>
+      <properties>
+        <env>win</env>
+        <web-xml-location>${project.basedir}/src/main/webapp/WEB-INF/web.xml</web-xml-location>
+      </properties>
+    </profile>
+
+    <profile>
+      <id>linux</id>
+      <activation>
+        <os>
+          <family>linux</family>
+        </os>
+      </activation>
+      <properties>
+        <env>linux</env>
+        <web-xml-location>${project.basedir}/src/main/webapp/WEB-INF/web-${env}.xml
+        </web-xml-location>
+      </properties>
+
+      <build>
+        <resources>
+          <resource>
+            <directory>src/main/resources/${env}</directory>
+          </resource>
+          <resource>
+            <directory>src/main/resources</directory>
+            <excludes>
+              <exclude>project-data.properties</exclude>
+            </excludes>
+          </resource>
+        </resources>
+      </build>
+    </profile>
+  </profiles>
+
+  <dependencies>
+    <!-- Spring -->
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-context</artifactId>
+      <version>${org.springframework-version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-webmvc</artifactId>
+      <version>${org.springframework-version}</version>
+    </dependency>
+
+    <!-- Spring Security -->
+    <dependency>
+      <groupId>org.springframework.security</groupId>
+      <artifactId>spring-security-web</artifactId>
+      <version>${spring-security.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.security</groupId>
+      <artifactId>spring-security-config</artifactId>
+      <version>${spring-security.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.security</groupId>
+      <artifactId>spring-security-core</artifactId>
+      <version>${spring-security.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.security</groupId>
+      <artifactId>spring-security-taglibs</artifactId>
+      <version>${spring-security.version}</version>
+    </dependency>
+
+    <!-- AspectJ -->
+    <dependency>
+      <groupId>org.aspectj</groupId>
+      <artifactId>aspectjrt</artifactId>
+      <version>${org.aspectj-version}</version>
+    </dependency>
+
+    <!-- Logging -->
+    <!-- Apache Log4j SLF4J Binding  -->
+    <dependency>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-slf4j-impl</artifactId>
+    </dependency>
+    <!--
+    <dependency>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-web</artifactId>
+    </dependency>
+    -->
+
+    <!-- @Inject -->
+    <dependency>
+      <groupId>javax.inject</groupId>
+      <artifactId>javax.inject</artifactId>
+      <version>1</version>
+    </dependency>
+
+    <!-- Servlet -->
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>javax.servlet-api</artifactId>
+      <version>${javax.servlet-api.version}</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>javax.servlet.jsp</groupId>
+      <artifactId>javax.servlet.jsp-api</artifactId>
+      <version>${javax.servlet.jsp-api.version}</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <!-- 
+      jetty가 사용하는 apache-jstl에 디펜던시된 taglibs-standard-impl이 Tomcat 8.5에서도 잘 동작한다. 
+      Struts 2에서는 괜찮았는데, Tomcat 8.5 + Spring 환경에서는 javax.servlet의 jstl을 써야할 것 같다.
+      javax.servlet의 jstl을 쓰더라도 Jetty에서 문제는 없었다.
+      
+      https://github.com/spring-projects/spring-framework/blob/5.2.x/spring-webmvc/src/main/java/org/springframework/web/servlet/support/JstlUtils.java
+    -->
+    <!-- 
+    <dependency>
+      <groupId>org.apache.taglibs</groupId>
+      <artifactId>taglibs-standard-impl</artifactId>
+      <version>1.2.5</version>
+      <scope>runtime</scope>
+    </dependency>
+     -->
+
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>jstl</artifactId>
+      <version>${jstl.version}</version>
+      <scope>runtime</scope>
+    </dependency>
+
+    <!-- https://github.com/sargue/java-time-jsptags -->
+    <dependency>
+      <groupId>net.sargue</groupId>
+      <artifactId>java-time-jsptags</artifactId>
+      <version>${java-time-jsptags.version}</version>
+    </dependency>
+
+    <!-- Database -->
+    <!-- https://mvnrepository.com/artifact/com.oracle.database.jdbc/ojdbc8/18.3.0.0 -->
+    <dependency>
+      <groupId>com.oracle.database.jdbc</groupId>
+      <artifactId>ojdbc8</artifactId>
+      <version>${ojdbc8.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.zaxxer</groupId>
+      <artifactId>HikariCP</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.mybatis</groupId>
+      <artifactId>mybatis</artifactId>
+      <version>${mybatis.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.mybatis</groupId>
+      <artifactId>mybatis-spring</artifactId>
+      <version>${mybatis.spring.version}</version>
+    </dependency>
+
+    <!-- https://mvnrepository.com/artifact/org.mybatis.dynamic-sql/mybatis-dynamic-sql -->
+    <dependency>
+      <groupId>org.mybatis.dynamic-sql</groupId>
+      <artifactId>mybatis-dynamic-sql</artifactId>
+      <version>${mybatis.dynamic.sql.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>javax.annotation</groupId>
+      <artifactId>javax.annotation-api</artifactId>
+      <version>${javax.annotation-api.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-tx</artifactId>
+      <version>${org.springframework-version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-jdbc</artifactId>
+      <version>${org.springframework-version}</version>
+    </dependency>
+
+    <!-- 이 프로젝트에서는 quartz 를 사용하지 말아보자.. 디펜던시를 안걸면 그냥 Spring Scheduler 사용할 것 같음. -->
+    <!--
+    <dependency>
+      <groupId>org.quartz-scheduler</groupId>
+      <artifactId>quartz</artifactId>
+      <version>${quartz.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>com.zaxxer</groupId>
+          <artifactId>HikariCP-java7</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+
+    <dependency>
+      <groupId>org.quartz-scheduler</groupId>
+      <artifactId>quartz-jobs</artifactId>
+      <version>${quartz.version}</version>
+    </dependency>
+    -->
+
+    <dependency>
+      <groupId>com.google.code.gson</groupId>
+      <artifactId>gson</artifactId>
+      <version>${gson.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>net.coobird</groupId>
+      <artifactId>thumbnailator</artifactId>
+      <version>${thumbnailator.version}</version>
+    </dependency>
+
+    <!-- lombok -->
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <version>${lombok.version}</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <!-- Test -->
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-test</artifactId>
+      <version>${org.springframework-version}</version>
+      <scope>test</scope>
+    </dependency>
+
+    <!-- JSON 검증을 json-path 로도 해봤던 것 같은데, test 스코프로 추가해두자! -->
+    <dependency>
+      <groupId>com.jayway.jsonpath</groupId>
+      <artifactId>json-path</artifactId>
+      <version>${json-path.version}</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.hamcrest</groupId>
+      <artifactId>hamcrest</artifactId>
+      <version>${hamcrest.version}</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-junit-jupiter</artifactId>
+      <version>${mockito.version}</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-inline</artifactId>
+      <version>${mockito.version}</version>
+      <scope>test</scope>
+    </dependency>
+
+    <!-- Only needed to run tests in a version of IntelliJ IDEA that bundles older versions -->
+    <!-- IntelliJ 최신 버전을 사용중이여서 나한테는 의미 없을 것 같다.-->
+    <!--
+    <dependency>
+      <groupId>org.junit.platform</groupId>
+      <artifactId>junit-platform-launcher</artifactId>
+      <scope>test</scope>
+    </dependency>
+    -->
+
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <!-- // JUnit4 가 호환될 필요는 없다.
+    <dependency>
+        <groupId>org.junit.vintage</groupId>
+        <artifactId>junit-vintage-engine</artifactId>
+        <scope>test</scope>
+    </dependency>
+    -->
+  </dependencies>
+  <build>
+    <pluginManagement>
+      <plugins>
+        <!-- 이 플러그인의 구성은 Eclipse m2e 설정만 저장하는 데 사용되고, Maven 빌드 자체에는 영향을 
+            미치지 않음. toolchain 동작이 eclipse m2e에서는 의미가 없음. -->
+        <plugin>
+          <groupId>org.eclipse.m2e</groupId>
+          <artifactId>lifecycle-mapping</artifactId>
+          <version>1.0.0</version>
+          <configuration>
+            <lifecycleMappingMetadata>
+              <pluginExecutions>
+                <pluginExecution>
+                  <pluginExecutionFilter>
+                    <groupId>
+                      org.apache.maven.plugins
+                    </groupId>
+                    <artifactId>
+                      maven-toolchains-plugin
+                    </artifactId>
+                    <versionRange>
+                      [1.1,)
+                    </versionRange>
+                    <goals>
+                      <goal>toolchain</goal>
+                    </goals>
+                  </pluginExecutionFilter>
+                  <action>
+                    <ignore/>
+                    <!-- Eclipse m2e 동작에서는 무시 처리 -->
+                  </action>
+                </pluginExecution>
+                <pluginExecution>
+                  <pluginExecutionFilter>
+                    <groupId>
+                      org.mybatis.generator
+                    </groupId>
+                    <artifactId>
+                      mybatis-generator-maven-plugin
+                    </artifactId>
+                    <versionRange>
+                      [1.4.0,)
+                    </versionRange>
+                    <goals>
+                      <goal>generate</goal>
+                    </goals>
+                  </pluginExecutionFilter>
+                  <action>
+                    <ignore/>
+                    <!-- Eclipse m2e 동작에서는 무시 처리 -->
+                  </action>
+                </pluginExecution>
+              </pluginExecutions>
+            </lifecycleMappingMetadata>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+    <plugins>
+      <plugin>
+        <groupId>org.mybatis.generator</groupId>
+        <artifactId>mybatis-generator-maven-plugin</artifactId>
+        <version>${mybatis-generator-maven-plugin.version}</version>
+        <!-- 아래내용을 활성화하면 compile관련 페이즈를 실행할 때도 항상 먼저 실행이된다. -->
+        <!-- 나는 필요할때만 mybatis-generator:generate Goal로 쓰기로하자 -->
+        <!--
+        <executions>
+            <execution>
+                <id>Generate MyBatis Artifacts</id>
+                <goals>
+                    <goal>generate</goal>
+                </goals>
+            </execution>
+        </executions> 
+        -->
+        <configuration>
+          <!-- https://mybatis.org/generator/running/runningWithMaven.html -->
+          <!-- Maven Goal 실행: mvn mybatis-generator:generate -->
+          <!-- <configurationFile>${project.basedir}/src/test/resources/generatorConfig.xml</configurationFile> -->
+          <configurationFile>${project.basedir}/generatorConfig.xml</configurationFile>
+          <detail>true</detail>
+          <verbose>true</verbose>
+          <overwrite>true</overwrite>
+        </configuration>
+        <dependencies>
+          <dependency>
+            <groupId>com.oracle.database.jdbc</groupId>
+            <artifactId>ojdbc8</artifactId>
+            <version>${ojdbc8.version}</version>
+          </dependency>
+        </dependencies>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-war-plugin</artifactId>
+        <version>${maven-war-plugin.version}</version>
+        <configuration>
+          <failOnMissingWebXml>false</failOnMissingWebXml>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>
