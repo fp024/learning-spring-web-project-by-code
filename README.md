@@ -46,7 +46,7 @@
 * [Part 5. AOP와 트랜젝션](part05)
 * [Part 6. 파일 업로드 처리](part06)
 * [Part 7. Spring Web Security를 이용한 로그인 처리](part07)
-* 부록. IntelliJ와 Gradle을 이용하는 스프링 환경
+* [부록. IntelliJ와 Gradle을 이용하는 스프링 환경](appendix)
 
 
 
