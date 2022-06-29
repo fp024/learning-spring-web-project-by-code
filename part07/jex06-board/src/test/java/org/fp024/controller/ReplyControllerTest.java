@@ -92,11 +92,21 @@ class ReplyControllerTest {
     LOGGER.info("{}", responseContent);
   }
 
+  /** 응답을 Success 평문으로 받으므로.. /replies/43.json으로 요청 시도할 경우 406 응답을 받게된다. */
   @Test
   void testRemove() throws Exception {
+    ReplyVO reply = new ReplyVO();
+    reply.setRno(43L);
+    reply.setReplyer("user00");
+
+    String jsonBody = GsonHelper.gson().toJson(reply);
+
     String responseContent =
         mockMvc
-            .perform(MockMvcRequestBuilders.delete("/replies/43"))
+            .perform(
+                MockMvcRequestBuilders.delete("/replies/43")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(jsonBody))
             .andExpect(status().isOk())
             .andReturn()
             .getResponse()

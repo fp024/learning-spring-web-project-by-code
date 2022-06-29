@@ -1307,9 +1307,9 @@ $.ajax({
 
 
 
-## 🎇 TODO: 테스트 코드 수정 
+## 🎇 테스트 코드 수정 
 
-Spring Security 를 적용하면서 관련 Controller 테스트 코드를 수정할 필요가 있다.
+Spring Security 를 적용하면서 관련 Controller 테스트 코드 중에 오류가 발생하는 것이 있을 거라고 생각했는데.. 스프링 시큐리티관련은 동작하지 않아서, 관련해서 오류는 없었다. 단지, 진행하면서 메서드 파라미터가 좀더 추가되서 생기는 오류 정도만 수정했다. 그래도 여유있을 때, 추가해두자 .  😅😅😅
 
 
 
@@ -1317,7 +1317,7 @@ Spring Security 를 적용하면서 관련 Controller 테스트 코드를 수정
 
 ## jex06-board 프로젝트 진행 특이사항
 
-* jex06에서 JOIN문 등을 mybatis-dynamic-sql 코드로 바꾸었기 때문에 적용과정에 어려움은 없었다.
+* jex06에서 JOIN문 등을 mybatis-dynamic-sql 코드로 이미 바꾸면서 진행했기 때문에 적용과정에 어려움은 없었다.
 
 
 
@@ -1327,7 +1327,9 @@ Spring Security 를 적용하면서 관련 Controller 테스트 코드를 수정
 
 ## 의견
 
-* 
+* 간단하게 붙였음에도 강력한 느낌이 든다. 😄😄😄, csrf 관련 처리를 쉽게 적용할 수 있는 점이 매우 맘에 들었다.
+
+* 마지막 장이 이제 끝났다. 책 너무 오래보긴 했다. 😅😅😅
 
   
 
@@ -1346,7 +1348,4 @@ Spring Security 를 적용하면서 관련 Controller 테스트 코드를 수정
   * RequestBody로 요청하기 때문에..  이부분이 컨트롤러 메서드의 Long rno 부분을 PathVariable로 쓸 필요가 없어지긴함.
 
   
-
-
-## 기타
 
