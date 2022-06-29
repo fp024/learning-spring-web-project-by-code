@@ -35,7 +35,7 @@
               <h6 class="m-0 font-weight-bold text-primary">Board Modify Page</h6>
             </div>
             <div class="card-body">
-              <form role="form" action="/board/modify" method="post">
+              <form id="modify-form" role="form" action="/board/modify" method="post">
                 <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
                 <input type="hidden" name="pageNum" value="<c:out value="${criteria.pageNum}"/>">
                 <input type="hidden" name="amount" value="<c:out value="${criteria.amount}"/>">
@@ -53,7 +53,7 @@
                   <textarea class="form-control" rows="5" name="content"><c:out value='${board.content}' /></textarea>
                 </div>
                 <div class="form-group">
-                  <label>Writer</label> <input class="form-control" name="writer" readonly="readonly" value="<c:out value='${board.writer}'/>">
+                  <label>Writer</label> <input name="writer" class="form-control" readonly="readonly" value="<c:out value='${board.writer}'/>">
                 </div>
                 <sec:authentication property="principal" var="pinfo" />
                 <sec:authorize access="isAuthenticated()">
@@ -212,7 +212,7 @@
   <!-- 게시물 폼 등록 처리 -->
   <script type="text/javascript">
     $(document).ready(function () {
-      var $formObj = $("form");
+      var $formObj = $("#modify-form");
 
       $formObj.find("button").on("click", function (e) {
         e.preventDefault();

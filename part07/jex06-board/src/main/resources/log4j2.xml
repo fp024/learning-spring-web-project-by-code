@@ -16,6 +16,7 @@
     <Logger name="org.springframework.beans" level="debug" />
     <Logger name="org.springframework.context" level="debug" />
     <Logger name="org.springframework.web" level="debug" />
+    <Logger name="org.springframework.security" level="debug" />
 
     <!-- Root Logger -->
     <Root level="debug">

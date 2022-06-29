@@ -24,19 +24,21 @@
 
     <security:intercept-url pattern="/sample/admin" access="hasRole('ROLE_ADMIN')"/>
 
-    <!--<security:access-denied-handler error-page="/accessError"/>-->
+    <security:access-denied-handler error-page="/accessError"/>
     <security:access-denied-handler ref="customAccessDenied"/>
 
-    <security:form-login login-page="/customLogin"/>
+    <security:form-login login-page="/customLogin" default-target-url="/board/list"/>
 
     <security:remember-me
       data-source-ref="dataSource"
       token-validity-seconds="604800"
       remember-me-cookie="remember-me"/>
 
-    <security:logout logout-url="/customLogout"
+    <security:logout
       invalidate-session="true"
-      delete-cookies="remember-me,JSESSIONID"/>
+      delete-cookies="remember-me,JSESSIONID"
+      logout-success-url="/board/list"
+    />
 
   </security:http>
 

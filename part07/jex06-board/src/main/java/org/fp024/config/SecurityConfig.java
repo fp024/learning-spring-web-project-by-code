@@ -37,12 +37,16 @@ public class SecurityConfig {
                 .antMatchers("/sample/member")
                 .hasRole(MemberAuthType.ROLE_MEMBER.getGroupName()));
 
-    http.formLogin().loginPage("/customLogin").loginProcessingUrl("/login");
+    http.formLogin()
+        .loginPage("/customLogin")
+        .loginProcessingUrl("/login")
+        .defaultSuccessUrl("/board/list");
 
     http.logout()
-        .logoutUrl("/customLogout")
+        .logoutUrl("/logout")
         .invalidateHttpSession(true)
-        .deleteCookies("remember-me", "JSESSIONID");
+        .deleteCookies("remember-me", "JSESSIONID")
+        .logoutSuccessUrl("/board/list");
 
     http.rememberMe()
         .key("fp024")

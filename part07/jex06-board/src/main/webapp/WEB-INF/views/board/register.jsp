@@ -6,7 +6,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 
-<%@include file="../includes/header.jsp" %>
+<%@include file="../includes/header.jsp"%>
 <link href="/resources/css/upload-ajax.css" rel="stylesheet">
 
 <body id="page-top">
@@ -20,7 +20,7 @@
     <div id="content">
 
       <!-- topbar도 별도 파일에 분리하자! -->
-      <%@include file="../includes/topbar.jsp" %>
+      <%@include file="../includes/topbar.jsp"%>
 
       <!-- Begin Page Content -->
       <div class="container-fluid">
@@ -35,7 +35,7 @@
             <h6 class="m-0 font-weight-bold text-primary">Board Register</h6>
           </div>
           <div class="card-body">
-            <form role="form" action="/board/register" method="post">
+            <form id="register-form" role="form" action="/board/register" method="post">
               <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
               <div class="form-group">
                 <label>Title</label> <input class="form-control" name="title">
@@ -46,7 +46,7 @@
               </div>
               <div class="form-group">
                 <label>Writer</label>
-                <input class="form-control" name="writer"
+                <input name="writer" class="form-control"
                        value="<sec:authentication property="principal.username"/>"
                        readonly="readonly">
               </div>
@@ -82,7 +82,7 @@
 
 
     <!-- Footer -->
-    <%@include file="../includes/footer.jsp" %>
+    <%@include file="../includes/footer.jsp"%>
     <!-- End of Footer -->
 
   </div>
@@ -90,12 +90,12 @@
 
 </div>
 <!-- End of Page Wrapper -->
-<%@include file="../includes/dialogAndScript.jsp" %>
+<%@include file="../includes/dialogAndScript.jsp"%>
 
 
 <script>
   $(document).ready(function (e) {
-    var formObj = $("form[role='form']");
+    var formObj = $("#register-form");
 
     $("button[type='submit']").on("click", function (e) {
       e.preventDefault();
@@ -106,14 +106,10 @@
       $(".uploadResult ul li").each(function (i, obj) {
         var jobj = $(obj);
         console.dir(jobj);
-        str += "<input type='hidden' name='attachList[" + i + "].fileName' value='" + jobj.data(
-            "filename") + "'>";
-        str += "<input type='hidden' name='attachList[" + i + "].uuid' value='" + jobj.data("uuid")
-            + "'>";
-        str += "<input type='hidden' name='attachList[" + i + "].uploadPath' value='" + jobj.data(
-            "path") + "'>";
-        str += "<input type='hidden' name='attachList[" + i + "].fileType' value='" + jobj.data(
-            "type") + "'>";
+        str += "<input type='hidden' name='attachList[" + i + "].fileName' value='" + jobj.data("filename") + "'>";
+        str += "<input type='hidden' name='attachList[" + i + "].uuid' value='" + jobj.data("uuid") + "'>";
+        str += "<input type='hidden' name='attachList[" + i + "].uploadPath' value='" + jobj.data("path") + "'>";
+        str += "<input type='hidden' name='attachList[" + i + "].fileType' value='" + jobj.data("type") + "'>";
       });
       formObj.append(str).submit();
 
@@ -150,21 +146,17 @@
           var originPath =
               obj.uploadPath + "/" + obj.uuid + "_" + obj.fileName;
           console.log(originPath);
-          str += "<li data-path='" + obj.uploadPath + "' data-uuid='" + obj.uuid
-              + "' data-filename='" + obj.fileName + "' data-type='" + obj.fileType + "'><div>"
+          str += "<li data-path='" + obj.uploadPath + "' data-uuid='" + obj.uuid + "' data-filename='" + obj.fileName + "' data-type='" + obj.fileType + "'><div>"
               + "<span>" + obj.fileName + "</span>"
-              + "<button type='button' data-file=\'" + fileCallPath
-              + "\' data-type='IMAGE' class='btn btn-warning btn-circle'><i class='fas fa-times'></i></button><br>"
+              + "<button type='button' data-file=\'" + fileCallPath + "\' data-type='IMAGE' class='btn btn-warning btn-circle'><i class='fas fa-times'></i></button><br>"
               + "<img src='/display?fileName=" + fileCallPath + "'></a>"
               + "</div></li>";
         } else {
           var fileCallPath = encodeURIComponent(
               obj.uploadPath + "/" + obj.uuid + "_" + obj.fileName);
-          str += "<li data-path='" + obj.uploadPath + "' data-uuid='" + obj.uuid
-              + "' data-filename='" + obj.fileName + "' data-type='" + obj.fileType + "'><div>"
+          str += "<li data-path='" + obj.uploadPath + "' data-uuid='" + obj.uuid + "' data-filename='" + obj.fileName + "' data-type='" + obj.fileType + "'><div>"
               + "<span>" + obj.fileName + "</span>"
-              + "<button type='button' data-file=\'" + fileCallPath
-              + "\' data-type='NORMAL' class='btn btn-warning btn-circle'><i class='fas fa-times'></i></button><br>"
+              + "<button type='button' data-file=\'" + fileCallPath + "\' data-type='NORMAL' class='btn btn-warning btn-circle'><i class='fas fa-times'></i></button><br>"
               + "<a href='/download?fileName=" + fileCallPath
               + "'><img src='/resources/img/attach.png'></a>"
               + "</div></li>";

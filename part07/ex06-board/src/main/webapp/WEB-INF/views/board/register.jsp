@@ -35,7 +35,7 @@
               <h6 class="m-0 font-weight-bold text-primary">Board Register</h6>
             </div>
             <div class="card-body">
-              <form role="form" action="/board/register" method="post">
+              <form id="register-form" role="form" action="/board/register" method="post">
                 <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
                 <div class="form-group">
                   <label>Title</label> <input class="form-control" name="title">
@@ -46,7 +46,7 @@
                 </div>
                 <div class="form-group">
                   <label>Writer</label>
-                  <input class="form-control" name="writer"
+                  <input name="writer" class="form-control"
                          value="<sec:authentication property="principal.username"/>"
                          readonly="readonly">
                 </div>
@@ -95,7 +95,7 @@
 
   <script>
     $(document).ready(function (e) {
-      var formObj = $("form[role='form']");
+      var formObj = $("#register-form");
 
       $("button[type='submit']").on("click", function (e) {
         e.preventDefault();

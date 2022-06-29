@@ -1238,7 +1238,70 @@ $.ajax({
 
 
 
+## 39. 로그아웃 처리
 
+내 환경의 SB Admin2 에서는  topbar.jsp에  로그인 관련 메뉴를 넣어두었다.
+
+
+
+### 39.1 로그아웃 페이지
+
+로그아웃 페이지는 따로 만들지 않고, SB Admin 2에서 제공하는 로그아웃 다이알로그에  /logout 을 POST 요청하는 form 코드를 넣었다.
+
+
+
+### 39.2 로그인 후  '/board/list'로 이동하기
+
+저자님은 home.jsp에 self.location으로 /board/list로 이동처리하셨는데, 나는 스프링 시큐리티 옵션을 사용했다.
+
+* xml 기반 설정
+
+  ```xml
+  <security:form-login login-page="/customLogin" default-target-url="/board/list"/>
+  ```
+
+* Java 기반 설정
+
+  ```java
+      http.formLogin()
+          .loginPage("/customLogin")
+          .loginProcessingUrl("/login")
+          .defaultSuccessUrl("/board/list");
+  ```
+
+
+
+읽기가 공개된 게시판이니 로그아웃 하고나서도 `/board/list`로 가도록 했다.
+
+* xml 기반 설정
+
+  ```xml
+      <security:logout
+        invalidate-session="true"
+        delete-cookies="remember-me,JSESSIONID"
+        logout-success-url="/board/list"
+      />
+  ```
+
+* Java 기반 설정
+
+  ```java
+      http.logout()
+          .logoutUrl("/logout")
+          .invalidateHttpSession(true)
+          .deleteCookies("remember-me", "JSESSIONID")
+          .logoutSuccessUrl("/board/list");
+  ```
+
+  
+
+### 황당했던 실수
+
+게시물 등록이나 수정을 하면 로그아웃이 되는 문제가 있었음.
+
+요청도 제대로 안남고 로그에도 안남아서, 문제를 계속확인해보니.. 등록과 수정 폼에서 form 을 jQuery로 불러올 때 그냥 form으로만 불러와서 top 메뉴의 form을 불러오는 바람에 logout submit이 일어났던 것이였음... 
+
+관련 form들은 id로 바로 찾을 수 있게끔 명시적으로 바꿨다. 😅😅😅
 
 
 
