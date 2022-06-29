@@ -6,7 +6,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 
-<%@include file="../includes/header.jsp"%>
+<%@include file="../includes/header.jsp" %>
 <link href="/resources/css/upload-ajax.css" rel="stylesheet">
 
 <body id="page-top">
@@ -20,7 +20,7 @@
     <div id="content">
 
       <!-- topbar도 별도 파일에 분리하자! -->
-      <%@include file="../includes/topbar.jsp"%>
+      <%@include file="../includes/topbar.jsp" %>
 
       <!-- Begin Page Content -->
       <div class="container-fluid">
@@ -82,7 +82,7 @@
 
 
     <!-- Footer -->
-    <%@include file="../includes/footer.jsp"%>
+    <%@include file="../includes/footer.jsp" %>
     <!-- End of Footer -->
 
   </div>
@@ -90,7 +90,7 @@
 
 </div>
 <!-- End of Page Wrapper -->
-<%@include file="../includes/dialogAndScript.jsp"%>
+<%@include file="../includes/dialogAndScript.jsp" %>
 
 
 <script>
@@ -106,10 +106,14 @@
       $(".uploadResult ul li").each(function (i, obj) {
         var jobj = $(obj);
         console.dir(jobj);
-        str += "<input type='hidden' name='attachList[" + i + "].fileName' value='" + jobj.data("filename") + "'>";
-        str += "<input type='hidden' name='attachList[" + i + "].uuid' value='" + jobj.data("uuid") + "'>";
-        str += "<input type='hidden' name='attachList[" + i + "].uploadPath' value='" + jobj.data("path") + "'>";
-        str += "<input type='hidden' name='attachList[" + i + "].fileType' value='" + jobj.data("type") + "'>";
+        str += "<input type='hidden' name='attachList[" + i + "].fileName' value='" + jobj.data(
+            "filename") + "'>";
+        str += "<input type='hidden' name='attachList[" + i + "].uuid' value='" + jobj.data("uuid")
+            + "'>";
+        str += "<input type='hidden' name='attachList[" + i + "].uploadPath' value='" + jobj.data(
+            "path") + "'>";
+        str += "<input type='hidden' name='attachList[" + i + "].fileType' value='" + jobj.data(
+            "type") + "'>";
       });
       formObj.append(str).submit();
 
@@ -146,17 +150,21 @@
           var originPath =
               obj.uploadPath + "/" + obj.uuid + "_" + obj.fileName;
           console.log(originPath);
-          str += "<li data-path='" + obj.uploadPath + "' data-uuid='" + obj.uuid + "' data-filename='" + obj.fileName + "' data-type='" + obj.fileType + "'><div>"
+          str += "<li data-path='" + obj.uploadPath + "' data-uuid='" + obj.uuid
+              + "' data-filename='" + obj.fileName + "' data-type='" + obj.fileType + "'><div>"
               + "<span>" + obj.fileName + "</span>"
-              + "<button type='button' data-file=\'" + fileCallPath + "\' data-type='IMAGE' class='btn btn-warning btn-circle'><i class='fas fa-times'></i></button><br>"
+              + "<button type='button' data-file=\'" + fileCallPath
+              + "\' data-type='IMAGE' class='btn btn-warning btn-circle'><i class='fas fa-times'></i></button><br>"
               + "<img src='/display?fileName=" + fileCallPath + "'></a>"
               + "</div></li>";
         } else {
           var fileCallPath = encodeURIComponent(
               obj.uploadPath + "/" + obj.uuid + "_" + obj.fileName);
-          str += "<li data-path='" + obj.uploadPath + "' data-uuid='" + obj.uuid + "' data-filename='" + obj.fileName + "' data-type='" + obj.fileType + "'><div>"
+          str += "<li data-path='" + obj.uploadPath + "' data-uuid='" + obj.uuid
+              + "' data-filename='" + obj.fileName + "' data-type='" + obj.fileType + "'><div>"
               + "<span>" + obj.fileName + "</span>"
-              + "<button type='button' data-file=\'" + fileCallPath + "\' data-type='NORMAL' class='btn btn-warning btn-circle'><i class='fas fa-times'></i></button><br>"
+              + "<button type='button' data-file=\'" + fileCallPath
+              + "\' data-type='NORMAL' class='btn btn-warning btn-circle'><i class='fas fa-times'></i></button><br>"
               + "<a href='/download?fileName=" + fileCallPath
               + "'><img src='/resources/img/attach.png'></a>"
               + "</div></li>";
@@ -165,6 +173,9 @@
 
       uploadUL.append(str);
     }
+
+    var csrfHeaderName = "${_csrf.headerName}";
+    var csrfTokenValue = "${_csrf.token}";
 
     // 게시글 등록 완료가 안된상태에서도 미리 ajax 파일 업로드함.
     $("input[type='file']").change(function () {
@@ -183,13 +194,15 @@
         url: '/uploadAjaxAction',
         processData: false,
         contentType: false,
+        beforeSend: function (xhr) {
+          xhr.setRequestHeader(csrfHeaderName, csrfTokenValue);
+        },
         data: formData,
         type: 'POST',
         dataType: 'json',
         success: function (result) {
           console.log(result);
           showUploadResult(result); // 업로드 결과 함수.
-
         }
       });
     });
@@ -205,6 +218,9 @@
       $.ajax({
         url: '/deleteFile',
         data: {fileName: targetFile, type: type},
+        beforeSend: function (xhr) {
+          xhr.setRequestHeader(csrfHeaderName, csrfTokenValue);
+        },
         dataType: 'text',
         type: 'POST',
         success: function (result) {

@@ -166,6 +166,9 @@
         uploadUL.append(str);
       }
 
+      var csrfHeaderName = "${_csrf.headerName}";
+      var csrfTokenValue = "${_csrf.token}";
+
       // 게시글 등록 완료가 안된상태에서도 미리 ajax 파일 업로드함.
       $("input[type='file']").change(function () {
         var formData = new FormData();
@@ -183,13 +186,15 @@
           url: '/uploadAjaxAction',
           processData: false,
           contentType: false,
+          beforeSend: function (xhr) {
+            xhr.setRequestHeader(csrfHeaderName, csrfTokenValue);
+          },
           data: formData,
           type: 'POST',
           dataType: 'json',
           success: function (result) {
             console.log(result);
             showUploadResult(result); // 업로드 결과 함수.
-
           }
         });
       });
@@ -205,6 +210,9 @@
         $.ajax({
           url: '/deleteFile',
           data: {fileName: targetFile, type: type},
+          beforeSend: function (xhr) {
+            xhr.setRequestHeader(csrfHeaderName, csrfTokenValue);
+          },
           dataType: 'text',
           type: 'POST',
           success: function (result) {

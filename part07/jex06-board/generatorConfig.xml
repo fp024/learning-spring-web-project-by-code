@@ -85,7 +85,7 @@
       <columnOverride column="filename" property="fileName"/>
       <columnOverride column="filetype" property="fileType" jdbcType="CHAR"
         javaType="org.fp024.domain.FileType"
-        typeHandler="org.fp024.typehandler.FileTypeEnumHandler"/>
+        typeHandler="org.fp024.typehandler.CustomEnumTypeHandler"/>
       <columnOverride column="bno" property="bno" jdbcType='BIGINT' javaType='java.lang.Long'/>
     </table>
 

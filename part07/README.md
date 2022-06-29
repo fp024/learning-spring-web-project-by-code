@@ -1137,7 +1137,49 @@ ServletConfig 클래스에 아래 어노테이션을 추가해주자.
   @PreAuthorize("principal.username == #board.writer")
   ```
 
-  
+
+
+
+
+### 38.5 Ajax와 스프링 시큐리티 처리
+
+* 스프링 시큐리티가 적용되면 `POST`, `PUT`, `PATCH`, `DELETE` 같은 방식으로 데이터 전송하는 경우에는 반드시 `X-CSRF-TOKEN`과 같은 헤저정보를 추가해서 CSRF 토큰 값을 전달하도록 해야함.
+
+
+
+#### 38.5.1 게시물 등록 시 첨부파일의 처리
+
+첨부파일을 등록, 삭제 처리를 하는 ajax 요청 옵션에 아래 내용을 추가함
+
+```javascript
+var csrfHeaderName = "${_csrf.headerName}";
+var csrfTokenValue = "${_csrf.token}";
+
+$.ajax({
+  //...
+  beforeSend: function (xhr) {
+    xhr.setRequestHeader(csrfHeaderName, csrfTokenValue);      
+  },
+  //...
+}); 
+```
+
+
+
+##### UploadController의 수정
+
+* 첨부 파일 등록, 삭제를 로그인한 사용자로 제한함. (게시물 최초 등록에서의 첨부파일 추가 또는 삭제를 의미함.)
+  * 첨부파일의 등록, 삭제 POST 요청 메서드에 `  @PreAuthorize("isAuthenticated()")`를 붙임.
+
+
+
+#### 38.5.2 게시물 수정/삭제에서 첨부파일의 처리
+
+* 수정의 첨부 파일 삭제는 DB 데이터에서만 삭제하고, 실제 삭제는 스케줄러에 의해 삭제하므로 수정요청 ajax코드 만 등록할 때처럼 수정한다.
+
+UploadController 관련해서는 회원 정보 기준으로 처리하는 것이 없어서, UUID 파일명만 예측하면 다른 로그인 사용자가 업로드한 파일도 지울 수 있는 문제가 있는데, 일단 UUID가 포함된 완전한 파일명을 알아내는 것이 전제되야하므로 간단하게 지울 수 있는 문제는 아니긴하다.
+
+나중에 회원 ID정보로 같이 처리할 수 있는 식으로 수정하면 자신이 올린 파일만 지우게 할 수는 있을 것 같다.
 
 
 
@@ -1173,7 +1215,7 @@ ServletConfig 클래스에 아래 어노테이션을 추가해주자.
 * p628 
   * Custom`e`AccessDeniedHandler -> CustomAccessDeniedHandler
 
-
+  
 
 
 ## 기타

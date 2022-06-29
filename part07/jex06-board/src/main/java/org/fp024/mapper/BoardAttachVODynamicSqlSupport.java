@@ -34,7 +34,7 @@ public final class BoardAttachVODynamicSqlSupport {
     public final SqlColumn<String> fileName = column("FILENAME", JDBCType.VARCHAR);
 
     public final SqlColumn<FileType> fileType =
-        column("FILETYPE", JDBCType.CHAR, "org.fp024.typehandler.FileTypeEnumHandler");
+        column("FILETYPE", JDBCType.CHAR, "org.fp024.typehandler.CustomEnumTypeHandler");
 
     public final SqlColumn<Long> bno = column("BNO", JDBCType.BIGINT);
 
