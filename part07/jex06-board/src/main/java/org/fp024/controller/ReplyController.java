@@ -10,6 +10,7 @@ import org.fp024.service.ReplyService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,6 +33,7 @@ public class ReplyController {
    * @param vo 댓글
    * @return 등록 결과 성공시 "Success" 반환
    */
+  @PreAuthorize("isAuthenticated()")
   @PostMapping(
       value = "/new",
       consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -81,13 +83,15 @@ public class ReplyController {
    * @param rno 댓글 번호
    * @return 삭제 성공 여부
    */
+  @PreAuthorize("principal.username == #vo.replyer")
   @DeleteMapping(
       value = "/{rno}",
       produces = {MediaType.TEXT_PLAIN_VALUE})
-  public ResponseEntity<String> remove(@PathVariable("rno") Long rno) {
+  public ResponseEntity<String> remove(@RequestBody ReplyVO vo, @PathVariable("rno") Long rno) {
     LOGGER.info("remove: {}", rno);
+    LOGGER.info("replayer: {}", vo.getReplyer());
     try {
-      if (replyService.remove(rno) == 1) {
+      if (replyService.remove(vo.getRno()) == 1) {
         return new ResponseEntity<>("Success", HttpStatus.OK);
       } else {
         return new ResponseEntity<>("Failure", HttpStatus.OK);
@@ -104,6 +108,7 @@ public class ReplyController {
    * @param rno 댓글 번호
    * @return 수정 성공 여부
    */
+  @PreAuthorize("principal.username == #vo.replyer")
   @RequestMapping(
       method = {RequestMethod.PUT, RequestMethod.PATCH},
       value = "/{rno}",

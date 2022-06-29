@@ -1177,17 +1177,76 @@ $.ajax({
 
 * 수정의 첨부 파일 삭제는 DB 데이터에서만 삭제하고, 실제 삭제는 스케줄러에 의해 삭제하므로 수정요청 ajax코드 만 등록할 때처럼 수정한다.
 
-UploadController 관련해서는 회원 정보 기준으로 처리하는 것이 없어서, UUID 파일명만 예측하면 다른 로그인 사용자가 업로드한 파일도 지울 수 있는 문제가 있는데, 일단 UUID가 포함된 완전한 파일명을 알아내는 것이 전제되야하므로 간단하게 지울 수 있는 문제는 아니긴하다.
+🎈 UploadController 관련해서는 회원 정보 기준으로 처리하는 것이 없어서, UUID 파일명만 예측하면 다른 로그인 사용자가 업로드한 파일도 지울 수 있는 문제가 있는데, 일단 UUID가 포함된 완전한 파일명을 알아내는 것이 전제되야하므로 간단하게 지울 수 있는 문제는 아니긴하다.
 
 나중에 회원 ID정보로 같이 처리할 수 있는 식으로 수정하면 자신이 올린 파일만 지우게 할 수는 있을 것 같다.
 
 
 
+#### 38.5.3 댓글 기능에서의 Ajax
+
+* 보안 원칙
+  * 댓글의 등록: 로그인한 사용자만 댓글을 추가할 수 있도록 함.
+  * 댓글의 수정과 삭제: 로그인한 사용자가 자신이 등록한 댓글만 수정, 삭제할 수 있도록 함.
+
+* 브라우저에서 달라지는 부분
+  * 댓글의 등록: CSRF 토큰을 같이 전송하도록 수정 필요.
+  * 댓글의 수정/삭제: 댓글 처리시 댓글 번호 뿐만 아니라 댓글 작성자도 같이 전송하도록 수정 필요.
+
+
+
+##### 댓글 등록
+
+* 로그인 사용자의 이름을 변수에 할당
+    ```javascript
+      var replyer = null;
+      <sec:authorize access="isAuthenticated()">
+      replyer = '<sec:authentication property="principal.username"/>';
+      </sec:authorize>
+    ```
+
+* get.jsp에서는 security 헤더 설정을 전역으로 하는 방법이 가이드 되었음.
+
+  ```javascript
+    // Ajax String Security Header
+    $(document).ajaxSend(function (e, xhr, options) {
+      xhr.setRequestHeader(csrfHeaderName, csrfTokenValue);
+    });
+  ```
+
+* ReplyController 수정
+
+  * 댓글 작성을 로그인 사용자만 하도록 create 메서드에  `@PreAuthorize("isAuthenticated()")` 추가
+
+
+
+##### 댓글 삭제
+
+* 자신이 작성한 댓글만 삭제
+* 뷰에서 삭제 버튼 클릭시 로그인 여부, 작성자와 ID가 같은지 여부를 JavaScript 코드로 체크
+* Ajax 처리 스크립트에서 작성자가 같이 전달되도록 변경
+* 컨트롤러의 remove 메서드에서는 댓글 작성자와 댓글 번호를 ReplyVO 도메인으로 받도록 수정
+
+
+
+##### 댓글 수정
+
+* 자신이 작성한 댓글만 수정
+* 뷰에서 수정 버튼 클릭시 로그인 여부, 작성자와 ID가 같은지 여부를 JavaScript 코드로 체크
+* Ajax 처리 스크립트에서 작성자가 같이 전달되도록 변경
+* 컨트롤러의 modify 메서드에서는 이미 댓글 작성자와 댓글 번호를 ReplyVO 도메인으로 받고 있고 `@PreAuthorize("principal.username == #vo.replyer")`만 추가해 줌
 
 
 
 
 
+
+
+
+
+## 🎇 TODO: 테스트 코드 수정 
+
+Spring Security 를 적용하면서 관련 Controller 테스트 코드를 수정할 필요가 있다.
 
 
 
@@ -1214,6 +1273,14 @@ UploadController 관련해서는 회원 정보 기준으로 처리하는 것이 
 
 * p628 
   * Custom`e`AccessDeniedHandler -> CustomAccessDeniedHandler
+
+* p732
+
+  * 댓글 서비스 ReplyVO 에서 댓글 삭제 메서드가 `int remove(Long rno);` 로 댓글 번호만 전달하게 되어있는데, ReplyVO 도메인을 전달하고 있음.
+
+    `return service.remove(vo);` > `return service.remove(vo.getRno());` 또는  `return service.remove(rno);`로 유지하면 되겠다.
+
+  * RequestBody로 요청하기 때문에..  이부분이 컨트롤러 메서드의 Long rno 부분을 PathVariable로 쓸 필요가 없어지긴함.
 
   
 
