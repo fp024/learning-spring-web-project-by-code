@@ -21,7 +21,7 @@
 
     <org.springframework-version>5.3.22</org.springframework-version>
 
-    <spring-security.version>5.7.2</spring-security.version>
+    <spring-security.version>5.7.3</spring-security.version>
 
     <org.aspectj-version>1.9.9.1</org.aspectj-version>
 
@@ -65,7 +65,7 @@
 
     <json-path.version>2.7.0</json-path.version>
 
-    <mockito.version>4.6.1</mockito.version>
+    <mockito.version>4.7.0</mockito.version>
 
     <hamcrest.version>2.2</hamcrest.version>
 
@@ -79,7 +79,7 @@
     <maven-war-plugin.version>3.3.2</maven-war-plugin.version>
     <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
     <maven-compiler-plugin.version>3.10.1</maven-compiler-plugin.version>
-    <maven-toolchains-plugin.version>3.0.0</maven-toolchains-plugin.version>
+    <maven-toolchains-plugin.version>3.1.0</maven-toolchains-plugin.version>
 
     <!-- Jetty Http 포트 기본값 -->
     <jetty.port>8080</jetty.port>
@@ -92,7 +92,7 @@
     <web-xml-location>${project.basedir}/src/main/webapp/WEB-INF/web.xml</web-xml-location>
 
     <!-- cargo 플러그인 설정 -->
-    <cargo.version>1.9.13</cargo.version>
+    <cargo.version>1.10.1</cargo.version>
     <cargo-tomcat9x.version>9.0.65</cargo-tomcat9x.version>
     <cargo-context-path>${jetty-context-path}</cargo-context-path>
     <cargo-server-port>${jetty.port}</cargo-server-port>
