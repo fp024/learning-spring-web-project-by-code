@@ -37,7 +37,7 @@
 
     <lombok.version>1.18.24</lombok.version>
 
-    <mybatis.version>3.5.10</mybatis.version>
+    <mybatis.version>3.5.11</mybatis.version>
     <mybatis.spring.version>2.0.7</mybatis.spring.version>
     <mybatis.dynamic.sql.version>1.4.0</mybatis.dynamic.sql.version>
 
@@ -61,7 +61,7 @@
     -->
     <jetty.version>10.0.12</jetty.version>
 
-    <junit.jupiter.version>5.9.0</junit.jupiter.version>
+    <junit.jupiter.version>5.9.1</junit.jupiter.version>
 
     <json-path.version>2.7.0</json-path.version>
 
