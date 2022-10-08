@@ -93,7 +93,7 @@
 
     <!-- cargo 플러그인 설정 -->
     <cargo.version>1.10.2</cargo.version>
-    <cargo-tomcat9x.version>9.0.65</cargo-tomcat9x.version>
+    <cargo-tomcat9x.version>9.0.68</cargo-tomcat9x.version>
     <cargo-context-path>${jetty-context-path}</cargo-context-path>
     <cargo-server-port>${jetty.port}</cargo-server-port>
 
