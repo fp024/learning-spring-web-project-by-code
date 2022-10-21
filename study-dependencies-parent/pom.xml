@@ -21,7 +21,7 @@
 
     <org.springframework-version>5.3.23</org.springframework-version>
 
-    <spring-security.version>5.7.3</spring-security.version>
+    <spring-security.version>5.7.4</spring-security.version>
 
     <org.aspectj-version>1.9.9.1</org.aspectj-version>
 
@@ -65,7 +65,7 @@
 
     <json-path.version>2.7.0</json-path.version>
 
-    <mockito.version>4.8.0</mockito.version>
+    <mockito.version>4.8.1</mockito.version>
 
     <hamcrest.version>2.2</hamcrest.version>
 
