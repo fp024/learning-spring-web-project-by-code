@@ -48,9 +48,8 @@
       최신버전을 쓰더라도 특별한 문제는 없었다.
       https://mvnrepository.com/artifact/com.oracle.database.jdbc/ojdbc11
     -->
-    <ojdbc8.version>18.3.0.0</ojdbc8.version>
     <ojdbc11.version>21.7.0.0</ojdbc11.version>
-    
+
     <!-- 몇몇 프로젝트에서는 hsqldb로 사용해보자... -->
     <hsqldb.version>2.7.0</hsqldb.version>
 
