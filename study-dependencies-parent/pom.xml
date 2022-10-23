@@ -51,7 +51,7 @@
     <ojdbc11.version>21.7.0.0</ojdbc11.version>
 
     <!-- 몇몇 프로젝트에서는 hsqldb로 사용해보자... -->
-    <hsqldb.version>2.7.0</hsqldb.version>
+    <hsqldb.version>2.7.1</hsqldb.version>
 
     <thumbnailator.version>0.4.17</thumbnailator.version>
     <!-- 
