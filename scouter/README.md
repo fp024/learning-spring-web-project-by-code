@@ -162,6 +162,14 @@ Windows 환경에서 cargo 플러그인을 통한 Tomcat 9.x에는 적용함
 
 
 
+## Scouter Client (Eclipse 기반 프로그램)로 성능 모니터링
+
+![scouter-client](doc-resources/scouter-viewer.png)
+
+게시판 프로젝트 켜서 F5 또는 연속 클릭으로 잘 나오는지 확인해보았음.
+
+상태를 볼수는 있지만 역시나... 부하를 주는 프로그램에 대해 학습이 필요할 것 같다. ([게틀링](https://gatling.io/) 같은...)
+
 
 
 ## 🎇 추가로 해야할 일  (아래 것 들은... 천천히 하자~)
@@ -188,6 +196,7 @@ Windows 환경에서 cargo 플러그인을 통한 Tomcat 9.x에는 적용함
     * [jetty-start-with-scouter.bat](../jetty-start-with-scouter.bat)
     * [tomcat-start-with-scouter.bat](../tomcat-start-with-scouter.bat)
   * FORK모드로 Jetty를 실행하면 jvmArgs를 잘 전달 할 수 있었다.
+
 
 
 ## 의견
