@@ -1,6 +1,6 @@
 # Scouter 적용 테스트
 
-> Scouter를 적용해보자!
+> ✨ Scouter를 적용해보자! 
 
 
 
@@ -167,14 +167,34 @@ Windows 환경에서 cargo 플러그인을 통한 Tomcat 9.x에는 적용함
 ## 🎇 추가로 해야할 일  (아래 것 들은... 천천히 하자~)
 
 - [ ] Linux 환경용 스크립트 파일 만들기
+
 - [ ] https://gatling.io/ 으로 부하 시나리오 만들어보기
-- [ ] Jetty로도 어떻게 할 수 없는지 더 알아보기. 
+
+- [x] Maven 웹 애플리케이션 실행 프로필 분리
+
+  [study-dependencies-parent/pom.xml](../study-dependencies-parent/pom.xml)
+
+  * 기본 상태에서는 Scouter를 연동할 필요가 없어서 Scouter를 연동하지 않은 기본 프로필을 기본 값으로 분리했다. (`-P{프로필_ID}`로 프로필을 주지않고 mvn을 실행하면 Scouter 연동없이 실행한다.)
+
+    * `default-webapp-run`: 기본 웹 애플리케이션 실행 : jetty 또는 tomcat
+
+    * `webapp-run-with-scouter`: Scouter를 활성화하여 웹 애플리케이션 실행 : jetty 또는 tomcat
 
 
 
+- [x] Jetty로도 어떻게 할 수 없는지 더 알아보기. 
+
+  * 프로젝트 루트에 jetty와 tomcat용 배치파일을 만들었다.
+    * [jetty-start-with-scouter.bat](../jetty-start-with-scouter.bat)
+    * [tomcat-start-with-scouter.bat](../tomcat-start-with-scouter.bat)
+  * FORK모드로 Jetty를 실행하면 jvmArgs를 잘 전달 할 수 있었다.
 
 
 ## 의견
 
 * 윈도우 환경에서 게시판 스터디 프로젝트를 간편하게 Scouter와 연동할 수 있게 구성할 수 있어서 좋았다.
+
+* Jetty 연동은 조금 막혔었는데, 해결되서 다행이다. 🎉
+
+  
 

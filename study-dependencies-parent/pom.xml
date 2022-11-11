@@ -101,7 +101,6 @@
     <cargo-tomcat9x.version>9.0.68</cargo-tomcat9x.version>
     <cargo-context-path>${jetty-context-path}</cargo-context-path>
     <cargo-server-port>${jetty.port}</cargo-server-port>
-
   </properties>
 
 
@@ -138,6 +137,226 @@
       </dependency>
     </dependencies>
   </dependencyManagement>
+
+  <!-- 기본 웹 애플리케이션 실행 : jetty 또는 tomcat -->
+  <profiles>
+    <profile>
+      <id>default-webapp-run</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <build>
+        <plugins>
+          <!-- Jetty 서버 구동 -->
+          <!-- 도움말 자세히보기: mvnw jetty:help -Ddetail=true -Dgoal=run -->
+          <plugin>
+            <!-- https://www.eclipse.org/jetty/documentation/jetty-10/programming-guide/index.html#jetty-maven-plugin -->
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-maven-plugin</artifactId>
+            <version>${jetty.version}</version>
+            <configuration>          
+              <httpConnector>
+                <!--host>localhost</host-->
+                <port>${jetty.port}</port>
+              </httpConnector>
+              <webApp>
+                <contextPath>${jetty-context-path}</contextPath>
+                <descriptor>${web-xml-location}</descriptor>
+                <sessionHandler>
+                  <sessionIdPathParameterName>none</sessionIdPathParameterName>
+                </sessionHandler>
+              </webApp>
+              <deployMode>EMBED</deployMode>
+              <stopKey>CTRL+C</stopKey>
+              <stopPort>8999</stopPort>
+              <!-- 9.x 설정: <scanIntervalSeconds> 대신 <scan> 사용 -->
+              <!-- 
+                변경 감지 자동 재시작시 ContextLoaderListener가 제대로 실행되지 않는 오류가 발생한다.
+                설정을 -1로하여 자동 재시작이 일어나지 않도록 한다.
+               -->
+              <scan>${jetty-auto-deploy-seconds}</scan>
+              <scanTargetPatterns>
+                <scanTargetPattern>
+                  <directory>src/main/webapp/WEB-INF</directory>
+                  <includes>
+                    <include>**/*.properties</include>
+                    <include>**/*.xml</include>
+                  </includes>
+                  <excludes>
+                    <exclude>**/*.jsp</exclude>
+                  </excludes>
+                </scanTargetPattern>
+              </scanTargetPatterns>
+            </configuration>
+            <dependencies>
+              <dependency>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>apache-jstl</artifactId>
+                <version>${jetty.version}</version>
+                <exclusions>
+                  <exclusion>
+                    <groupId>org.apache.taglibs</groupId>
+                    <artifactId>taglibs-standard-impl</artifactId>
+                  </exclusion>
+                </exclusions>
+              </dependency>
+            </dependencies>
+          </plugin>
+          
+          <!-- 실제 Tomcat 9 배포 실행 테스트 -->
+          <!-- mvn clean package -DskipTests cargo:run -->
+          <plugin>
+            <groupId>org.codehaus.cargo</groupId>
+            <artifactId>cargo-maven3-plugin</artifactId>
+            <version>${cargo.version}</version>
+            <configuration>
+              <container>
+                <containerId>tomcat9x</containerId>
+                <systemProperties>
+                  <file.encoding>UTF-8</file.encoding>
+                  <scouter.config>${project.basedir}/../../${scouter.config.file}</scouter.config>
+                </systemProperties>
+                <zipUrlInstaller>
+                  <url>https://repo.maven.apache.org/maven2/org/apache/tomcat/tomcat/${cargo-tomcat9x.version}/tomcat-${cargo-tomcat9x.version}.zip</url>
+                  <downloadDir>${project.build.directory}/downloads</downloadDir>
+                  <extractDir>${project.build.directory}/extracts</extractDir>
+                </zipUrlInstaller>
+              </container>
+              <configuration>
+                <type>standalone</type>
+                <properties>
+                  <cargo.servlet.port>${cargo-server-port}</cargo.servlet.port>
+                </properties>
+              </configuration>
+              <deployables>
+                <deployable>
+                  <groupId>${project.groupId}</groupId>
+                  <artifactId>${project.artifactId}</artifactId>
+                  <type>war</type>
+                  <properties>
+                    <context>${cargo-context-path}</context>
+                  </properties>
+                </deployable>
+              </deployables>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  
+    <!-- Scouter를 활성화하여 웹 애플리케이션 실행 : jetty 또는 tomcat -->
+    <profile>
+      <id>webapp-run-with-scouter</id>
+      <build>
+        <plugins>
+          <!-- Jetty 서버 구동 -->
+          <!-- 도움말 자세히보기: mvnw jetty:help -Ddetail=true -Dgoal=run -->
+          <plugin>
+            <!-- https://www.eclipse.org/jetty/documentation/jetty-10/programming-guide/index.html#jetty-maven-plugin -->
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-maven-plugin</artifactId>
+            <version>${jetty.version}</version>
+            <configuration>          
+              <httpConnector>
+                <!--host>localhost</host-->
+                <port>${jetty.port}</port>
+              </httpConnector>
+              <!-- jvmArgs는 FORK 모드에서만 동작한다. -->
+              <jvmArgs><!-- 
+                  -->-javaagent:${scouter.agent.lib} <!--
+                  -->--illegal-access=warn <!--
+                  -->--add-opens=java.base/java.lang=ALL-UNNAMED <!--
+                  -->-Dscouter.config=${project.basedir}/../../${scouter.config.file} <!--
+              --></jvmArgs>
+              <webApp>
+                <contextPath>${jetty-context-path}</contextPath>
+                <descriptor>${web-xml-location}</descriptor>
+                <sessionHandler>
+                  <sessionIdPathParameterName>none</sessionIdPathParameterName>
+                </sessionHandler>
+              </webApp>
+              <deployMode>FORK</deployMode>
+              <stopKey>CTRL+C</stopKey>
+              <stopPort>8999</stopPort>
+              <!-- 9.x 설정: <scanIntervalSeconds> 대신 <scan> 사용 -->
+              <!-- 
+                변경 감지 자동 재시작시 ContextLoaderListener가 제대로 실행되지 않는 오류가 발생한다.
+                설정을 -1로하여 자동 재시작이 일어나지 않도록 한다.
+               -->
+              <scan>${jetty-auto-deploy-seconds}</scan>
+              <scanTargetPatterns>
+                <scanTargetPattern>
+                  <directory>src/main/webapp/WEB-INF</directory>
+                  <includes>
+                    <include>**/*.properties</include>
+                    <include>**/*.xml</include>
+                  </includes>
+                  <excludes>
+                    <exclude>**/*.jsp</exclude>
+                  </excludes>
+                </scanTargetPattern>
+              </scanTargetPatterns>
+            </configuration>
+            <dependencies>
+              <dependency>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>apache-jstl</artifactId>
+                <version>${jetty.version}</version>
+                <exclusions>
+                  <exclusion>
+                    <groupId>org.apache.taglibs</groupId>
+                    <artifactId>taglibs-standard-impl</artifactId>
+                  </exclusion>
+                </exclusions>
+              </dependency>
+            </dependencies>
+          </plugin>
+
+          <!-- 실제 Tomcat 9 배포 실행 테스트 -->
+          <plugin>
+            <groupId>org.codehaus.cargo</groupId>
+            <artifactId>cargo-maven3-plugin</artifactId>
+            <version>${cargo.version}</version>
+            <configuration>
+              <container>
+                <containerId>tomcat9x</containerId>
+                <systemProperties>
+                  <file.encoding>UTF-8</file.encoding>
+                  <scouter.config>${project.basedir}/../../${scouter.config.file}</scouter.config>
+                </systemProperties>
+                <zipUrlInstaller>
+                  <url>https://repo.maven.apache.org/maven2/org/apache/tomcat/tomcat/${cargo-tomcat9x.version}/tomcat-${cargo-tomcat9x.version}.zip</url>
+                  <downloadDir>${project.build.directory}/downloads</downloadDir>
+                  <extractDir>${project.build.directory}/extracts</extractDir>
+                </zipUrlInstaller>
+              </container>
+              <configuration>
+                <type>standalone</type>
+                <properties>
+                  <cargo.start.jvmargs><!-- 
+                  -->-javaagent:${scouter.agent.lib} <!--
+                  -->--illegal-access=warn <!--
+                  -->--add-opens=java.base/java.lang=ALL-UNNAMED <!--
+                  --></cargo.start.jvmargs>
+                  <cargo.servlet.port>${cargo-server-port}</cargo.servlet.port>
+                </properties>
+              </configuration>
+              <deployables>
+                <deployable>
+                  <groupId>${project.groupId}</groupId>
+                  <artifactId>${project.artifactId}</artifactId>
+                  <type>war</type>
+                  <properties>
+                    <context>${cargo-context-path}</context>
+                  </properties>
+                </deployable>
+              </deployables>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>    
+  </profiles>
 
   <build>
     <pluginManagement>
@@ -256,105 +475,6 @@
         </configuration>
       </plugin>
       -->
-
-      <!-- Jetty 서버 구동 -->
-      <!-- 도움말 자세히보기: mvnw jetty:help -Ddetail=true -Dgoal=run -->
-      <plugin>
-        <!-- https://www.eclipse.org/jetty/documentation/jetty-10/programming-guide/index.html#jetty-maven-plugin -->
-        <groupId>org.eclipse.jetty</groupId>
-        <artifactId>jetty-maven-plugin</artifactId>
-        <version>${jetty.version}</version>
-        <configuration>
-          <httpConnector>
-            <!--host>localhost</host-->
-            <port>${jetty.port}</port>
-          </httpConnector>
-          <webApp>
-            <contextPath>${jetty-context-path}</contextPath>
-            <descriptor>${web-xml-location}</descriptor>
-            <sessionHandler>
-              <sessionIdPathParameterName>none</sessionIdPathParameterName>
-            </sessionHandler>
-          </webApp>
-          <deployMode>EMBED</deployMode>
-          <stopKey>CTRL+C</stopKey>
-          <stopPort>8999</stopPort>
-          <!-- 9.x 설정: <scanIntervalSeconds> 대신 <scan> 사용 -->
-          <!-- 
-            변경 감지 자동 재시작시 ContextLoaderListener가 제대로 실행되지 않는 오류가 발생한다.
-            설정을 -1로하여 자동 재시작이 일어나지 않도록 한다.
-           -->
-          <scan>${jetty-auto-deploy-seconds}</scan>
-          <scanTargetPatterns>
-            <scanTargetPattern>
-              <directory>src/main/webapp/WEB-INF</directory>
-              <includes>
-                <include>**/*.properties</include>
-                <include>**/*.xml</include>
-              </includes>
-              <excludes>
-                <exclude>**/*.jsp</exclude>
-              </excludes>
-            </scanTargetPattern>
-          </scanTargetPatterns>
-        </configuration>
-        <dependencies>
-          <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>apache-jstl</artifactId>
-            <version>${jetty.version}</version>
-            <exclusions>
-              <exclusion>
-                <groupId>org.apache.taglibs</groupId>
-                <artifactId>taglibs-standard-impl</artifactId>
-              </exclusion>
-            </exclusions>
-          </dependency>
-        </dependencies>
-      </plugin>
-
-      <!-- 실제 Tomcat 9 배포 실행 테스트 -->
-      <!-- mvn clean package -DskipTests cargo:run -->
-      <plugin>
-        <groupId>org.codehaus.cargo</groupId>
-        <artifactId>cargo-maven3-plugin</artifactId>
-        <version>${cargo.version}</version>
-        <configuration>
-          <container>
-            <containerId>tomcat9x</containerId>
-            <systemProperties>
-              <file.encoding>UTF-8</file.encoding>
-              <scouter.config>${project.basedir}/../../${scouter.config.file}</scouter.config>
-            </systemProperties>
-            <zipUrlInstaller>
-              <url>https://repo.maven.apache.org/maven2/org/apache/tomcat/tomcat/${cargo-tomcat9x.version}/tomcat-${cargo-tomcat9x.version}.zip</url>
-              <downloadDir>${project.build.directory}/downloads</downloadDir>
-              <extractDir>${project.build.directory}/extracts</extractDir>
-            </zipUrlInstaller>
-          </container>
-          <configuration>
-            <type>standalone</type>
-            <properties>
-              <cargo.start.jvmargs><!-- 
-              -->-javaagent:${scouter.agent.lib} <!--
-              -->--illegal-access=warn <!--
-              -->--add-opens=java.base/java.lang=ALL-UNNAMED <!--
-              --></cargo.start.jvmargs>
-              <cargo.servlet.port>${cargo-server-port}</cargo.servlet.port>
-            </properties>
-          </configuration>
-          <deployables>
-            <deployable>
-              <groupId>${project.groupId}</groupId>
-              <artifactId>${project.artifactId}</artifactId>
-              <type>war</type>
-              <properties>
-                <context>${cargo-context-path}</context>
-              </properties>
-            </deployable>
-          </deployables>
-        </configuration>
-      </plugin>
     </plugins>
   </build>
 </project>
