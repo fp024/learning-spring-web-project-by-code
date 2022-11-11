@@ -324,6 +324,7 @@
             <containerId>tomcat9x</containerId>
             <systemProperties>
               <file.encoding>UTF-8</file.encoding>
+              <scouter.config>${project.basedir}/../../${scouter.config.file}</scouter.config>
             </systemProperties>
             <zipUrlInstaller>
               <url>https://repo.maven.apache.org/maven2/org/apache/tomcat/tomcat/${cargo-tomcat9x.version}/tomcat-${cargo-tomcat9x.version}.zip</url>
@@ -334,6 +335,11 @@
           <configuration>
             <type>standalone</type>
             <properties>
+              <cargo.start.jvmargs><!-- 
+              -->-javaagent:${scouter.agent.lib} <!--
+              -->--illegal-access=warn <!--
+              -->--add-opens=java.base/java.lang=ALL-UNNAMED <!--
+              --></cargo.start.jvmargs>
               <cargo.servlet.port>${cargo-server-port}</cargo.servlet.port>
             </properties>
           </configuration>
