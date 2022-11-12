@@ -119,6 +119,7 @@ Windows 환경에서 cargo 플러그인을 통한 Tomcat 9.x에는 적용함
                 -->-javaagent:${scouter.agent.lib} <!--
                 -->--illegal-access=warn <!--
                 -->--add-opens=java.base/java.lang=ALL-UNNAMED <!--
+                -->-Djdk.attach.allowAttachSelf=true <!--
                 --></cargo.start.jvmargs>
                 <cargo.servlet.port>${cargo-server-port}</cargo.servlet.port>
               </properties>
@@ -136,16 +137,16 @@ Windows 환경에서 cargo 플러그인을 통한 Tomcat 9.x에는 적용함
           </configuration>
         </plugin>
   ```
-
+  
   * cargo.start.jvmargs
-
+  
     * `-javaagent`: Scouter Java Agent 라이브러리 지정
     * `--add-opens=java.base/java.lang=ALL-UNNAMED`는 Java 17 실행시 unnamed module 관련 오류 해결 목적으로 추가
-
+  
   * scouter.config
-
+  
     * Scouter Java Agent  설정 파일 경로 지정
-
+  
     
 
 ### Cargo  Maven Plugin으로 웹 애플리케이션 실행 배치 파일
@@ -205,5 +206,20 @@ Windows 환경에서 cargo 플러그인을 통한 Tomcat 9.x에는 적용함
 
 * Jetty 연동은 조금 막혔었는데, 해결되서 다행이다. 🎉
 
-  
+
+
+
+## 추가 사항
+
+### Attach API cannot be used to attach to the current VM by default 	
+
+* Scouter [개발자님 답글](https://github.com/scouter-project/scouter/issues/866#issuecomment-1236034288)중에 `--add-opens` 설정 외에도 `jdk.attach.allowAttachSelf=true` 옵션이 있어서 추가함. 
+
+  ```
+  --add-opens=java.base/java.lang=ALL-UNNAMED -Djdk.attach.allowAttachSelf=true
+  ```
+
+* https://www.oracle.com/java/technologies/javase/9-notes.html#JDK-8178380
+
+* Java 9 부터 현재 VM에 연결하기 위한 Attach API를 기본으로 사용할 수 없게 설정되어있어서, 호환성을 위해 허용하도록 추가해주는 설정 같다.
 

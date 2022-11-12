@@ -266,6 +266,7 @@
                   -->-javaagent:${scouter.agent.lib} <!--
                   -->--illegal-access=warn <!--
                   -->--add-opens=java.base/java.lang=ALL-UNNAMED <!--
+                  -->-Djdk.attach.allowAttachSelf=true <!--
                   -->-Dscouter.config=${project.basedir}/../../${scouter.config.file} <!--
               --></jvmArgs>
               <webApp>
@@ -337,6 +338,7 @@
                   -->-javaagent:${scouter.agent.lib} <!--
                   -->--illegal-access=warn <!--
                   -->--add-opens=java.base/java.lang=ALL-UNNAMED <!--
+                  -->-Djdk.attach.allowAttachSelf=true <!--
                   --></cargo.start.jvmargs>
                   <cargo.servlet.port>${cargo-server-port}</cargo.servlet.port>
                 </properties>
