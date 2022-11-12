@@ -175,7 +175,7 @@ Windows 환경에서 cargo 플러그인을 통한 Tomcat 9.x에는 적용함
 
 ## 🎇 추가로 해야할 일  (아래 것 들은... 천천히 하자~)
 
-- [ ] Linux 환경용 스크립트 파일 만들기
+- [x] Linux 환경용 스크립트 파일 만들기
 
 - [ ] https://gatling.io/ 으로 부하 시나리오 만들어보기
 
@@ -222,4 +222,39 @@ Windows 환경에서 cargo 플러그인을 통한 Tomcat 9.x에는 적용함
 * https://www.oracle.com/java/technologies/javase/9-notes.html#JDK-8178380
 
 * Java 9 부터 현재 VM에 연결하기 위한 Attach API를 기본으로 사용할 수 없게 설정되어있어서, 호환성을 위해 허용하도록 추가해주는 설정 같다.
+
+
+
+### `cargo:run` 으로 프로젝트를  nohup로 백그라운드 실행한 상태에서 `cargo:stop`으로 Tomcat종료시 프로세스가 남는 문제
+
+* https://codehaus-cargo.github.io/cargo/Maven+3+Plugin.html
+
+* `cargo:run`으로 프로젝트를 시작하면 이런 메시지가 남음
+
+  ```
+  ...
+  [INFO] [talledLocalContainer] Tomcat 9.x started on port [8080]
+  [INFO] Press Ctrl-C to stop the container...
+  ...
+  ```
+
+  * Ctrl+C 입력을 받기 위해서 Maven 부모프로세스가 대기하고 있고, 자식으로 Tomcat을 실행하는 것으로 보임.
+
+    ```
+    
+    # Maven Wrapper 부모 프로세스 1850
+    0 S fp024       1850    1845  9  80   0 - 843381 -     06:07 pts/0    00:00:11 ... org.apache.maven.wrapper.MavenWrapperMain clean package -DskipTests cargo:run -Pwebapp-run-with-scouter
+    
+    # Cargo가 실행한 Tomcat 9.x 프로세스 (2256)
+    0 S fp024       2256    1850 12  80   0 - 1086730 -    06:08 pts/0    00:00:13 ... org.apache.catalina.startup.Bootstrap start
+    
+    ```
+
+  * 이때 다른 bash창을 열어  `cargo:stop`를 실행 하면 Tomcat(자식 프로세스:2256)만 종료시키기 때문에 Maven (부모 프로세스:1850)가 제대로 종료되지 않음. 🎃
+
+  stop을 하면 전부 종료시켜주면 좋은데... 좋은 방법을 찾을 때까지... cargo는 백그라운드로 실행하지 말아야겠다.
+
+
+
+
 
