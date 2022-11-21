@@ -124,24 +124,31 @@
 
 가상 머신에 띄어두기위해서 서버 실행/정지 스크립트를 만들고 크론탭으로 서버 시작시 실행되게 하였다.
 
-* 최신 테스트할 프로젝트에 대해 latest 란 심볼릭 링크를 우선 만든다.
+* 서버 시작 스크립트
+
+  * [jetty-start-with-scouter.sh](jetty-start-with-scouter.sh) : Scouter 연동해서 Jetty 서버로 시작
+
+  * [tomcat-start-with-scouter.sh](tomcat-start-with-scouter.sh) : Scouter 연동해서 Tomcat 서버로 시작
+
+* 서버 정지 스크립트
+
+  * [jetty-stop-server.sh](jetty-stop-server.sh) : Jetty 서버 종료
+
+  * [tomcat-stop-server.sh](tomcat-stop-server.sh) : Tomcat 서버 종료
+    * `cargo:run`으로 실행하는 Tomcat 서버의 경우 백그라운드로 실행할 경우 Tomcat 서버는 종료할 수 있지만 그것을 감싼 MavenWrapper프로세스는 고아 프로세스로 남을 수 있다. 왠만하면 백그라운드로 실행하지 말자!
+
+* 로그 보기 스크립트
+
+  * [show-log.sh](show-log.sh): 실행 로그 보기 (최초 시작후 로그만 남김, log rotate등은 적용하지 않음, 재부팅 때마다 새로 갱신)
+
+* `crontab -e` 설정 (백그라운드 실행에 )
 
   ```bash
-  cd /home/fp024/git-fp024/learning-spring-web-project-by-code
-  ln -s part04/jex03 latest
-  ```
+  # Scouter Host Agent 시작
+  @reboot /home/fp024/apps/scouter/latest/agent.host/host.sh
   
-* [start-server.sh](start-server.sh) : 서버 시작
-
-* [stop-server.sh](stop-server.sh) : 서버 종료
-
-* [show-log.sh](show-log.sh): 실행 로그 보기 (최초 시작후 로그만 남김, log rotate등은 적용하지 않음, 재부팅 때마다 새로 갱신)
-
-* `crontab -e` 설정
-
-  ```bash
-  # 코드로 배우는 스프링 웹프로젝트 스터디 게시판 서버 시작
-  @reboot /home/fp024/git-fp024/learning-spring-web-project-by-code/start-server.sh
+  # 게시판 프로젝트 시작
+  @reboot /home/fp024/git-fp024/learning-spring-web-project-by-code/jetty-start-with-scouter.sh
   ```
 
 
@@ -149,14 +156,15 @@
 
 스크립트에서 사용하는 환경 설정 파일 정의
 
-* env.properties
+* setenv.properties
 
   ```properties
-  JAVA_HOME=/home/fp024/.sdkman/candidates/java/current
-  MAVEN_HOME=/home/fp024/.sdkman/candidates/maven/current
+  JAVA_HOME=/home/fp024/JDK/17
+  SCOUTER_JAVA_AGENT_CONF=scouter/conf/board-webapp.conf
+  SCOUTER_JAVA_AGENT_LIB=/home/fp024/apps/scouter/latest/agent.java/scouter.agent.jar
   
-  # 최종 진행 완료한 프로젝트를 명시, Linux 스크립트로 시작, 종료시 사용
-  LATEST_HOME=part04/jex03
+  # 최종 진행한 프로젝트
+  LATEST_PROJECT_HOME=part07/jex06-board
   ```
 
 
