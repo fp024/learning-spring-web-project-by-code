@@ -23,14 +23,14 @@
         * Oracle 18c Express Edition
             * 책 환경: Oracle 11c Express Edition
     
-        * [HyperSQL DB 2.6.x](http://hsqldb.org/)
+        * [HyperSQL DB 2.7.x](http://hsqldb.org/)
             * 일부 단순 프로젝트, 최종 프로젝트
                 * Java 기반 설정과 [Mybatis Dynamic SQL](https://mybatis.org/mybatis-dynamic-sql/docs/introduction.html)를 적용한 ~~최종장 프로젝트는 Oracle이 없더라도 Pull 만 받아서 바로 실행가능하도록 HyperSQL DB Embedded 적용 목표.~~
                   * DB만 HyperSQL DB로 바꾸는 것은 의미가 없는 것 같다. Oracle로 쓰기로 했음. 완료 후에 여유있을 때, jex 최종장 프로젝트를 JPA로 바꾸는 것이 나을 것 같다.
         
     * WAS
         * [Jetty 10.x](https://mvnrepository.com/artifact/org.eclipse.jetty/jetty-maven-plugin) (Maven Jetty 플러그인 실행)
-        * [Tomcat 8.5.x](https://tomcat.apache.org/download-80.cgi)
+        * [Tomcat 9.0.x](https://tomcat.apache.org/download-90.cgi) (Cargo Maven 플러그인을 사용해서 실행)
     * 빌드 도구
         * [Maven 3.8.x](https://maven.apache.org/index.html)
     

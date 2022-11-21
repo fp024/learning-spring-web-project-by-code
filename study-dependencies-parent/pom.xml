@@ -98,7 +98,7 @@
 
     <!-- cargo 플러그인 설정 -->
     <cargo.version>1.10.3</cargo.version>
-    <cargo-tomcat9x.version>9.0.68</cargo-tomcat9x.version>
+    <cargo-tomcat9x.version>9.0.69</cargo-tomcat9x.version>
     <cargo-context-path>${jetty-context-path}</cargo-context-path>
     <cargo-server-port>${jetty.port}</cargo-server-port>
   </properties>
@@ -120,20 +120,10 @@
         <type>pom</type>
         <scope>import</scope>
       </dependency>
-
       <dependency>
         <groupId>com.zaxxer</groupId>
         <artifactId>HikariCP</artifactId>
         <version>${hikaricp.version}</version>
-        <exclusions>
-          <exclusion>
-            <!-- slf4j-api 2.0.0-alpha1 버전을 가져오는데... -->
-            <!-- log4j-slf4j-impl 가 가져오는 slf4j-api 1.7.25 버전과 충돌로 사용자정의 로깅이 뜨지 않는다. -->
-            <!-- HikariCP의 slf4j-api 디펜던시는 제외시켰다. -->
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-          </exclusion>
-        </exclusions>
       </dependency>
     </dependencies>
   </dependencyManagement>
