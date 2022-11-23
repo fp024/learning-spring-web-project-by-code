@@ -45,7 +45,7 @@
     * Oracle 18c XE를 설치한 가상머신은 Oralce 전용으로만 사용할 것이여서, 일단 추가 설정은 하지 않는다. 
 
     
-## 프로젝트의 JDBC 연경
+## 프로젝트의 JDBC 연결
 * https://www.oracle.com/database/technologies/faq-jdbc.html 
 
 * ojdbc8을 사용하면서, 버전도 드라이버버전도 데이터베이스 버전에 맞게 18.3.0.0 을 사용하도록 합니다.
