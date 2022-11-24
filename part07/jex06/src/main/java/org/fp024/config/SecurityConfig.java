@@ -1,5 +1,8 @@
 package org.fp024.config;
 
+import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
+
+import javax.sql.DataSource;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.fp024.security.CustomLoginSuccessHandler;
@@ -17,8 +20,6 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 
-import javax.sql.DataSource;
-
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -32,11 +33,11 @@ public class SecurityConfig {
     http.authorizeHttpRequests(
         (auths) ->
             auths
-                .antMatchers("/sample/all")
+                .requestMatchers(antMatcher("/sample/all"))
                 .permitAll()
-                .antMatchers("/sample/admin")
+                .requestMatchers(antMatcher("/sample/admin"))
                 .hasRole(MemberAuthType.ROLE_ADMIN.getGroupName())
-                .antMatchers("/sample/member")
+                .requestMatchers(antMatcher("/sample/member"))
                 .hasRole(MemberAuthType.ROLE_MEMBER.getGroupName()));
 
     http.formLogin()

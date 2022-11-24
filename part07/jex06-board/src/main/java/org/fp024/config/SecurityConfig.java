@@ -1,5 +1,7 @@
 package org.fp024.config;
 
+import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
+
 import java.util.concurrent.TimeUnit;
 import javax.sql.DataSource;
 import lombok.RequiredArgsConstructor;
@@ -30,11 +32,11 @@ public class SecurityConfig {
     http.authorizeHttpRequests(
         (auths) ->
             auths
-                .antMatchers("/sample/all")
+                .requestMatchers(antMatcher("/sample/all"))
                 .permitAll()
-                .antMatchers("/sample/admin")
+                .requestMatchers(antMatcher("/sample/admin"))
                 .hasRole(MemberAuthType.ROLE_ADMIN.getGroupName())
-                .antMatchers("/sample/member")
+                .requestMatchers(antMatcher("/sample/member"))
                 .hasRole(MemberAuthType.ROLE_MEMBER.getGroupName()));
 
     http.formLogin()

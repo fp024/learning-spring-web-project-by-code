@@ -21,7 +21,7 @@
 
     <org.springframework-version>5.3.24</org.springframework-version>
 
-    <spring-security.version>5.7.5</spring-security.version>
+    <spring-security.version>5.8.0</spring-security.version>
 
     <org.aspectj-version>1.9.9.1</org.aspectj-version>
 
@@ -124,6 +124,15 @@
         <groupId>com.zaxxer</groupId>
         <artifactId>HikariCP</artifactId>
         <version>${hikaricp.version}</version>
+        <exclusions>
+          <exclusion>
+            <!-- slf4j-api 2.0.0-alpha1 버전을 가져오는데... -->
+            <!-- 2.0.0 정식 버전을 끌고오게 되더라도 모듈을 불러오는 모습을 보인다. -->
+            <!-- HikariCP의 slf4j-api 디펜던시는 제외시켰다. -->
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
     </dependencies>
   </dependencyManagement>
