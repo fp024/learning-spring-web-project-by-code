@@ -5,8 +5,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import lombok.Getter;
@@ -25,9 +23,8 @@ public class ReplyVO {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long rno;
 
-  @ManyToOne
-  @JoinColumn(name = "bno", nullable = false)
-  private BoardVO boardVO;
+  @Column(nullable = false)
+  private Long bno;
 
   @Column(length = 1000, nullable = false)
   private String reply;
@@ -40,13 +37,4 @@ public class ReplyVO {
 
   @Column(name = "updatedate")
   private LocalDateTime updateDate;
-
-  // TODO: 컴파일 오류 방지
-  public Long getBno() {
-    return boardVO.getBno();
-  }
-  // TODO: 컴파일 오류 방지
-  public void setBno(Long bno) {
-    boardVO.setBno(bno);
-  }
 }
