@@ -97,7 +97,7 @@
     <web-xml-location>${project.basedir}/src/main/webapp/WEB-INF/web.xml</web-xml-location>
 
     <!-- cargo 플러그인 설정 -->
-    <cargo.version>1.10.3</cargo.version>
+    <cargo.version>1.10.4</cargo.version>
     <cargo-tomcat9x.version>9.0.69</cargo-tomcat9x.version>
     <cargo-context-path>${jetty-context-path}</cargo-context-path>
     <cargo-server-port>${jetty.port}</cargo-server-port>
