@@ -1,6 +1,7 @@
 package org.fp024.domain;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
@@ -11,6 +12,7 @@ import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.fp024.enumconverter.EnabledTypeConverter;
 
 /**
  * 회원 VO
@@ -34,8 +36,14 @@ public class MemberVO {
   @Column(length = 100, name = "username", nullable = false)
   private String userName;
 
+  @Column(name = "regdate")
   private LocalDateTime registerDate;
+
+  @Column(name = "updatedate")
   private LocalDateTime updateDate;
+
+  @Convert(converter = EnabledTypeConverter.class)
+  @Column(length = 1, nullable = false)
   private EnabledType enabled;
 
   @OneToMany(mappedBy = "memberVO", fetch = FetchType.EAGER)

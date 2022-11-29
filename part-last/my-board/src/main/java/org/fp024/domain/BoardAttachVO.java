@@ -7,7 +7,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -25,17 +24,17 @@ public class BoardAttachVO {
   @Column(length = 100)
   private String uuid;
 
-  @Column(length = 200, name = "uploadpath")
+  @Column(length = 200, nullable = false, name = "uploadpath")
   private String uploadPath;
 
-  @Column(length = 200, name = "filename")
+  @Column(length = 200, nullable = false, name = "filename")
   private String fileName;
 
   @Column(length = 1, name = "filetype")
   @Convert(converter = FileTypeConverter.class)
   private FileType fileType;
 
-  @JoinColumn(name = "bno")
+  @JoinColumn(name = "bno", nullable = false)
   @ManyToOne
   private BoardVO boardVO;
 

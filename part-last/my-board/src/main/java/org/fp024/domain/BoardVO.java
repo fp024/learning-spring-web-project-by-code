@@ -2,6 +2,7 @@ package org.fp024.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -42,6 +43,7 @@ public class BoardVO {
   @Column(name = "replycnt")
   private int replyCount;
 
-  @OneToMany(mappedBy = "boardVO")
+  @OneToMany(mappedBy = "boardVO", fetch = FetchType.EAGER)
   private List<BoardAttachVO> attachList;
+
 }

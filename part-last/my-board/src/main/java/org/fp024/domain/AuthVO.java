@@ -21,11 +21,11 @@ import lombok.ToString;
 @Getter
 @ToString
 @Entity
-@Table(name = "authorities")
+@Table(name = "tbl_member_auth")
 public class AuthVO {
   @EmbeddedId private AuthId authId;
 
-  @JoinColumn(name = "username", insertable = false, updatable = false)
+  @JoinColumn(name = "userid", insertable = false, updatable = false)
   @ManyToOne
   private MemberVO memberVO;
 
@@ -44,10 +44,11 @@ public class AuthVO {
 @EqualsAndHashCode
 @Embeddable
 class AuthId implements Serializable {
-  @Column(length = 128, name = "username")
+
+  @Column(length = 50, name = "userid")
   private String userId;
 
-  @Column(length = 128, name = "authority")
+  @Column(length = 50, name = "auth")
   @Enumerated(EnumType.STRING)
   private MemberAuthType auth;
 }
