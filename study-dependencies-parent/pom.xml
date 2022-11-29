@@ -27,7 +27,7 @@
 
     <quartz.version>2.3.2</quartz.version>
 
-    <jackson.version>2.14.0</jackson.version>
+    <jackson.version>2.14.1</jackson.version>
     <!-- 마이크로 보안 패치가 있을때, jackson-databind 만 패치되기도 함. 
          jackson-databind는 별도로 분리해두는게 낫겠다. -->
     <jackson-databind.version>${jackson.version}</jackson-databind.version>
