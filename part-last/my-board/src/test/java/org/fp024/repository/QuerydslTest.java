@@ -1,14 +1,13 @@
 package org.fp024.repository;
 
-import com.querydsl.core.types.Predicate;
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import jakarta.persistence.Entity;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.extern.slf4j.Slf4j;
 import org.fp024.config.RootConfig;
 import org.fp024.domain.QMemberVO;
-import org.fp024.domain.QReplyVO;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
@@ -17,21 +16,22 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 @Slf4j
 public class QuerydslTest {
 
-  @PersistenceContext
-  private EntityManager em;
+  @PersistenceContext private EntityManager em;
 
   @Test
   void test() {
     JPAQueryFactory query = new JPAQueryFactory(em);
     QMemberVO qMemberVO = new QMemberVO("m");
 
-    query.selectFrom(qMemberVO).fetchFirst();
+    String result =
+        query
+            .select(qMemberVO.userId)
+            .from(qMemberVO) //
+            .where(qMemberVO.userId.eq("admin90"))
+            .fetchOne();
 
-
-
-
-
+    assertThat(result) //
+        .isNotNull()
+        .isEqualTo("admin90");
   }
-
-
 }

@@ -286,12 +286,13 @@
       <version>${javax.annotation-api.version}</version>
     </dependency>
 
-    <!-- TODO: QueryDSL 붙이고 나서 컴파일할 때 경고가 나와서 넣긴했는데... 옳은 일인지? -->
+    <!--
     <dependency>
-      <groupId>com.google.code.findbugs</groupId>
-      <artifactId>jsr305</artifactId>
-      <version>3.0.2</version>
+      <groupId>org.jetbrains</groupId>
+      <artifactId>annotations</artifactId>
+      <version>23.0.0</version>
     </dependency>
+    -->
 
 
     <dependency>
@@ -416,6 +417,7 @@
       </plugins>
     </pluginManagement>
     <plugins>
+      <!-- maven-compiler-plugin 3.10.1 환경에서는 따로 설정하지 않아도 어노테이션 프로세서가 잘 동작한다. -->
       <!--
       <plugin>
         <groupId>com.mysema.maven</groupId>
@@ -442,7 +444,7 @@
           <source>${java.version}</source>
           <target>${java.version}</target>
           <compilerArgs>
-            <!--<arg>-Xlint:all</arg>--> <!-- QueryDSL 붙인 이후 어노테이션 경고가많이 나오긴하는데, 일단은 빼보자! -->
+            <arg>-Xlint:all</arg>
             <arg>-Xlint:-processing
             </arg> <!-- No processor claimed any of these annotations 경고는 노출되지않게 설정 -->
             <arg>-Xlint:-path</arg> <!-- bad path element 경고 무시 -->
