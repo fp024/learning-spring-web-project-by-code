@@ -1,32 +1,13 @@
 package org.fp024.service;
 
-import static org.fp024.mapper.BoardVODynamicSqlSupport.bno;
-import static org.fp024.mapper.ReplyVODynamicSqlSupport.reply;
-import static org.fp024.mapper.ReplyVODynamicSqlSupport.replyDate;
-import static org.fp024.mapper.ReplyVODynamicSqlSupport.replyVO;
-import static org.fp024.mapper.ReplyVODynamicSqlSupport.replyer;
-import static org.fp024.mapper.ReplyVODynamicSqlSupport.rno;
-import static org.fp024.mapper.ReplyVODynamicSqlSupport.updateDate;
-import static org.mybatis.dynamic.sql.SqlBuilder.count;
-import static org.mybatis.dynamic.sql.SqlBuilder.isEqualTo;
-import static org.mybatis.dynamic.sql.SqlBuilder.isGreaterThan;
-import static org.mybatis.dynamic.sql.SqlBuilder.isLessThanOrEqualTo;
-import static org.mybatis.dynamic.sql.SqlBuilder.select;
-
-import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.fp024.domain.Criteria;
 import org.fp024.domain.ReplyPageDTO;
 import org.fp024.domain.ReplyVO;
-import org.fp024.mapper.ReplyMapper;
-import org.fp024.repository.BoardRepository;
-import org.fp024.repository.ReplyRepository;
-import org.mybatis.dynamic.sql.Constant;
-import org.mybatis.dynamic.sql.DerivedColumn;
-import org.mybatis.dynamic.sql.render.RenderingStrategies;
+import org.fp024.repository.jpa.ReplyRepository;
+import org.fp024.repository.querydsl.ReplyQuerydslRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,14 +15,9 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Service
 public class ReplyServiceImpl implements ReplyService {
-
-  private final ReplyMapper replyMapper;
-
   private final ReplyRepository replyRepository;
 
-  private final BoardRepository boardRepository;
-
-  private final BoardService boardService;
+  private final ReplyQuerydslRepository replyQuerydslRepository;
 
   @Transactional
   @Override
@@ -51,7 +27,7 @@ public class ReplyServiceImpl implements ReplyService {
     vo.setReplyDate(null);
     vo.setUpdateDate(null);
 
-    boardService.updateReplyCount(vo.getBno(), 1);
+    replyQuerydslRepository.updateReplyCount(vo.getBno(), 1);
 
     replyRepository.save(vo);
   }
@@ -59,12 +35,14 @@ public class ReplyServiceImpl implements ReplyService {
   @Override
   public ReplyVO get(Long rno) {
     LOGGER.info("get.....{}", rno);
-    return replyMapper.selectByPrimaryKey(rno).orElse(null);
+    // return replyMapper.selectByPrimaryKey(rno).orElse(null);
+    return replyRepository.findById(rno).orElse(null);
   }
 
   @Override
   public int modify(ReplyVO vo) {
     LOGGER.info("modify.....{}", vo);
+    /*
     return replyMapper.update(
         c ->
             c.set(reply)
@@ -72,6 +50,8 @@ public class ReplyServiceImpl implements ReplyService {
                 .set(updateDate)
                 .equalTo(LocalDateTime.now())
                 .where(rno, isEqualTo(vo.getRno())));
+     */
+    return replyQuerydslRepository.update(vo);
   }
 
   @Transactional
@@ -79,24 +59,27 @@ public class ReplyServiceImpl implements ReplyService {
   public int remove(Long rno) {
     LOGGER.info("remove.....{}", rno);
 
-    Optional<ReplyVO> optional = replyMapper.selectByPrimaryKey(rno);
+    Optional<ReplyVO> optional = replyRepository.findById(rno);
 
     if (optional.isEmpty()) {
       return 0;
     }
 
-    boardService.updateReplyCount(optional.get().getBno(), -1);
+    // boardService.updateReplyCount(optional.get().getBno(), -1);
+    replyQuerydslRepository.updateReplyCount(optional.get().getBno(), -1);
 
-    return replyMapper.deleteByPrimaryKey(rno);
+    // return replyMapper.deleteByPrimaryKey(rno);
+
+    return replyQuerydslRepository.delete(rno);
   }
 
   @Override
   public ReplyPageDTO getListPage(Criteria cri, Long boardNo) {
     LOGGER.info("get Reply List of a board {}", boardNo);
 
-    DerivedColumn<Long> rownum = DerivedColumn.of("ROWNUM");
-    Constant<String> hint = Constant.of("/*+INDEX(tbl_reply idx_reply) */ 'dummy'");
-
+    // DerivedColumn<Long> rownum = DerivedColumn.of("ROWNUM");
+    // Constant<String> hint = Constant.of("/*+INDEX(tbl_reply idx_reply) */ 'dummy'");
+    /*
     List<ReplyVO> list =
         replyMapper.selectMany(
             select(ReplyMapper.selectList)
@@ -112,16 +95,21 @@ public class ReplyServiceImpl implements ReplyService {
                 .build()
                 .render(RenderingStrategies.MYBATIS3));
 
-    return new ReplyPageDTO(cri.getAmount(), getCount(boardNo), list);
+    */
+
+    return new ReplyPageDTO(
+        cri.getAmount(), getCount(boardNo), replyQuerydslRepository.select(cri, boardNo));
   }
 
   private int getCount(Long boardNo) {
-    return (int)
-        replyMapper.count(
-            select(count())
-                .from(replyVO)
-                .where(bno, isEqualTo(boardNo))
-                .build()
-                .render(RenderingStrategies.MYBATIS3));
+    //    return (int)
+    //        replyMapper.count(
+    //            select(count())
+    //                .from(replyVO)
+    //                .where(bno, isEqualTo(boardNo))
+    //                .build()
+    //                .render(RenderingStrategies.MYBATIS3));
+
+    return replyQuerydslRepository.count(boardNo);
   }
 }

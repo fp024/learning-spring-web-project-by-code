@@ -1,4 +1,4 @@
-package org.fp024.repository;
+package org.fp024.repository.jpa;
 
 import org.fp024.domain.MemberVO;
 import org.springframework.data.repository.CrudRepository;

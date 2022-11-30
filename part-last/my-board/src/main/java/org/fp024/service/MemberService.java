@@ -3,7 +3,7 @@ package org.fp024.service;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.fp024.domain.MemberVO;
-import org.fp024.repository.MemberRepository;
+import org.fp024.repository.jpa.MemberRepository;
 import org.springframework.stereotype.Service;
 
 /** 회원 서비스 */

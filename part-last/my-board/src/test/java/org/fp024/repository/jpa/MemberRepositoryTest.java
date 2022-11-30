@@ -1,4 +1,4 @@
-package org.fp024.repository;
+package org.fp024.repository.jpa;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

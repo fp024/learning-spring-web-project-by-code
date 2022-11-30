@@ -22,7 +22,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
 @ComponentScan(basePackages = {"org.fp024.service", "org.fp024.task"})
-@EnableJpaRepositories(basePackages = "org.fp024.repository")
+@EnableJpaRepositories(basePackages = "org.fp024.repository.jpa")
 @MapperScan(basePackages = {"org.fp024.mapper"})
 @PropertySource({"classpath:database.properties"})
 @EnableScheduling
