@@ -22,6 +22,8 @@ import org.fp024.domain.Criteria;
 import org.fp024.domain.ReplyPageDTO;
 import org.fp024.domain.ReplyVO;
 import org.fp024.mapper.ReplyMapper;
+import org.fp024.repository.BoardRepository;
+import org.fp024.repository.ReplyRepository;
 import org.mybatis.dynamic.sql.Constant;
 import org.mybatis.dynamic.sql.DerivedColumn;
 import org.mybatis.dynamic.sql.render.RenderingStrategies;
@@ -35,6 +37,10 @@ public class ReplyServiceImpl implements ReplyService {
 
   private final ReplyMapper replyMapper;
 
+  private final ReplyRepository replyRepository;
+
+  private final BoardRepository boardRepository;
+
   private final BoardService boardService;
 
   @Transactional
@@ -47,7 +53,7 @@ public class ReplyServiceImpl implements ReplyService {
 
     boardService.updateReplyCount(vo.getBno(), 1);
 
-    replyMapper.insertSelective(vo);
+    replyRepository.save(vo);
   }
 
   @Override
