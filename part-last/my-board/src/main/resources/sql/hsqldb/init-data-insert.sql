@@ -103,4 +103,4 @@ VALUES (1, '댓글 본문 12', '댓글 작성자 012');
 
 -- 첨부파일 등록
 INSERT INTO tbl_attach (uuid, uploadpath, filename, filetype, bno)
-VALUES ('5c96644a-fbd3-457c-ab1f-50061153d375', '/2022/12/01', '이미지_파일.jpg', 'I', 1);
+VALUES ('5c96644a-fbd3-457c-ab1f-50061153d375', '2022/12/01', '이미지_파일.jpg', 'I', 1);

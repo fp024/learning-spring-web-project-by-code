@@ -69,4 +69,8 @@ public class CommonUtil {
   public static String unixPathToCurrentSystemPath(String path) {
     return path.replace("/", File.separator);
   }
+
+  public static String currentSystemPathToUnixPath(String path) {
+    return path.replace(File.separator, "/");
+  }
 }

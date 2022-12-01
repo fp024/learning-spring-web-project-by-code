@@ -16,4 +16,9 @@ class FileCheckTaskTest {
   void test() {
     task.checkFiles();
   }
+
+  @Test
+  void getOldFiles() {
+    task.getOldFiles();
+  }
 }
