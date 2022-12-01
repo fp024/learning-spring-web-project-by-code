@@ -52,8 +52,8 @@ public class BoardQuerydslRepository {
         .selectFrom(boardVO)
         .where(createSearchCondition(criteria).and(boardVO.bno.gt(0)))
         .orderBy(boardVO.bno.desc())
-        .limit((criteria.getPageNum() - 1) * criteria.getAmount())
-        .offset(criteria.getAmount())
+        .offset(criteria.getOffset())
+        .limit(criteria.getAmount())
         .fetch();
   }
 

@@ -24,7 +24,7 @@
     <spring-data-jpa.version>3.0.0</spring-data-jpa.version>
     <querydsl.version>5.0.0</querydsl.version>
 
-    <jetty.version>11.0.12</jetty.version>
+    
     <apache-jstl.version>11.0.0</apache-jstl.version>
 
     <jakarta.inject-api.version>2.0.1</jakarta.inject-api.version>
@@ -34,8 +34,14 @@
     <java-time-jsptags.version>2.0.0</java-time-jsptags.version>
 
     <assertj.version>3.23.1</assertj.version>
+    
+    <!-- Jetty 12 버전이 나오면 바꿀 것. -->
+    <jetty.version>11.0.12</jetty.version>
+    
+    <!-- Tomcat 10.1.x는 Servlet 6.0을 정식 지원함. -->
+    <cargo-tomcat.containerId>tomcat10x</cargo-tomcat.containerId>
+    <cargo-tomcat.version>10.1.1</cargo-tomcat.version>
   </properties>
-
 
   <!-- web.xml에서 경로 변화를 주기위해, profile을 윈도우와 리눅스 환경으로 나눠보았다. -->
   <profiles>
@@ -125,6 +131,13 @@
       <groupId>org.springframework.security</groupId>
       <artifactId>spring-security-taglibs</artifactId>
       <version>${spring-security.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.security</groupId>
+      <artifactId>spring-security-test</artifactId>
+      <version>${spring-security.version}</version>
+      <scope>test</scope>
     </dependency>
 
     <!-- AspectJ -->

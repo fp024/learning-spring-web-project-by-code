@@ -22,8 +22,8 @@ public class ReplyQuerydslRepository {
     return jpaQueryFactory
         .selectFrom(replyVO)
         .where(replyVO.bno.eq(boardNo).and(replyVO.rno.gt(0L)))
-        .orderBy(replyVO.bno.desc())
-        .offset((cri.getPageNum() - 1) * cri.getAmount())
+        .orderBy(replyVO.bno.asc())
+        .offset(cri.getOffset())
         .limit(cri.getAmount())
         .fetch();
   }

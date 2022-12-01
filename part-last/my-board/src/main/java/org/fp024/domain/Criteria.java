@@ -4,13 +4,13 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import org.springframework.web.util.UriComponentsBuilder;
-
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.util.UriComponentsBuilder;
 
+@Slf4j
 @ToString
 public class Criteria {
   @Getter private long pageNum;
@@ -73,5 +73,13 @@ public class Criteria {
             .queryParam("keyword", this.keyword);
 
     return builder.toUriString();
+  }
+
+  /*
+   * Querydsl에 사용할 offset은 0보다 작으면 안된다.
+   */
+  public long getOffset() {
+    long pageNum = (getPageNum() < 1) ? 1 : getPageNum();
+    return (pageNum - 1) * getAmount();
   }
 }

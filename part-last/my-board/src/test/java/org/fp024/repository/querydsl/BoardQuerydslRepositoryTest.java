@@ -99,38 +99,38 @@ class BoardQuerydslRepositoryTest {
 
   /*
   Hibernate:
-    select
-        b1_0.bno,
-        b1_0.content,
-        b1_0.regdate,
-        b1_0.replycnt,
-        b1_0.title,
-        b1_0.updatedate,
-        b1_0.writer
-    from
-        tbl_board b1_0
-    where
-        (
-            b1_0.title like ? escape '!'
-            or b1_0.content like ? escape '!'
-            or b1_0.writer like ? escape '!'
-        )
-        and b1_0.bno>?
-    order by
-        b1_0.bno desc offset ? rows fetch first ? rows only
+      select
+          b1_0.bno,
+          b1_0.content,
+          b1_0.regdate,
+          b1_0.replycnt,
+          b1_0.title,
+          b1_0.updatedate,
+          b1_0.writer
+      from
+          tbl_board b1_0
+      where
+          (
+              b1_0.title like ? escape '!'
+              or b1_0.content like ? escape '!'
+              or b1_0.writer like ? escape '!'
+          )
+          and b1_0.bno>?
+      order by
+          b1_0.bno desc offset ? rows fetch first ? rows only
 
-    binding parameter [1] as [VARCHAR] - [%키워드%]
-    binding parameter [2] as [VARCHAR] - [%키워드%]
-    binding parameter [3] as [VARCHAR] - [%키워드%]
-    binding parameter [4] as [BIGINT] - [0]
-    binding parameter [5] as [INTEGER] - [10]
-    binding parameter [6] as [INTEGER] - [10]
+      binding parameter [1] as [VARCHAR] - [%키워드%]
+      binding parameter [2] as [VARCHAR] - [%키워드%]
+      binding parameter [3] as [VARCHAR] - [%키워드%]
+      binding parameter [4] as [BIGINT] - [0]
+      binding parameter [5] as [INTEGER] - [0]
+      binding parameter [6] as [INTEGER] - [10]
    */
   @DisplayName("게시물 페이징 목록 조회")
   @Test
   void list() {
     Criteria c = new Criteria();
-    c.setPageNum(2);
+    c.setPageNum(1);
     c.setAmount(10);
     c.setSearchCodes(List.of("T", "C", "W"));
     c.setKeyword("키워드");

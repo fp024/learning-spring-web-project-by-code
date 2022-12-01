@@ -99,7 +99,8 @@
 
     <!-- cargo 플러그인 설정 -->
     <cargo.version>1.10.4</cargo.version>
-    <cargo-tomcat9x.version>9.0.69</cargo-tomcat9x.version>
+    <cargo-tomcat.containerId>tomcat9x</cargo-tomcat.containerId>
+    <cargo-tomcat.version>9.0.69</cargo-tomcat.version>
     <cargo-context-path>${jetty-context-path}</cargo-context-path>
     <cargo-server-port>${jetty.port}</cargo-server-port>
   </properties>
@@ -211,12 +212,12 @@
             <version>${cargo.version}</version>
             <configuration>
               <container>
-                <containerId>tomcat9x</containerId>
+                <containerId>${cargo-tomcat.containerId}</containerId>
                 <systemProperties>
                   <file.encoding>UTF-8</file.encoding>
                 </systemProperties>
                 <zipUrlInstaller>
-                  <url>https://repo.maven.apache.org/maven2/org/apache/tomcat/tomcat/${cargo-tomcat9x.version}/tomcat-${cargo-tomcat9x.version}.zip</url>
+                  <url>https://repo.maven.apache.org/maven2/org/apache/tomcat/tomcat/${cargo-tomcat.version}/tomcat-${cargo-tomcat.version}.zip</url>
                   <downloadDir>${project.build.directory}/downloads</downloadDir>
                   <extractDir>${project.build.directory}/extracts</extractDir>
                 </zipUrlInstaller>
@@ -319,13 +320,13 @@
             <version>${cargo.version}</version>
             <configuration>
               <container>
-                <containerId>tomcat9x</containerId>
+                <containerId>${cargo-tomcat.containerId}</containerId>
                 <systemProperties>
                   <file.encoding>UTF-8</file.encoding>
                   <scouter.config>${project.basedir}/../../${scouter.config.file}</scouter.config>
                 </systemProperties>
                 <zipUrlInstaller>
-                  <url>https://repo.maven.apache.org/maven2/org/apache/tomcat/tomcat/${cargo-tomcat9x.version}/tomcat-${cargo-tomcat9x.version}.zip</url>
+                  <url>https://repo.maven.apache.org/maven2/org/apache/tomcat/tomcat/${cargo-tomcat.version}/tomcat-${cargo-tomcat.version}.zip</url>
                   <downloadDir>${project.build.directory}/downloads</downloadDir>
                   <extractDir>${project.build.directory}/extracts</extractDir>
                 </zipUrlInstaller>

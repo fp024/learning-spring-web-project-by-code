@@ -36,6 +36,7 @@ public class ReplyServiceImpl implements ReplyService {
     return replyRepository.findById(rno).orElse(null);
   }
 
+  @Transactional
   @Override
   public int modify(ReplyVO vo) {
     LOGGER.info("modify.....{}", vo);

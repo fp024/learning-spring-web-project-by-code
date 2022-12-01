@@ -23,7 +23,7 @@
         <Logger name="org.hibernate.engine.transaction" level="DEBUG"/> <!-- 이 패키지는 최소 DEBUG 레벨인 듯.. -->
 
         <!-- Root Logger -->
-        <Root level="info">
+        <Root level="DEBUG">
             <Appender-Ref ref="STDOUT" />
         </Root>
     </Loggers>

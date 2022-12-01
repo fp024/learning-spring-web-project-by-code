@@ -62,7 +62,8 @@ class BoardRepositoryTest {
   @Transactional
   @Test
   void delete() {
-    Long bno = 1L;
+    // 외래키가 연관되어있기 때문에 댓글이 달려있을 경우 댓글을 제거하고 삭제해야한다.
+    Long bno = 2L;
     assertThat(repository.delete((root, query, cb) -> cb.equal(root.get("bno"), bno)))
         .isEqualTo(1L);
   }
