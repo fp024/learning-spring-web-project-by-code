@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import lombok.extern.slf4j.Slf4j;
 import org.fp024.config.RootConfig;
+import org.fp024.domain.BoardVO;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,5 +65,34 @@ class BoardRepositoryTest {
     Long bno = 1L;
     assertThat(repository.delete((root, query, cb) -> cb.equal(root.get("bno"), bno)))
         .isEqualTo(1L);
+  }
+
+  /*
+  Hibernate:
+    insert
+    into
+        tbl_board
+        (bno, content, replycnt, title, writer)
+    values
+        (default, ?, ?, ?, ?)
+
+    binding parameter [1] as [VARCHAR] - [신규 게시물 본문]
+    binding parameter [2] as [INTEGER] - [0]
+    binding parameter [3] as [VARCHAR] - [신규 게시물 제목]
+    binding parameter [4] as [VARCHAR] - [신규 게시물 작성자]
+  */
+  @DisplayName("신규 게시물 등록")
+  @Transactional
+  @Test
+  void save() {
+    // BoardVO에 `@DynamicInsert`를 붙였기 때문에.. null 설정된 필드의 경우 INSERT문에 포함되지 않음.
+    BoardVO board = new BoardVO();
+    board.setTitle("신규 게시물 제목");
+    board.setContent("신규 게시물 본문");
+    board.setWriter("신규 게시물 작성자");
+
+    repository.save(board);
+
+    LOGGER.info("### bno: {}", board.getBno());
   }
 }

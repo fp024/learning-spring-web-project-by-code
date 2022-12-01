@@ -49,3 +49,6 @@ VALUES ('게시물 001 제목', '게시물 001 본문', '게시물 001 작성자
 
 
 
+-- 첨부파일 등록
+INSERT INTO tbl_attach (uuid, uploadpath, filename, filetype, bno)
+VALUES ('23594eb5-e6fc-4b9c-991f-e218cab6b85d', '/2022/12/01', '이미지_파일.png', 'I', 1);

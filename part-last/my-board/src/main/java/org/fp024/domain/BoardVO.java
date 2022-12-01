@@ -13,12 +13,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.DynamicInsert;
 
 @NoArgsConstructor // 컴파일 에러 회피
 @ToString
 @Getter
 @Setter // 컴파일 에러 회피
 @Entity
+@DynamicInsert // INSERT 할때 null 인 경우 쿼리에 포함시키지 않음.
 @Table(name = "tbl_board")
 public class BoardVO {
   @Id

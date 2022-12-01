@@ -15,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 @SpringJUnitConfig(classes = {RootConfig.class})
 @Slf4j
 class BoardQuerydslRepositoryTest {
-
   @Autowired private BoardQuerydslRepository repository;
 
   /*
@@ -136,33 +135,5 @@ class BoardQuerydslRepositoryTest {
     c.setSearchCodes(List.of("T", "C", "W"));
     c.setKeyword("키워드");
     repository.list(c);
-  }
-
-  /*
-   Hibernate:
-       insert
-       into
-           tbl_board
-           (title,content,writer,replycnt)
-       values
-           (?,?,?,?)
-
-   binding parameter [1] as [VARCHAR] - [신규 게시물 제목]
-   binding parameter [2] as [VARCHAR] - [신규 게시물 본문]
-   binding parameter [3] as [VARCHAR] - [신규 게시물 작성자]
-   binding parameter [4] as [INTEGER] - [0]
-  */
-  @DisplayName("신규 게시물 등록")
-  @Transactional
-  @Test
-  void save() {
-    BoardVO board = new BoardVO();
-    board.setTitle("신규 게시물 제목");
-    board.setContent("신규 게시물 본문");
-    board.setWriter("신규 게시물 작성자");
-
-    repository.save(board);
-    // TODO: bno에 증가된 값이 안들어가 있다. ㅠㅠ
-    LOGGER.info("### 저장 후 bno 값: {} ###", board.getBno());
   }
 }

@@ -65,13 +65,4 @@ public class BoardQuerydslRepository {
     }
     return builder;
   }
-
-  // TODO: 자동생성된 id값을 어떻게 가져오지?
-  public void save(BoardVO board) {
-
-    jpaQueryFactory
-        .insert(boardVO)
-        .columns(boardVO.title, boardVO.content, boardVO.writer, boardVO.replyCount)
-        .values(board.getTitle(), board.getContent(), board.getWriter(), 0);
-  }
 }

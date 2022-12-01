@@ -37,7 +37,7 @@ public class BoardServiceImpl implements BoardService {
     LOGGER.info("register..... {}", board);
     board.setRegdate(null);
     board.setUpdateDate(null);
-    boardQuerydslRepository.save(board);
+    boardRepository.save(board);
 
     if (board.getAttachList() == null || board.getAttachList().isEmpty()) {
       return;
