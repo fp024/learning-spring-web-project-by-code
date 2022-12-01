@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.apache.ibatis.type.Alias;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import lombok.Getter;
@@ -13,7 +12,6 @@ import lombok.Setter;
 import lombok.ToString;
 
 @ToString
-@Alias("criteria")
 public class Criteria {
   @Getter private long pageNum;
   private PageSize pageSize;

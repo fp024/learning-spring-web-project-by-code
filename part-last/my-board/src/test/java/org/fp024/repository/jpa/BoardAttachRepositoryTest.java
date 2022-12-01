@@ -1,29 +1,16 @@
-package org.fp024.mapper;
+package org.fp024.repository.jpa;
 
-import static org.fp024.mapper.BoardAttachVODynamicSqlSupport.bno;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mybatis.dynamic.sql.SqlBuilder.isEqualTo;
-
-import java.util.List;
-import java.util.UUID;
+import lombok.extern.slf4j.Slf4j;
 import org.fp024.config.RootConfig;
-import org.fp024.domain.BoardAttachVO;
-import org.fp024.domain.FileType;
-import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
-import org.springframework.transaction.annotation.Transactional;
 
-/**
- * 첨부파일 매퍼 테스트
- *
- * <p>이 프로젝트에서는 mapper를 직접 사용하기보단 서비스 클래스를 만들어서 사용하는 것이 나을 수도 있다.
- */
 @SpringJUnitConfig(classes = {RootConfig.class})
-class BoardAttachMapperTest {
+@Slf4j
+class BoardAttachRepositoryTest {
+  @Autowired private BoardAttachRepository repository;
 
-  @Autowired private BoardAttachMapper mapper;
-
+  /*
   private static final String TEST_UUID = UUID.randomUUID().toString();
   private static final String UPLOAD_PATH = "/2022/05/30";
   private static final String FILE_NAME = "이미지_파일.png";
@@ -67,4 +54,6 @@ class BoardAttachMapperTest {
     assertEquals(FILE_TYPE, list.get(0).getFileType());
     assertEquals(BNO, list.get(0).getBno());
   }
+
+   */
 }

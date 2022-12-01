@@ -8,7 +8,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.util.Properties;
 
-import org.apache.ibatis.io.Resources;
+import org.fp024.util.Resources;
 import org.junit.jupiter.api.Test;
 
 import lombok.extern.slf4j.Slf4j;

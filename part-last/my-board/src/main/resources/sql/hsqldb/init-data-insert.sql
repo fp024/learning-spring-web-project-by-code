@@ -1,3 +1,4 @@
+-- 회원 등록
 INSERT INTO tbl_member (userid, userpw, username, enabled)
 VALUES ('user00', '$2a$10$CdNsrwk7cDs7eBNuW7cp8unvLAA8NKXSqA3UfRgysCjvtZyqCLsWm', '일반사용자00', 'Y');
 INSERT INTO tbl_member (userid, userpw, username, enabled)
@@ -19,6 +20,7 @@ VALUES ('admin91', '$2a$10$kd0PNukIe.v15HghkXUJIO31BB7ZulAPdMi00LH2O//HuAJAFElMC
 INSERT INTO tbl_member (userid, userpw, username, enabled)
 VALUES ('admin92', '$2a$10$JqLbWg6o6PfnLr.yObk4v.LZpFHp0/R7cXc0V8gW2AjaXnkImi7WC', '관리자92', 'Y');
 
+-- 회원 권한 등록
 INSERT INTO tbl_member_auth (userid, auth)
 VALUES ('user00', 'ROLE_USER');
 INSERT INTO tbl_member_auth (userid, auth)
@@ -39,3 +41,11 @@ INSERT INTO tbl_member_auth (userid, auth)
 VALUES ('admin91', 'ROLE_ADMIN');
 INSERT INTO tbl_member_auth (userid, auth)
 VALUES ('admin92', 'ROLE_ADMIN');
+
+
+-- 게시물 등록
+INSERT INTO tbl_board (title, content, writer, regdate, updatedate, replycnt)
+VALUES ('게시물 001 제목', '게시물 001 본문', '게시물 001 작성자', '2022-12-01 00:00:00', '2022-12-01 00:00:00', 0);
+
+
+

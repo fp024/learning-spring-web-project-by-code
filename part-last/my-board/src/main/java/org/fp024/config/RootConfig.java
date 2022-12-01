@@ -1,16 +1,17 @@
 package org.fp024.config;
 
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.PersistenceContext;
 import javax.sql.DataSource;
-import org.apache.ibatis.session.SqlSessionFactory;
-import org.mybatis.spring.SqlSessionFactoryBean;
-import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.jpa.JpaTransactionManager;
@@ -21,12 +22,12 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
-@ComponentScan(basePackages = {"org.fp024.service", "org.fp024.task"})
+@ComponentScan(basePackages = {"org.fp024.service", "org.fp024.task", "org.fp024.repository.querydsl"})
 @EnableJpaRepositories(basePackages = "org.fp024.repository.jpa")
-@MapperScan(basePackages = {"org.fp024.mapper"})
 @PropertySource({"classpath:database.properties"})
 @EnableScheduling
 @EnableTransactionManagement
+@Import(QuerydslConfig.class)
 public class RootConfig {
 
   @Bean(destroyMethod = "close")
@@ -58,7 +59,7 @@ public class RootConfig {
 
     hibernateJpaVendorAdapter.setDatabase(Database.HSQL);
     // 하이버네이트의 Dialect 클래스를 사용하고 싶으면 아래 클래스로 사용.
-    // hibernateJpaVendorAdapter.setDatabasePlatform("org.hibernate.dialect.MySQLDialect");
+    // hibernateJpaVendorAdapter.setDatabasePlatform(org.hibernate.dialect.HSQLDialect.class.getCanonicalName());
     hibernateJpaVendorAdapter.setShowSql(true);
     emfBean.setJpaVendorAdapter(hibernateJpaVendorAdapter);
 
@@ -74,13 +75,5 @@ public class RootConfig {
     JpaTransactionManager transactionManager = new JpaTransactionManager();
     transactionManager.setEntityManagerFactory(entityManagerFactory);
     return transactionManager;
-  }
-
-  @Bean
-  public SqlSessionFactory sqlSessionFactory(DataSource dataSource) throws Exception {
-    SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
-    sqlSessionFactoryBean.setDataSource(dataSource);
-    sqlSessionFactoryBean.setTypeAliasesPackage("org.fp024.domain");
-    return sqlSessionFactoryBean.getObject();
   }
 }

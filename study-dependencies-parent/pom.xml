@@ -65,6 +65,7 @@
          https://stackoverflow.com/questions/66217350/deploying-spring-5-x-on-tomcat-10-x-with-jakarta-package        
     -->
     <jetty.version>10.0.12</jetty.version>
+    <apache-jstl.version>${jetty.version}</apache-jstl.version>
 
     <junit.jupiter.version>5.9.1</junit.jupiter.version>
 
@@ -191,7 +192,7 @@
               <dependency>
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>apache-jstl</artifactId>
-                <version>${jetty.version}</version>
+                <version>${apache-jstl.version}</version>
                 <exclusions>
                   <exclusion>
                     <groupId>org.apache.taglibs</groupId>

@@ -25,9 +25,11 @@
     <querydsl.version>5.0.0</querydsl.version>
 
     <jetty.version>11.0.12</jetty.version>
+    <apache-jstl.version>11.0.0</apache-jstl.version>
+
     <jakarta.inject-api.version>2.0.1</jakarta.inject-api.version>
     <jakarta.servlet-api.version>6.0.0</jakarta.servlet-api.version>
-    <jakarta.servlet.jsp.jstl-api.version>3.0.0</jakarta.servlet.jsp.jstl-api.version>
+    <jakarta.servlet.jsp.jstl-api.version>2.0.0</jakarta.servlet.jsp.jstl-api.version>
 
     <java-time-jsptags.version>2.0.0</java-time-jsptags.version>
 
@@ -249,6 +251,38 @@
     </dependency>
 
     <dependency>
+      <groupId>org.hibernate.orm</groupId>
+      <artifactId>hibernate-jpamodelgen</artifactId>
+      <version>${hibernate.version}</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <!-- hibernate-jpamodelgen 추가 후 반드시 필요한 모듈 -->
+    <dependency>
+      <groupId>jakarta.xml.bind</groupId>
+      <artifactId>jakarta.xml.bind-api</artifactId>
+      <version>4.0.0</version>
+    </dependency>
+
+    <dependency>
+      <groupId>javax.annotation</groupId>
+      <artifactId>javax.annotation-api</artifactId>
+      <version>${javax.annotation-api.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.google.code.findbugs</groupId>
+      <artifactId>jsr305</artifactId>
+      <version>3.0.2</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.jetbrains</groupId>
+      <artifactId>annotations</artifactId>
+      <version>23.0.0</version>
+    </dependency>
+
+    <dependency>
       <groupId>com.querydsl</groupId>
       <artifactId>querydsl-apt</artifactId>
       <version>${querydsl.version}</version>
@@ -261,7 +295,7 @@
       <artifactId>HikariCP</artifactId>
     </dependency>
 
-    <dependency>
+<!--    <dependency>
       <groupId>org.mybatis</groupId>
       <artifactId>mybatis</artifactId>
       <version>${mybatis.version}</version>
@@ -273,26 +307,11 @@
       <version>${mybatis.spring.version}</version>
     </dependency>
 
-    <!-- https://mvnrepository.com/artifact/org.mybatis.dynamic-sql/mybatis-dynamic-sql -->
     <dependency>
       <groupId>org.mybatis.dynamic-sql</groupId>
       <artifactId>mybatis-dynamic-sql</artifactId>
       <version>${mybatis.dynamic.sql.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>javax.annotation</groupId>
-      <artifactId>javax.annotation-api</artifactId>
-      <version>${javax.annotation-api.version}</version>
-    </dependency>
-
-    <!--
-    <dependency>
-      <groupId>org.jetbrains</groupId>
-      <artifactId>annotations</artifactId>
-      <version>23.0.0</version>
-    </dependency>
-    -->
+    </dependency>-->
 
 
     <dependency>

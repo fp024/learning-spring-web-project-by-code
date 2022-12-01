@@ -2,7 +2,6 @@ package org.fp024.task;
 
 import static org.fp024.util.CommonUtil.getFolderYesterday;
 import static org.fp024.util.CommonUtil.unixPathToCurrentSystemPath;
-import static org.mybatis.dynamic.sql.SqlBuilder.isEqualTo;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -13,25 +12,21 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.fp024.domain.BoardAttachVO;
+import org.fp024.domain.BoardAttachVO_;
 import org.fp024.domain.FileType;
-import org.fp024.mapper.BoardAttachMapper;
-import org.fp024.mapper.BoardAttachVODynamicSqlSupport;
+import org.fp024.repository.jpa.BoardAttachRepository;
 import org.fp024.util.ProjectDataUtil;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-/**
- * 업로드 파일 정리 테스크
- *
- * <p>자동생성된 Mapper에 대한 서비스를 구현하지않아서, 여기서 getOldFiles() 를 구현하자!
- */
+/** 업로드 파일 정리 테스크 */
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class FileCheckTask {
   private static final String UPLOAD_FOLDER = ProjectDataUtil.getProperty("multipart.uploadFolder");
 
-  private final BoardAttachMapper attachMapper;
+  private final BoardAttachRepository attachRepository;
 
   @Scheduled(cron = "0 0 2 * * *")
   public void checkFiles() {
@@ -96,7 +91,7 @@ public class FileCheckTask {
    * @return 어제 추가된 첨부파일 목록
    */
   private List<BoardAttachVO> getOldFiles() {
-    return attachMapper.select(
-        c -> c.where(BoardAttachVODynamicSqlSupport.uploadPath, isEqualTo(getFolderYesterday())));
+    return attachRepository.findAll(
+        (root, query, cb) -> cb.equal(root.get(BoardAttachVO_.uploadPath), getFolderYesterday()));
   }
 }

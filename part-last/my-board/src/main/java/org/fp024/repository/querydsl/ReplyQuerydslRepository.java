@@ -1,16 +1,17 @@
 package org.fp024.repository.querydsl;
 
-import static org.fp024.domain.QBoardVO.boardVO;
 import static org.fp024.domain.QReplyVO.replyVO;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.fp024.domain.Criteria;
 import org.fp024.domain.ReplyVO;
 import org.springframework.stereotype.Repository;
 
+/** 댓글 리포지토리 - Querydsl 사용 */
 @RequiredArgsConstructor
 @Repository
 public class ReplyQuerydslRepository {
@@ -25,15 +26,6 @@ public class ReplyQuerydslRepository {
         .offset((cri.getPageNum() - 1) * cri.getAmount())
         .limit(cri.getAmount())
         .fetch();
-  }
-
-  // TODO: BoardVO를 수정하는 거라서 옮길지? 검토필요
-  public void updateReplyCount(Long bno, int amount) {
-    jpaQueryFactory
-        .update(boardVO) //
-        .set(boardVO.replyCount, boardVO.replyCount.add(amount))
-        .where(boardVO.bno.eq(bno))
-        .execute();
   }
 
   public int update(ReplyVO vo) {
@@ -55,11 +47,20 @@ public class ReplyQuerydslRepository {
   }
 
   public int count(Long boardNo) {
-    return jpaQueryFactory
-        .select(replyVO.count())
-        .from(replyVO)
-        .where(replyVO.bno.eq(boardNo))
-        .fetchOne()
+    return Objects.requireNonNull(
+            jpaQueryFactory
+                .select(replyVO.count())
+                .from(replyVO)
+                .where(replyVO.bno.eq(boardNo))
+                .fetchOne())
         .intValue();
+  }
+
+  public void save(ReplyVO vo) {
+    jpaQueryFactory
+        .insert(replyVO)
+        .columns(replyVO.reply, replyVO.replyer, replyVO.bno)
+        .values(vo.getReply(), vo.getReplyer(), vo.getBno())
+        .execute();
   }
 }

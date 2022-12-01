@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 /** Querydsl 테스트 */
-@SpringJUnitConfig(classes = {QuerydslConfig.class, RootConfig.class})
+@SpringJUnitConfig(classes = {RootConfig.class})
 @Slf4j
 public class QuerydslTest {
   @Autowired private JPAQueryFactory jpaQueryFactory;
