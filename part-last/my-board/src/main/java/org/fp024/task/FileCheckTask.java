@@ -1,5 +1,6 @@
 package org.fp024.task;
 
+import static org.fp024.util.CommonUtil.currentSystemPathToUnixPath;
 import static org.fp024.util.CommonUtil.getFolderYesterday;
 import static org.fp024.util.CommonUtil.unixPathToCurrentSystemPath;
 
@@ -90,8 +91,11 @@ public class FileCheckTask {
    *
    * @return 어제 추가된 첨부파일 목록
    */
-  private List<BoardAttachVO> getOldFiles() {
+  List<BoardAttachVO> getOldFiles() {
     return attachRepository.findAll(
-        (root, query, cb) -> cb.equal(root.get(BoardAttachVO_.uploadPath), getFolderYesterday()));
+        (root, query, cb) ->
+            cb.equal(
+                root.get(BoardAttachVO_.uploadPath),
+                currentSystemPathToUnixPath(getFolderYesterday())));
   }
 }
