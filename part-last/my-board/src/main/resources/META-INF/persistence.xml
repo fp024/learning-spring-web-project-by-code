@@ -8,7 +8,6 @@
 
   <persistence-unit name="my_board" transaction-type="RESOURCE_LOCAL">
     <!-- 로컬 트랜젝션: Java Connection을 이용해 트랜젝션 처리 -->
-
     <properties>
       <!-- 로그나 콘솔에 SQL을 이쁘게 출력 -->
       <property name="hibernate.format_sql" value="true"/>

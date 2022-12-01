@@ -1,11 +1,8 @@
 package org.fp024.config;
 
-import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.PersistenceContext;
 import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -22,7 +19,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
-@ComponentScan(basePackages = {"org.fp024.service", "org.fp024.task", "org.fp024.repository.querydsl"})
+@ComponentScan(
+    basePackages = {"org.fp024.service", "org.fp024.task", "org.fp024.repository.querydsl"})
 @EnableJpaRepositories(basePackages = "org.fp024.repository.jpa")
 @PropertySource({"classpath:database.properties"})
 @EnableScheduling
