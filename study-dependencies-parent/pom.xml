@@ -27,7 +27,7 @@
 
     <quartz.version>2.3.2</quartz.version>
 
-    <jackson.version>2.14.0</jackson.version>
+    <jackson.version>2.14.1</jackson.version>
     <!-- 마이크로 보안 패치가 있을때, jackson-databind 만 패치되기도 함. 
          jackson-databind는 별도로 분리해두는게 낫겠다. -->
     <jackson-databind.version>${jackson.version}</jackson-databind.version>
@@ -65,6 +65,7 @@
          https://stackoverflow.com/questions/66217350/deploying-spring-5-x-on-tomcat-10-x-with-jakarta-package        
     -->
     <jetty.version>10.0.12</jetty.version>
+    <apache-jstl.version>${jetty.version}</apache-jstl.version>
 
     <junit.jupiter.version>5.9.1</junit.jupiter.version>
 
@@ -98,7 +99,8 @@
 
     <!-- cargo 플러그인 설정 -->
     <cargo.version>1.10.4</cargo.version>
-    <cargo-tomcat9x.version>9.0.69</cargo-tomcat9x.version>
+    <cargo-tomcat.containerId>tomcat9x</cargo-tomcat.containerId>
+    <cargo-tomcat.version>9.0.69</cargo-tomcat.version>
     <cargo-context-path>${jetty-context-path}</cargo-context-path>
     <cargo-server-port>${jetty.port}</cargo-server-port>
   </properties>
@@ -191,7 +193,7 @@
               <dependency>
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>apache-jstl</artifactId>
-                <version>${jetty.version}</version>
+                <version>${apache-jstl.version}</version>
                 <exclusions>
                   <exclusion>
                     <groupId>org.apache.taglibs</groupId>
@@ -210,12 +212,12 @@
             <version>${cargo.version}</version>
             <configuration>
               <container>
-                <containerId>tomcat9x</containerId>
+                <containerId>${cargo-tomcat.containerId}</containerId>
                 <systemProperties>
                   <file.encoding>UTF-8</file.encoding>
                 </systemProperties>
                 <zipUrlInstaller>
-                  <url>https://repo.maven.apache.org/maven2/org/apache/tomcat/tomcat/${cargo-tomcat9x.version}/tomcat-${cargo-tomcat9x.version}.zip</url>
+                  <url>https://repo.maven.apache.org/maven2/org/apache/tomcat/tomcat/${cargo-tomcat.version}/tomcat-${cargo-tomcat.version}.zip</url>
                   <downloadDir>${project.build.directory}/downloads</downloadDir>
                   <extractDir>${project.build.directory}/extracts</extractDir>
                 </zipUrlInstaller>
@@ -318,13 +320,13 @@
             <version>${cargo.version}</version>
             <configuration>
               <container>
-                <containerId>tomcat9x</containerId>
+                <containerId>${cargo-tomcat.containerId}</containerId>
                 <systemProperties>
                   <file.encoding>UTF-8</file.encoding>
                   <scouter.config>${project.basedir}/../../${scouter.config.file}</scouter.config>
                 </systemProperties>
                 <zipUrlInstaller>
-                  <url>https://repo.maven.apache.org/maven2/org/apache/tomcat/tomcat/${cargo-tomcat9x.version}/tomcat-${cargo-tomcat9x.version}.zip</url>
+                  <url>https://repo.maven.apache.org/maven2/org/apache/tomcat/tomcat/${cargo-tomcat.version}/tomcat-${cargo-tomcat.version}.zip</url>
                   <downloadDir>${project.build.directory}/downloads</downloadDir>
                   <extractDir>${project.build.directory}/extracts</extractDir>
                 </zipUrlInstaller>

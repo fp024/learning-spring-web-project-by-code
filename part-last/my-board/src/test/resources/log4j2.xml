@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+    <!-- Appenders -->    
+    <Appenders>
+        <Console name="STDOUT" target="SYSTEM_OUT">
+            <PatternLayout pattern="%-5p: %c - %m%n"/>
+        </Console>
+    </Appenders>
+    
+    <!-- Application Loggers -->
+    <Loggers>
+        <Logger name="org.fp024" level="info"/>
+
+        <!-- 3rdparty Loggers -->
+        <Logger name="org.springframework.core" level="info"/>
+        <Logger name="org.springframework.beans" level="info"/>
+        <Logger name="org.springframework.context" level="info"/>
+        <Logger name="org.springframework.web" level="info"/>
+
+        <Logger name="org.hibernate.orm.jdbc.bind" level="TRACE"/>
+        <Logger name="org.hibernate.orm.jdbc.extract" level="TRACE"/>
+
+        <Logger name="org.hibernate.engine.transaction" level="DEBUG"/> <!-- 이 패키지는 최소 DEBUG 레벨인 듯.. -->
+
+        <!-- Root Logger -->
+        <Root level="DEBUG">
+            <Appender-Ref ref="STDOUT" />
+        </Root>
+    </Loggers>
+</Configuration>
