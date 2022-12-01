@@ -4,6 +4,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import java.io.Serial;
 import java.io.Serializable;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
@@ -19,6 +20,7 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode
 @Embeddable
 public class AuthId implements Serializable {
+  @Serial private static final long serialVersionUID = -7015651083348796420L;
 
   @Column(length = 50, name = "userid")
   private String userId;

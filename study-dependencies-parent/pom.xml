@@ -189,6 +189,7 @@
                 </scanTargetPattern>
               </scanTargetPatterns>
             </configuration>
+            <!--
             <dependencies>
               <dependency>
                 <groupId>org.eclipse.jetty</groupId>
@@ -202,6 +203,7 @@
                 </exclusions>
               </dependency>
             </dependencies>
+            -->
           </plugin>
           
           <!-- 실제 Tomcat 9 배포 실행 테스트 -->
