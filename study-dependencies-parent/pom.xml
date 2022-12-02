@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.fp024</groupId>
   <artifactId>study-dependencies-parent</artifactId>
@@ -87,6 +89,9 @@
     <maven-compiler-plugin.version>3.10.1</maven-compiler-plugin.version>
     <maven-toolchains-plugin.version>3.1.0</maven-toolchains-plugin.version>
 
+    <!-- Jetty일 때는 provided, Tomcat일 때는 compile로 설정하기위해 프로퍼티로 분리했다. -->
+    <jstl-scope.type>provided</jstl-scope.type>
+    
     <!-- Jetty Http 포트 기본값 -->
     <jetty.port>8080</jetty.port>
     <!-- Jetty Context Path 설정 기본값 -->
@@ -139,13 +144,16 @@
     </dependencies>
   </dependencyManagement>
 
-  <!-- 기본 웹 애플리케이션 실행 : jetty 또는 tomcat -->
   <profiles>
+    <!-- Jetty 기본 웹 애플리케이션 실행  -->
     <profile>
-      <id>default-webapp-run</id>
+      <id>jetty-run</id>
       <activation>
         <activeByDefault>true</activeByDefault>
       </activation>
+      <properties>
+        <jstl-scope.type>provided</jstl-scope.type>
+      </properties>
       <build>
         <plugins>
           <!-- Jetty 서버 구동 -->
@@ -155,7 +163,7 @@
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-maven-plugin</artifactId>
             <version>${jetty.version}</version>
-            <configuration>          
+            <configuration>
               <httpConnector>
                 <!--host>localhost</host-->
                 <port>${jetty.port}</port>
@@ -189,24 +197,20 @@
                 </scanTargetPattern>
               </scanTargetPatterns>
             </configuration>
-            <!--
-            <dependencies>
-              <dependency>
-                <groupId>org.eclipse.jetty</groupId>
-                <artifactId>apache-jstl</artifactId>
-                <version>${apache-jstl.version}</version>
-                <exclusions>
-                  <exclusion>
-                    <groupId>org.apache.taglibs</groupId>
-                    <artifactId>taglibs-standard-impl</artifactId>
-                  </exclusion>
-                </exclusions>
-              </dependency>
-            </dependencies>
-            -->
           </plugin>
-          
-          <!-- 실제 Tomcat 9 배포 실행 테스트 -->
+        </plugins>
+      </build>
+    </profile>
+
+    <!-- Tomcat 기본 웹 애플리케이션 실행  -->
+    <profile>
+      <id>tomcat-run</id>
+      <properties>
+        <jstl-scope.type>compile</jstl-scope.type>
+      </properties>
+      <build>
+        <plugins>
+          <!-- 실제 Tomcat 배포 실행 테스트 -->
           <!-- mvn clean package -DskipTests cargo:run -->
           <plugin>
             <groupId>org.codehaus.cargo</groupId>
@@ -219,7 +223,9 @@
                   <file.encoding>UTF-8</file.encoding>
                 </systemProperties>
                 <zipUrlInstaller>
-                  <url>https://repo.maven.apache.org/maven2/org/apache/tomcat/tomcat/${cargo-tomcat.version}/tomcat-${cargo-tomcat.version}.zip</url>
+                  <url>
+                    https://repo.maven.apache.org/maven2/org/apache/tomcat/tomcat/${cargo-tomcat.version}/tomcat-${cargo-tomcat.version}.zip
+                  </url>
                   <downloadDir>${project.build.directory}/downloads</downloadDir>
                   <extractDir>${project.build.directory}/extracts</extractDir>
                 </zipUrlInstaller>
@@ -245,10 +251,13 @@
         </plugins>
       </build>
     </profile>
-  
-    <!-- Scouter를 활성화하여 웹 애플리케이션 실행 : jetty 또는 tomcat -->
+
+    <!-- Jetty - Scouter를 활성화하여 웹 애플리케이션 실행 -->
     <profile>
-      <id>webapp-run-with-scouter</id>
+      <id>jetty-run-with-scouter</id>
+      <properties>
+        <jstl-scope.type>provided</jstl-scope.type>
+      </properties>
       <build>
         <plugins>
           <!-- Jetty 서버 구동 -->
@@ -258,7 +267,7 @@
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-maven-plugin</artifactId>
             <version>${jetty.version}</version>
-            <configuration>          
+            <configuration>
               <httpConnector>
                 <!--host>localhost</host-->
                 <port>${jetty.port}</port>
@@ -300,22 +309,20 @@
                 </scanTargetPattern>
               </scanTargetPatterns>
             </configuration>
-            <dependencies>
-              <dependency>
-                <groupId>org.eclipse.jetty</groupId>
-                <artifactId>apache-jstl</artifactId>
-                <version>${jetty.version}</version>
-                <exclusions>
-                  <exclusion>
-                    <groupId>org.apache.taglibs</groupId>
-                    <artifactId>taglibs-standard-impl</artifactId>
-                  </exclusion>
-                </exclusions>
-              </dependency>
-            </dependencies>
           </plugin>
+        </plugins>
+      </build>
+    </profile>
 
-          <!-- 실제 Tomcat 9 배포 실행 테스트 -->
+    <!-- Tomcat - Scouter를 활성화하여 웹 애플리케이션 실행 -->
+    <profile>
+      <id>tomcat-run-with-scouter</id>
+      <properties>
+        <jstl-scope.type>compile</jstl-scope.type>
+      </properties>
+      <build>
+        <plugins>
+          <!-- 실제 Tomcat  배포 실행 테스트 -->
           <plugin>
             <groupId>org.codehaus.cargo</groupId>
             <artifactId>cargo-maven3-plugin</artifactId>
@@ -328,7 +335,9 @@
                   <scouter.config>${project.basedir}/../../${scouter.config.file}</scouter.config>
                 </systemProperties>
                 <zipUrlInstaller>
-                  <url>https://repo.maven.apache.org/maven2/org/apache/tomcat/tomcat/${cargo-tomcat.version}/tomcat-${cargo-tomcat.version}.zip</url>
+                  <url>
+                    https://repo.maven.apache.org/maven2/org/apache/tomcat/tomcat/${cargo-tomcat.version}/tomcat-${cargo-tomcat.version}.zip
+                  </url>
                   <downloadDir>${project.build.directory}/downloads</downloadDir>
                   <extractDir>${project.build.directory}/extracts</extractDir>
                 </zipUrlInstaller>
@@ -359,7 +368,7 @@
           </plugin>
         </plugins>
       </build>
-    </profile>    
+    </profile>
   </profiles>
 
   <build>
@@ -390,7 +399,7 @@
                     </goals>
                   </pluginExecutionFilter>
                   <action>
-                    <ignore />
+                    <ignore/>
                     <!-- Eclipse m2e 동작에서는 무시 처리 -->
                   </action>
                 </pluginExecution>
@@ -404,7 +413,7 @@
           <artifactId>maven-surefire-plugin</artifactId>
           <version>${maven-surefire-plugin.version}</version>
         </plugin>
-        
+
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-war-plugin</artifactId>
