@@ -22,23 +22,32 @@ public class CommonUtil {
    * @return 현재 폴더 경로명
    */
   public static String getFolder() {
-    return getFolderBeforeDays(0);
+    return getFolderBeforeDays(0, File.separator);
   }
 
   /**
-   * 하루전 폴더 경로명 가져오기
+   * 하루전 폴더 경로명 현재 OS 기준 형식으로 가져오기
    *
-   * @return 하루전 폴더 경로명
+   * @return 하루전 폴더 경로명 (현재 OS 기준 형식)
    */
   public static String getFolderYesterday() {
-    return getFolderBeforeDays(1);
+    return getFolderBeforeDays(1, File.separator);
   }
 
-  private static String getFolderBeforeDays(int days) {
+  /**
+   * 하루전 폴더 경로명 Unix Path 형식으로 가져오기
+   *
+   * @return 하루전 폴더 경로명 (Unix Path 형식으로 고정)
+   */
+  public static String getFolderYesterdayUnixPath() {
+    return getFolderBeforeDays(1, "/");
+  }
+
+  private static String getFolderBeforeDays(int days, String fileSeparator) {
     return LocalDateTime.now()
         .minusDays(days)
         .format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
-        .replace("-", File.separator);
+        .replace("-", fileSeparator);
   }
 
   public static String getUUID() {
@@ -68,9 +77,5 @@ public class CommonUtil {
    */
   public static String unixPathToCurrentSystemPath(String path) {
     return path.replace("/", File.separator);
-  }
-
-  public static String currentSystemPathToUnixPath(String path) {
-    return path.replace(File.separator, "/");
   }
 }

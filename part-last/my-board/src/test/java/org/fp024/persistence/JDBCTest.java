@@ -3,28 +3,24 @@ package org.fp024.persistence;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.util.Properties;
-
-import org.fp024.util.Resources;
-import org.junit.jupiter.api.Test;
-
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Test;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.support.PropertiesLoaderUtils;
 
 @Slf4j
 class JDBCTest {
   private static final Properties DATABASE_PROPERTIES = getDBProperties();
 
   public static Properties getDBProperties() {
-    Properties properties = new Properties();
-    try (InputStream reader = Resources.getResourceAsStream("database.properties"); ) {
-      properties.load(reader);
+    try {
+      return PropertiesLoaderUtils.loadProperties(new ClassPathResource("database.properties"));
     } catch (IOException e) {
       throw new IllegalStateException(e);
     }
-    return properties;
   }
 
   static {

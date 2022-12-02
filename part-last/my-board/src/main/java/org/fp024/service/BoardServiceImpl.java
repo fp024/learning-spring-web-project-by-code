@@ -74,6 +74,7 @@ public class BoardServiceImpl implements BoardService {
           .forEach(
               attach -> {
                 attach.setBno(board.getBno());
+                attach.setUploadPath(winPathToUnixPath(attach.getUploadPath()));
                 attachRepository.save(attach);
               });
     }

@@ -1,11 +1,18 @@
 package org.fp024.util;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Properties;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.support.PropertiesLoaderUtils;
 
-/** Project Data 프러퍼티 관리 유틸리티 */
+/**
+ * Project Data 프러퍼티 관리 유틸리티
+ *
+ * <p>원래는 mybatis에서 가져온 Resource를 사용했었지만, <br>
+ * Spring-core에 존재하는 PropertiesLoaderUtils.loadProperties()를 사용해서 동일하게 구현가능하므로 <br>
+ * 이제는 그것을 사용하자!
+ */
 @Slf4j
 public class ProjectDataUtil {
   /** 프로퍼티 파일은 한번만 로드 */
@@ -16,7 +23,7 @@ public class ProjectDataUtil {
     return PROPERTIES.getProperty(key);
   }
 
-  public static int getIntegerProperty(String key) {
+  public static int getIntProperty(String key) {
     return Integer.parseInt(getProperty(key));
   }
 
@@ -30,15 +37,13 @@ public class ProjectDataUtil {
     private static final Properties PROPERTIES;
 
     static {
-      Properties prop = new Properties();
-
-      try (InputStream reader = Resources.getResourceAsStream(PROPERTIES_FILENAME)) {
-        prop.load(reader);
+      try {
+        PROPERTIES =
+            PropertiesLoaderUtils.loadProperties(new ClassPathResource(PROPERTIES_FILENAME));
+        LOGGER.info("### {} 프로퍼티 파일 로드 성공!!! ^^", PROPERTIES_FILENAME);
       } catch (IOException e) {
         throw new IllegalStateException("### " + PROPERTIES_FILENAME + " 프로퍼티 파일 로드 실패 ㅠㅠ", e);
       }
-      PROPERTIES = prop;
-      LOGGER.info("### {} 프로퍼티 파일 로드 성공!!! ^^", PROPERTIES_FILENAME);
     }
   }
 }
