@@ -1,8 +1,7 @@
 package org.fp024.task;
 
-import static org.fp024.util.CommonUtil.currentSystemPathToUnixPath;
 import static org.fp024.util.CommonUtil.getFolderYesterday;
-import static org.fp024.util.CommonUtil.unixPathToCurrentSystemPath;
+import static org.fp024.util.CommonUtil.getFolderYesterdayUnixPath;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -10,24 +9,33 @@ import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.fp024.domain.BoardAttachVO;
 import org.fp024.domain.BoardAttachVO_;
 import org.fp024.domain.FileType;
 import org.fp024.repository.jpa.BoardAttachRepository;
 import org.fp024.util.ProjectDataUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 /** 업로드 파일 정리 테스크 */
 @Slf4j
 @Component
-@RequiredArgsConstructor
 public class FileCheckTask {
-  private static final String UPLOAD_FOLDER = ProjectDataUtil.getProperty("multipart.uploadFolder");
+  private final String uploadFolder;
 
   private final BoardAttachRepository attachRepository;
+
+  @Autowired
+  public FileCheckTask(BoardAttachRepository attachRepository) {
+    this(attachRepository, ProjectDataUtil.getProperty("multipart.uploadFolder"));
+  }
+
+  public FileCheckTask(BoardAttachRepository attachRepository, String uploadFolder) {
+    this.attachRepository = attachRepository;
+    this.uploadFolder = uploadFolder;
+  }
 
   @Scheduled(cron = "0 0 2 * * *")
   public void checkFiles() {
@@ -46,8 +54,8 @@ public class FileCheckTask {
                 .map(
                     vo ->
                         Paths.get(
-                            UPLOAD_FOLDER,
-                            unixPathToCurrentSystemPath(vo.getUploadPath()),
+                            uploadFolder,
+                            vo.getUploadPath(),
                             vo.getUuid() + "_" + vo.getFileName()))
                 .toList());
 
@@ -57,15 +65,13 @@ public class FileCheckTask {
         .map(
             vo ->
                 Paths.get(
-                    UPLOAD_FOLDER,
-                    unixPathToCurrentSystemPath(vo.getUploadPath()),
-                    "s_" + vo.getUuid() + "_" + vo.getFileName()))
+                    uploadFolder, vo.getUploadPath(), "s_" + vo.getUuid() + "_" + vo.getFileName()))
         .forEach(fileListPaths::add);
 
     LOGGER.warn("==================================");
 
     // 어제 디렉토리
-    File targetDir = Paths.get(UPLOAD_FOLDER, getFolderYesterday()).toFile();
+    File targetDir = Paths.get(uploadFolder, getFolderYesterday()).toFile();
 
     // DB 목록에 없는 파일이 있으면 삭제 파일로 간주
     File[] removeFiles = targetDir.listFiles(file -> !fileListPaths.contains(file.toPath()));
@@ -94,8 +100,6 @@ public class FileCheckTask {
   List<BoardAttachVO> getOldFiles() {
     return attachRepository.findAll(
         (root, query, cb) ->
-            cb.equal(
-                root.get(BoardAttachVO_.uploadPath),
-                currentSystemPathToUnixPath(getFolderYesterday())));
+            cb.equal(root.get(BoardAttachVO_.uploadPath), getFolderYesterdayUnixPath()));
   }
 }

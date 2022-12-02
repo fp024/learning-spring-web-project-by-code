@@ -25,6 +25,7 @@ public class BoardAttachVO {
   @Column(nullable = false)
   private Long bno;
 
+  /** DB 저장은 항상 Unix Path 기준으로 저장됨 */
   @Column(length = 200, nullable = false, name = "uploadpath")
   private String uploadPath;
 
