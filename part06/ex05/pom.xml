@@ -117,7 +117,7 @@
       <groupId>javax.servlet</groupId>
       <artifactId>jstl</artifactId>
       <version>${jstl.version}</version>
-      <scope>runtime</scope>
+      <scope>${jstl-scope.type}</scope>
     </dependency>
     <!-- 파일 업로드 -->
     <!-- Servlet 4.0을 지원하는 WAS를 사용하므로, commons-fileupload는 사용하지 않는다. -->

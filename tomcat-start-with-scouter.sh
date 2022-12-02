@@ -12,4 +12,4 @@ cd ${PROJECT_ROOT}/${LATEST_PROJECT_HOME}
 #
 # Tomcat은 nohup로 백그라운드 실행하지말고 직접 실행하는 것이 낫겠다.
 
-./mvnw clean package -DskipTests cargo:run -Pwebapp-run-with-scouter
+./mvnw clean package -DskipTests cargo:run -Ptomcat-run-with-scouter

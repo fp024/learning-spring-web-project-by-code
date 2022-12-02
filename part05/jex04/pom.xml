@@ -82,7 +82,7 @@
       <groupId>javax.servlet</groupId>
       <artifactId>jstl</artifactId>
       <version>${jstl.version}</version>
-      <scope>runtime</scope>
+      <scope>${jstl-scope.type}</scope>
     </dependency>
     <!-- lombok  -->
     <dependency>
