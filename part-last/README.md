@@ -46,3 +46,12 @@
 
 
 
+---
+
+# Servlet 4.0 + Spring 5 + Hibernate 5 프로젝트
+
+>  Scouter가 Servlet 5.0 부터는 지원을 안해서 `Servlet 4.0 + Spring 5 + Hibernate 5` 환경 기반으로도 프로젝트를 만들어보기로 했다.
+
+* 프로젝트
+  * [my-board-spring5](my-board-spring5)
+
