@@ -40,7 +40,7 @@
     <lombok.version>1.18.24</lombok.version>
 
     <mybatis.version>3.5.11</mybatis.version>
-    <mybatis.spring.version>2.0.7</mybatis.spring.version>
+    <mybatis.spring.version>2.1.0</mybatis.spring.version>
     <mybatis.dynamic.sql.version>1.4.1</mybatis.dynamic.sql.version>
 
     <hikaricp.version>5.0.1</hikaricp.version>
@@ -67,7 +67,6 @@
          https://stackoverflow.com/questions/66217350/deploying-spring-5-x-on-tomcat-10-x-with-jakarta-package        
     -->
     <jetty.version>10.0.12</jetty.version>
-    <apache-jstl.version>${jetty.version}</apache-jstl.version>
 
     <junit.jupiter.version>5.9.1</junit.jupiter.version>
 
@@ -105,7 +104,7 @@
     <!-- cargo 플러그인 설정 -->
     <cargo.version>1.10.4</cargo.version>
     <cargo-tomcat.containerId>tomcat9x</cargo-tomcat.containerId>
-    <cargo-tomcat.version>9.0.69</cargo-tomcat.version>
+    <cargo-tomcat.version>9.0.70</cargo-tomcat.version>
     <cargo-context-path>${jetty-context-path}</cargo-context-path>
     <cargo-server-port>${jetty.port}</cargo-server-port>
   </properties>
