@@ -407,14 +407,14 @@
             <arg>-Xlint:all</arg>
             <arg>-Xlint:-processing</arg> <!-- No processor claimed any of these annotations 경고는 노출되지않게 설정 -->
             <arg>-Xlint:-path</arg> <!-- bad path element 경고 무시 -->
-<!--            <arg>-parameters</arg>-->
+            <arg>-parameters</arg>
           </compilerArgs>
           <showWarnings>true</showWarnings>
           <showDeprecation>true</showDeprecation>
           <annotationProcessors>
             <processor>lombok.launch.AnnotationProcessorHider$AnnotationProcessor</processor>
             <processor>com.querydsl.apt.jpa.JPAAnnotationProcessor</processor>
-            <!-- 하이버네이트 정정 메타 모델을 사용하는 사용처 없음 : 추후 필요시 활성화 -->
+            <!-- Hibernate 정적 메타모델을 사용하는 사용처 없음 : 추후 필요시 활성화 -->
             <!--<processor>org.hibernate.jpamodelgen.JPAMetaModelEntityProcessor</processor>-->
           </annotationProcessors>
         </configuration>

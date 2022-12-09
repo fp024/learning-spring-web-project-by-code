@@ -56,12 +56,14 @@ public class ReplyQuerydslRepository {
         .intValue();
   }
 
-  public void save(ReplyVO vo) {
-    jpaQueryFactory
-        .insert(replyVO)
-        .set(replyVO.reply, vo.getReply())
-        .set(replyVO.replyer, vo.getReplyer())
-        .set(replyVO.bno, vo.getBno())
-        .execute();
-  }
+// TODO: 현재 환경에서 Querydsl의 insert()로는 오류가난다.
+// https://github.com/fp024/learning-spring-web-project-by-code/issues/21
+//  public void save(ReplyVO vo) {
+//    jpaQueryFactory
+//        .insert(replyVO)
+//        .set(replyVO.reply, vo.getReply())
+//        .set(replyVO.replyer, vo.getReplyer())
+//        .set(replyVO.bno, vo.getBno())
+//        .execute();
+//  }
 }

@@ -16,6 +16,7 @@ import org.springframework.test.context.junit.jupiter.web.SpringJUnitWebConfig;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
 
 /**
@@ -63,6 +64,7 @@ class BoardControllerTest {
     assertEquals("검색어", criteria.getKeyword());
   }
 
+  @Transactional
   @Test
   void testRegister() throws Exception {
     String viewName =
@@ -93,6 +95,7 @@ class BoardControllerTest {
     LOGGER.info("modelMap: {}", getResult);
   }
 
+  @Transactional
   @Test
   void testModify() throws Exception {
     Criteria criteria = new Criteria();
@@ -112,6 +115,7 @@ class BoardControllerTest {
     assertEquals("redirect:/board/list" + criteria.getLink(), resultPage);
   }
 
+  @Transactional
   @Test
   void testRemove() throws Exception {
     Criteria criteria = new Criteria();

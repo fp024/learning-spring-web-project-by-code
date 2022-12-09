@@ -27,7 +27,11 @@ public class ReplyServiceImpl implements ReplyService {
   public void register(ReplyVO vo) {
     LOGGER.info("register.....{}", vo);
     boardQuerydslRepository.updateReplyCount(vo.getBno(), 1);
-    replyQuerydslRepository.save(vo);
+    // 아래 날짜값은 DB의 컬럼 기본값으로 처리되게 한다.
+    // ReplyVO에는 DynamicInsert 가 붙어있다.
+    vo.setReplyDate(null);
+    vo.setUpdateDate(null);
+    replyRepository.save(vo);
   }
 
   @Override

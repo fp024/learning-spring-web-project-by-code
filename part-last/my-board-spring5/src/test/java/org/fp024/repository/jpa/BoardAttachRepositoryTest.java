@@ -77,7 +77,8 @@ class BoardAttachRepositoryTest {
   void delete() {
     Long bno = 1L;
     long deleteRowCount = repository.deleteByBno(bno);
-    assertThat(deleteRowCount).isEqualTo(1);
+    LOGGER.info("### deleteRowCount: {}", deleteRowCount);
+    assertThat(deleteRowCount).isGreaterThan(0);
   }
 
   /*

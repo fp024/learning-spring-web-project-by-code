@@ -34,7 +34,7 @@
 
 ## 특이사항
 
-
+* ...
 
 
 
@@ -48,10 +48,21 @@
 
 ---
 
-# Servlet 4.0 + Spring 5 + Hibernate 5 프로젝트
+# Servlet 4.0 + Spring 5 + Hibernate 5 프로젝트 분기 추가
 
 >  Scouter가 Servlet 5.0 부터는 지원을 안해서 `Servlet 4.0 + Spring 5 + Hibernate 5` 환경 기반으로도 프로젝트를 만들어보기로 했다.
 
 * 프로젝트
   * [my-board-spring5](my-board-spring5)
+
+* ✨ Servlet 4.0 으로 전환되어 Scouter가 잘 동작한다.
+  * JPA로 전환한 프로젝트가 기존 설정 그대로 잘 붙는지 보고 싶었다.
+
+
+
+## 특이사항
+
+* [특정 환경에서 QueryDSL로 insert시 오류 문제 - (Spring 5.3.24 + Spring Data 2.7.6 + Hibernate 5.6.14 + QueryDSL 5.0) · Issue #21](https://github.com/fp024/learning-spring-web-project-by-code/issues/21)
+  * 버전환경을 내리고보니 Querydsl 의 insert문 수행시 오류가 난다. 🎃
+  * Spring Data JPA의 save()로 바꾸고 관련 엔티티에는 `@DynamicInsert`를 붙혔다.
 
