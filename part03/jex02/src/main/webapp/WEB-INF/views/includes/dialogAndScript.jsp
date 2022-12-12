@@ -89,25 +89,31 @@
 
     var $actionForm = $("#actionForm");
 
-    $(".page-item a").on("click", function(e) {
-      e.preventDefault();
+    // $actionForm은 list 페이지 에만 사용된다.
+    if ($actionForm.length) {
+      // 페이지 네비게이션 이동
+      $(".page-item a").on("click", function (e) {
+        e.preventDefault();
 
-      console.log('click');
+        console.log('click');
+        $actionForm.find("input[name='bno']").remove();
+        $actionForm.attr("action", "/board/list");
+        $actionForm.find("input[name='pageNum']").val($(this).attr("href"));
+        $actionForm.submit();
+      });
 
-      $actionForm.find("input[name='pageNum']").val($(this).attr("href"));
-      $actionForm.submit();
-    });
+      // 게시물 이동
+      $(".move").on("click", function (e) {
+        e.preventDefault();
 
-    $(".move").on("click", function(e) {
-      e.preventDefault();
+        console.log('click - move');
 
-      console.log('click - move');
-
-      $actionForm.find("input[name='bno']").remove();
-      $actionForm.append("<input type='hidden' name='bno' value='" + $(this).attr("href") + "'>");
-      $actionForm.attr("action", "/board/get");
-      $actionForm.submit();
-    });
+        $actionForm.find("input[name='bno']").remove();
+        $actionForm.attr("action", "/board/get");
+        $actionForm.append("<input type='hidden' name='bno' value='" + $(this).attr("href") + "'>");
+        $actionForm.submit();
+      });
+    }
 
   });
 </script>
