@@ -3,4 +3,4 @@
 !.mvn/wrapper/maven-wrapper.properties
 
 latest
-log/*.log
+*.log
