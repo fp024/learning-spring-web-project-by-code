@@ -34,7 +34,7 @@
     <assertj.version>3.23.1</assertj.version>
 
     <!-- Jetty 12 버전이 나오면 바꿀 것. -->
-    <jetty.version>11.0.12</jetty.version>
+    <jetty.version>11.0.13</jetty.version>
 
     <!-- Tomcat 10.1.x는 Servlet 6.0을 정식 지원함. -->
     <cargo-tomcat.containerId>tomcat10x</cargo-tomcat.containerId>
