@@ -11,7 +11,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.fp024.domain.BoardAttachVO;
-import org.fp024.domain.BoardAttachVO_;
 import org.fp024.domain.FileType;
 import org.fp024.repository.jpa.BoardAttachRepository;
 import org.fp024.util.ProjectDataUtil;
@@ -98,8 +97,6 @@ public class FileCheckTask {
    * @return 어제 추가된 첨부파일 목록
    */
   List<BoardAttachVO> getOldFiles() {
-    return attachRepository.findAll(
-        (root, query, cb) ->
-            cb.equal(root.get(BoardAttachVO_.uploadPath), getFolderYesterdayUnixPath()));
+    return attachRepository.findByUploadPath(getFolderYesterdayUnixPath());
   }
 }
