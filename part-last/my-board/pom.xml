@@ -38,7 +38,7 @@
 
     <!-- Tomcat 10.1.x는 Servlet 6.0을 정식 지원함. -->
     <cargo-tomcat.containerId>tomcat10x</cargo-tomcat.containerId>
-    <cargo-tomcat.version>10.1.1</cargo-tomcat.version>
+    <cargo-tomcat.version>10.1.4</cargo-tomcat.version>
   </properties>
 
   <!-- web.xml에서 경로 변화를 주기위해, profile을 윈도우와 리눅스 환경으로 나눠보았다. -->
