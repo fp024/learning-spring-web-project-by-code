@@ -50,7 +50,7 @@
       최신버전을 쓰더라도 특별한 문제는 없었다.
       https://mvnrepository.com/artifact/com.oracle.database.jdbc/ojdbc11
     -->
-    <ojdbc11.version>21.7.0.0</ojdbc11.version>
+    <ojdbc11.version>21.8.0.0</ojdbc11.version>
 
     <!-- 몇몇 프로젝트에서는 hsqldb로 사용해보자... -->
     <hsqldb.version>2.7.1</hsqldb.version>
@@ -66,7 +66,7 @@
       2. Jetty 11.x버전은 주요 서블릿 패키지명이 바뀌였기 때문에 Spring 5에서 사용할 수 없다.          
          https://stackoverflow.com/questions/66217350/deploying-spring-5-x-on-tomcat-10-x-with-jakarta-package        
     -->
-    <jetty.version>10.0.12</jetty.version>
+    <jetty.version>10.0.13</jetty.version>
 
     <junit.jupiter.version>5.9.1</junit.jupiter.version>
 
