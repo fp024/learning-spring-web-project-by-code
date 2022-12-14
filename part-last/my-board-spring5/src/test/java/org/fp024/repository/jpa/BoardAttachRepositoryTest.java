@@ -44,7 +44,7 @@ class BoardAttachRepositoryTest {
     binding parameter [1] as [BIGINT] - [1]
     binding parameter [2] as [VARCHAR] - [이미지_파일.png]
     binding parameter [3] as [VARCHAR] - [I]
-    binding parameter [4] as [VARCHAR] - [/2022/12/01]
+    binding parameter [4] as [VARCHAR] - [2022/12/01]
     binding parameter [5] as [VARCHAR] - [e2ac4f21-6906-4bd3-8317-864cf73face6]
    */
   // @Transactional // 이것을 설정하면 DB에 반영하진 않음.,
@@ -55,7 +55,7 @@ class BoardAttachRepositoryTest {
     BoardAttachVO ba = new BoardAttachVO();
     ba.setBno(1L);
     ba.setUuid(UUID.randomUUID().toString());
-    ba.setUploadPath("/2022/12/01");
+    ba.setUploadPath("2022/12/01");
     ba.setFileType(FileType.IMAGE);
     ba.setFileName("이미지_파일.png");
 
@@ -99,7 +99,7 @@ class BoardAttachRepositoryTest {
     extracted value ([2] : [BIGINT]) - [1]
     extracted value ([3] : [VARCHAR]) - [이미지_파일.png]
     extracted value ([4] : [VARCHAR]) - [I]
-    extracted value ([5] : [VARCHAR]) - [/2022/12/01]
+    extracted value ([5] : [VARCHAR]) - [2022/12/01]
    */
   @DisplayName("특정 게시물에 속한 첨부파일 조회")
   @Test
@@ -121,9 +121,9 @@ class BoardAttachRepositoryTest {
    where
        b1_0.uploadpath=?
 
-   binding parameter [1] as [VARCHAR] - [/2022/12/01]
+   binding parameter [1] as [VARCHAR] - [2022/12/01]
   */
-  @DisplayName("특정 업로드 경로(/년/월/일)의 첨부파일 정보 조회)")
+  @DisplayName("특정 업로드 경로(년/월/일)의 첨부파일 정보 조회)")
   @Test
   void findAll_02() {
     repository.findByUploadPath("2022/12/01");

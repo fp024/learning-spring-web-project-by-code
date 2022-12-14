@@ -9,11 +9,11 @@ import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.fp024.domain.BoardAttachVO;
 import org.fp024.domain.FileType;
 import org.fp024.mapper.BoardAttachMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -21,13 +21,18 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-@RequiredArgsConstructor
 @PropertySource("classpath:project-data.properties")
 public class FileCheckTask {
-  @Value("${multipart.uploadFolder}")
-  private String UPLOAD_FOLDER;
+  private final String uploadFolder;
 
   private final BoardAttachMapper attachMapper;
+
+  @Autowired
+  public FileCheckTask(
+      @Value("${multipart.uploadFolder}") String uploadFolder, BoardAttachMapper attachMapper) {
+    this.uploadFolder = uploadFolder;
+    this.attachMapper = attachMapper;
+  }
 
   @Scheduled(cron = "0 0 2 * * *")
   public void checkFiles() {
@@ -46,7 +51,7 @@ public class FileCheckTask {
                 .map(
                     vo ->
                         Paths.get(
-                            UPLOAD_FOLDER,
+                            uploadFolder,
                             unixPathToCurrentSystemPath(vo.getUploadPath()),
                             vo.getUuid() + "_" + vo.getFileName()))
                 .toList());
@@ -57,7 +62,7 @@ public class FileCheckTask {
         .map(
             vo ->
                 Paths.get(
-                    UPLOAD_FOLDER,
+                    uploadFolder,
                     unixPathToCurrentSystemPath(vo.getUploadPath()),
                     "s_" + vo.getUuid() + "_" + vo.getFileName()))
         .forEach(fileListPaths::add);
@@ -65,7 +70,7 @@ public class FileCheckTask {
     LOGGER.warn("==================================");
 
     // 어제 디렉토리
-    File targetDir = Paths.get(UPLOAD_FOLDER, getFolderYesterday()).toFile();
+    File targetDir = Paths.get(uploadFolder, getFolderYesterday()).toFile();
 
     // DB 목록에 없는 파일이 있으면 삭제 파일로 간주
     File[] removeFiles = targetDir.listFiles(file -> !fileListPaths.contains(file.toPath()));

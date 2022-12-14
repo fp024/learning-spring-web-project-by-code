@@ -75,6 +75,8 @@
     <mockito.version>4.9.0</mockito.version>
 
     <hamcrest.version>2.2</hamcrest.version>
+    
+    <assertj.version>3.23.1</assertj.version>
 
     <!-- 2.0.0 부터는 Servlet 5.0이상, Java 17이 요구사항이다. 1.1.4 버전을 유지한다. -->
     <java-time-jsptags.version>1.1.4</java-time-jsptags.version>

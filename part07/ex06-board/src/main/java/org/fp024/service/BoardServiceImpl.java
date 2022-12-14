@@ -1,6 +1,6 @@
 package org.fp024.service;
 
-import static org.fp024.util.CommonUtil.winPathToUnixPath;
+import static org.fp024.util.CommonUtil.currentSystemPathToUnixPath;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -37,11 +37,11 @@ public class BoardServiceImpl implements BoardService {
         .getAttachList()
         .forEach(
             attach -> {
-              attach.setBno(
-                  board.getBno()); // 신규 등록시는 최초에 bno가 없지만 insert 이후로 board에다 bno를 MyBatis가 넣어줄 것 임.
+              // 신규 등록시는 최초에 bno가 없지만 insert 이후로 board에다 bno를 MyBatis가 넣어줄 것 임.
+              attach.setBno(board.getBno());
               // 업로드 경로를 DB에 저장을 할 때만, Unix 경로로 사용해보자!,
               // 요즘 윈도우에서는 Unix 경로를 쓰더라도 잘 될 것 같은데... 조회 추가해보면서 확인해보자.
-              attach.setUploadPath(winPathToUnixPath(attach.getUploadPath()));
+              attach.setUploadPath(currentSystemPathToUnixPath(attach.getUploadPath()));
               attachMapper.insert(attach);
             });
   }
@@ -67,6 +67,7 @@ public class BoardServiceImpl implements BoardService {
           .forEach(
               attach -> {
                 attach.setBno(board.getBno());
+                attach.setUploadPath(currentSystemPathToUnixPath(attach.getUploadPath()));
                 attachMapper.insert(attach);
               });
     }

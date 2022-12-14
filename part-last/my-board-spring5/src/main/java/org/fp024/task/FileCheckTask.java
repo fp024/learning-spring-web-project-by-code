@@ -98,9 +98,5 @@ public class FileCheckTask {
    */
   List<BoardAttachVO> getOldFiles() {
     return attachRepository.findByUploadPath(getFolderYesterdayUnixPath());
-
-    //    return attachRepository.findAll(
-    //        (root, query, cb) ->
-    //            cb.equal(root.get(BoardAttachVO_.uploadPath), getFolderYesterdayUnixPath()));
   }
 }

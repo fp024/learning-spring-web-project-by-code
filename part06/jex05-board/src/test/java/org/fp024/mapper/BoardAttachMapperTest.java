@@ -25,7 +25,7 @@ class BoardAttachMapperTest {
   @Autowired private BoardAttachMapper mapper;
 
   private static final String TEST_UUID = UUID.randomUUID().toString();
-  private static final String UPLOAD_PATH = "/2022/05/30";
+  private static final String UPLOAD_PATH = "2022/05/30";
   private static final String FILE_NAME = "이미지_파일.png";
   private static final FileType FILE_TYPE = FileType.IMAGE;
   private static final Long BNO = 1L;
