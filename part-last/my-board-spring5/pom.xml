@@ -21,7 +21,6 @@
     <spring-data-jpa.version>2.7.6</spring-data-jpa.version>
     <querydsl.version>5.0.0</querydsl.version>
 
-    <assertj.version>3.23.1</assertj.version>
     <jetbrains.annotations.version>23.0.0</jetbrains.annotations.version>
   </properties>
 
