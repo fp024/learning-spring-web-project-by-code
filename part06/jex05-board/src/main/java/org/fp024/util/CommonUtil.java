@@ -74,12 +74,6 @@ public class CommonUtil {
     return path.replace(UNIX_PATH_SEPARATOR, File.separator);
   }
 
-  /*
-   * 첨부파일 xml 매퍼에서 Oracle 함수로 처리하고 있어서 현재 프로젝트에서는 필요없을 것 같다.
-   * 아무래도 jex05 프로젝트부터 잘못 사용한 것 같음.
-   *
-   * uploadpath = TO_CHAR(SYSDATE - 1, 'yyyy/mm/dd')
-   */
   public static String currentSystemPathToUnixPath(String path) {
     return path.replace(File.separator, UNIX_PATH_SEPARATOR);
   }
