@@ -1,6 +1,6 @@
 package org.fp024.service;
 
-import static org.fp024.util.CommonUtil.winPathToUnixPath;
+import static org.fp024.util.CommonUtil.currentSystemPathToUnixPath;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -47,7 +47,7 @@ public class BoardServiceImpl implements BoardService {
         .forEach(
             attach -> {
               attach.setBno(board.getBno());
-              attach.setUploadPath(winPathToUnixPath(attach.getUploadPath()));
+              attach.setUploadPath(currentSystemPathToUnixPath(attach.getUploadPath()));
               attachRepository.save(attach);
             });
   }
@@ -72,7 +72,7 @@ public class BoardServiceImpl implements BoardService {
           .forEach(
               attach -> {
                 attach.setBno(board.getBno());
-                attach.setUploadPath(winPathToUnixPath(attach.getUploadPath()));
+                attach.setUploadPath(currentSystemPathToUnixPath(attach.getUploadPath()));
                 attachRepository.save(attach);
               });
     }
