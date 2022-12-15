@@ -1,7 +1,5 @@
 package org.fp024.config;
 
-import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
-
 import javax.sql.DataSource;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,25 +17,32 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
+import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 @Slf4j
+// @Import(ServletConfig.class)
 public class SecurityConfig {
 
   private final DataSource dataSource;
+
+  @Bean(name = "mvcHandlerMappingIntrospector")
+  public HandlerMappingIntrospector mvcHandlerMappingIntrospector() {
+    return new HandlerMappingIntrospector();
+  }
 
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     http.authorizeHttpRequests(
         (auths) ->
             auths
-                .requestMatchers(antMatcher("/sample/all"))
+                .requestMatchers("/sample/all")
                 .permitAll()
-                .requestMatchers(antMatcher("/sample/admin"))
+                .requestMatchers("/sample/admin")
                 .hasRole(MemberAuthType.ROLE_ADMIN.getGroupName())
-                .requestMatchers(antMatcher("/sample/member"))
+                .requestMatchers("/sample/member")
                 .hasRole(MemberAuthType.ROLE_MEMBER.getGroupName()));
 
     http.formLogin()
