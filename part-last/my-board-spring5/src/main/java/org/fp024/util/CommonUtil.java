@@ -70,9 +70,9 @@ public class CommonUtil {
     return false;
   }
 
-  /** Windows 경로를 Unix 경로로 변환 */
-  public static String winPathToUnixPath(String path) {
-    return path.replace("\\", "/");
+  /** 현재 시스템 경로를 Unix 경로로 변환 */
+  public static String currentSystemPathToUnixPath(String path) {
+    return path.replace(File.separator, UNIX_PATH_SEPARATOR);
   }
 
   /**

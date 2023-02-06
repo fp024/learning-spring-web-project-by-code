@@ -1,15 +1,14 @@
 package org.fp024.config;
 
-import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
-
 import javax.servlet.ServletRegistration;
+import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 /** web.xml 대체 */
 public class WebConfig extends AbstractAnnotationConfigDispatcherServletInitializer {
 
   @Override
   protected Class<?>[] getRootConfigClasses() {
-    return new Class<?>[] {RootConfig.class, SecurityConfig.class};
+    return new Class<?>[] {SecurityConfig.class, RootConfig.class};
   }
 
   @Override
