@@ -17,7 +17,7 @@
 
   <!-- Spring 6 + JPA 3.0 기반 버전 프로퍼티는 하위 프로젝트에서 직접 관리 -->
   <properties>
-    <org.springframework-version>6.0.4</org.springframework-version>
+    <org.springframework-version>6.0.5</org.springframework-version>
     <spring-security.version>6.0.1</spring-security.version>
 
     <hibernate.version>6.1.6.Final</hibernate.version>

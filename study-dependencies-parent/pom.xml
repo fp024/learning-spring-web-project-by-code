@@ -37,7 +37,7 @@
 
     <log4j2.version>2.19.0</log4j2.version>
 
-    <lombok.version>1.18.24</lombok.version>
+    <lombok.version>1.18.26</lombok.version>
 
     <mybatis.version>3.5.11</mybatis.version>
     <mybatis.spring.version>2.1.0</mybatis.spring.version>
@@ -50,7 +50,7 @@
       최신버전을 쓰더라도 특별한 문제는 없었다.
       https://mvnrepository.com/artifact/com.oracle.database.jdbc/ojdbc11
     -->
-    <ojdbc11.version>21.8.0.0</ojdbc11.version>
+    <ojdbc11.version>21.9.0.0</ojdbc11.version>
 
     <!-- 몇몇 프로젝트에서는 hsqldb로 사용해보자... -->
     <hsqldb.version>2.7.1</hsqldb.version>
