@@ -23,7 +23,7 @@
 
     <org.springframework-version>5.3.25</org.springframework-version>
 
-    <spring-security.version>5.8.1</spring-security.version>
+    <spring-security.version>5.8.2</spring-security.version>
 
     <org.aspectj-version>1.9.19</org.aspectj-version>
 
@@ -37,9 +37,9 @@
 
     <log4j2.version>2.19.0</log4j2.version>
 
-    <lombok.version>1.18.24</lombok.version>
+    <lombok.version>1.18.26</lombok.version>
 
-    <mybatis.version>3.5.11</mybatis.version>
+    <mybatis.version>3.5.12</mybatis.version>
     <mybatis.spring.version>2.1.0</mybatis.spring.version>
     <mybatis.dynamic.sql.version>1.4.1</mybatis.dynamic.sql.version>
 
@@ -50,7 +50,7 @@
       최신버전을 쓰더라도 특별한 문제는 없었다.
       https://mvnrepository.com/artifact/com.oracle.database.jdbc/ojdbc11
     -->
-    <ojdbc11.version>21.8.0.0</ojdbc11.version>
+    <ojdbc11.version>21.9.0.0</ojdbc11.version>
 
     <!-- 몇몇 프로젝트에서는 hsqldb로 사용해보자... -->
     <hsqldb.version>2.7.1</hsqldb.version>
@@ -66,7 +66,7 @@
       2. Jetty 11.x버전은 주요 서블릿 패키지명이 바뀌였기 때문에 Spring 5에서 사용할 수 없다.          
          https://stackoverflow.com/questions/66217350/deploying-spring-5-x-on-tomcat-10-x-with-jakarta-package        
     -->
-    <jetty.version>10.0.13</jetty.version>
+    <jetty.version>10.0.14</jetty.version>
 
     <junit.jupiter.version>5.9.2</junit.jupiter.version>
 
@@ -84,7 +84,7 @@
     <commons-fileupload.version>1.4</commons-fileupload.version>
 
     <!-- Maven 플러그인 버전 관리 -->
-    <mybatis-generator-maven-plugin.version>1.4.1</mybatis-generator-maven-plugin.version>
+    <mybatis-generator-maven-plugin.version>1.4.2</mybatis-generator-maven-plugin.version>
     <maven-war-plugin.version>3.3.2</maven-war-plugin.version>
     <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
     <maven-compiler-plugin.version>3.10.1</maven-compiler-plugin.version>
