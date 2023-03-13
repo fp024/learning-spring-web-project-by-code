@@ -23,7 +23,7 @@
 
     <org.springframework-version>5.3.25</org.springframework-version>
 
-    <spring-security.version>5.8.1</spring-security.version>
+    <spring-security.version>5.8.2</spring-security.version>
 
     <org.aspectj-version>1.9.19</org.aspectj-version>
 
@@ -39,7 +39,7 @@
 
     <lombok.version>1.18.26</lombok.version>
 
-    <mybatis.version>3.5.11</mybatis.version>
+    <mybatis.version>3.5.13</mybatis.version>
     <mybatis.spring.version>2.1.0</mybatis.spring.version>
     <mybatis.dynamic.sql.version>1.4.1</mybatis.dynamic.sql.version>
 
@@ -66,13 +66,13 @@
       2. Jetty 11.x버전은 주요 서블릿 패키지명이 바뀌였기 때문에 Spring 5에서 사용할 수 없다.          
          https://stackoverflow.com/questions/66217350/deploying-spring-5-x-on-tomcat-10-x-with-jakarta-package        
     -->
-    <jetty.version>10.0.13</jetty.version>
+    <jetty.version>10.0.14</jetty.version>
 
     <junit.jupiter.version>5.9.2</junit.jupiter.version>
 
     <json-path.version>2.7.0</json-path.version>
 
-    <mockito.version>5.1.1</mockito.version>
+    <mockito.version>5.2.0</mockito.version>
 
     <hamcrest.version>2.2</hamcrest.version>
     
@@ -81,10 +81,10 @@
     <!-- 2.0.0 부터는 Servlet 5.0이상, Java 17이 요구사항이다. 1.1.4 버전을 유지한다. -->
     <java-time-jsptags.version>1.1.4</java-time-jsptags.version>
 
-    <commons-fileupload.version>1.4</commons-fileupload.version>
+    <commons-fileupload.version>1.5</commons-fileupload.version>
 
     <!-- Maven 플러그인 버전 관리 -->
-    <mybatis-generator-maven-plugin.version>1.4.1</mybatis-generator-maven-plugin.version>
+    <mybatis-generator-maven-plugin.version>1.4.2</mybatis-generator-maven-plugin.version>
     <maven-war-plugin.version>3.3.2</maven-war-plugin.version>
     <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
     <maven-compiler-plugin.version>3.10.1</maven-compiler-plugin.version>
@@ -104,9 +104,9 @@
     <web-xml-location>${project.basedir}/src/main/webapp/WEB-INF/web.xml</web-xml-location>
 
     <!-- cargo 플러그인 설정 -->
-    <cargo.version>1.10.4</cargo.version>
+    <cargo.version>1.10.6</cargo.version>
     <cargo-tomcat.containerId>tomcat9x</cargo-tomcat.containerId>
-    <cargo-tomcat.version>9.0.71</cargo-tomcat.version>
+    <cargo-tomcat.version>9.0.73</cargo-tomcat.version>
     <cargo-context-path>${jetty-context-path}</cargo-context-path>
     <cargo-server-port>${jetty.port}</cargo-server-port>
   </properties>
