@@ -245,12 +245,6 @@
       <version>${mockito.version}</version>
       <scope>test</scope>
     </dependency>
-    <dependency>
-      <groupId>org.mockito</groupId>
-      <artifactId>mockito-inline</artifactId>
-      <version>${mockito.version}</version>
-      <scope>test</scope>
-    </dependency>
     <!-- Only needed to run tests in a version of IntelliJ IDEA that bundles older versions -->
     <!-- IntelliJ 최신 버전을 사용중이여서 나한테는 의미 없을 것 같다.-->
     <!--

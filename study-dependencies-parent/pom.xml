@@ -21,9 +21,9 @@
     <jstl.version>1.2</jstl.version>
     <javax.annotation-api.version>1.3.2</javax.annotation-api.version>
 
-    <org.springframework-version>5.3.26</org.springframework-version>
+    <org.springframework-version>5.3.27</org.springframework-version>
 
-    <spring-security.version>5.8.2</spring-security.version>
+    <spring-security.version>5.8.3</spring-security.version>
 
     <org.aspectj-version>1.9.19</org.aspectj-version>
 
@@ -41,7 +41,7 @@
 
     <mybatis.version>3.5.13</mybatis.version>
     <mybatis.spring.version>2.1.0</mybatis.spring.version>
-    <mybatis.dynamic.sql.version>1.4.1</mybatis.dynamic.sql.version>
+    <mybatis.dynamic.sql.version>1.5.0</mybatis.dynamic.sql.version>
 
     <hikaricp.version>5.0.1</hikaricp.version>
 
@@ -50,7 +50,7 @@
       최신버전을 쓰더라도 특별한 문제는 없었다.
       https://mvnrepository.com/artifact/com.oracle.database.jdbc/ojdbc11
     -->
-    <ojdbc11.version>21.9.0.0</ojdbc11.version>
+    <ojdbc11.version>23.2.0.0</ojdbc11.version>
 
     <!-- 몇몇 프로젝트에서는 hsqldb로 사용해보자... -->
     <hsqldb.version>2.7.1</hsqldb.version>
@@ -66,13 +66,13 @@
       2. Jetty 11.x버전은 주요 서블릿 패키지명이 바뀌였기 때문에 Spring 5에서 사용할 수 없다.          
          https://stackoverflow.com/questions/66217350/deploying-spring-5-x-on-tomcat-10-x-with-jakarta-package        
     -->
-    <jetty.version>10.0.14</jetty.version>
+    <jetty.version>10.0.15</jetty.version>
 
     <junit.jupiter.version>5.9.2</junit.jupiter.version>
 
-    <json-path.version>2.7.0</json-path.version>
+    <json-path.version>2.8.0</json-path.version>
 
-    <mockito.version>5.2.0</mockito.version>
+    <mockito.version>5.3.1</mockito.version>
 
     <hamcrest.version>2.2</hamcrest.version>
     
@@ -85,7 +85,7 @@
 
     <!-- Maven 플러그인 버전 관리 -->
     <mybatis-generator-maven-plugin.version>1.4.2</mybatis-generator-maven-plugin.version>
-    <maven-war-plugin.version>3.9.1</maven-war-plugin.version>
+    <maven-war-plugin.version>3.3.2</maven-war-plugin.version>
     <maven-surefire-plugin.version>3.0.0</maven-surefire-plugin.version>
     <maven-compiler-plugin.version>3.11.0</maven-compiler-plugin.version>
     <maven-toolchains-plugin.version>3.1.0</maven-toolchains-plugin.version>
@@ -106,7 +106,7 @@
     <!-- cargo 플러그인 설정 -->
     <cargo.version>1.10.6</cargo.version>
     <cargo-tomcat.containerId>tomcat9x</cargo-tomcat.containerId>
-    <cargo-tomcat.version>9.0.73</cargo-tomcat.version>
+    <cargo-tomcat.version>9.0.74</cargo-tomcat.version>
     <cargo-context-path>${jetty-context-path}</cargo-context-path>
     <cargo-server-port>${jetty.port}</cargo-server-port>
   </properties>
