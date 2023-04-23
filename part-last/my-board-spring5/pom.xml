@@ -190,6 +190,11 @@
     </dependency>
 
     <!-- 하이버네이트 정정 메타 모델을 사용하는 사용처 없음 -->
+    <!-- https://github.com/fp024/learning-spring-web-project-by-code/issues/23 -->
+    <!--
+      Querydsl에서 insert()가 안되길레 hibernate-jpamodelgen가 문제일까 싶어서 제거했는데 관련이 없었음.
+      나중에 필요해지면 다시 써도 되긴 하겠다.
+    -->
     <!-- 추후 필요시 활성화 -->
     <!--
     <dependency>
