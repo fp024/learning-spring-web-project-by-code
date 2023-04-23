@@ -23,8 +23,8 @@
     <hibernate.version>6.2.1.Final</hibernate.version>
     <spring-data-jpa.version>3.0.5</spring-data-jpa.version>
     <querydsl.version>5.0.0</querydsl.version>
-    <jakarta.inject-api.version>2.0.1</jakarta.inject-api.version>
     <jakarta.servlet-api.version>6.0.0</jakarta.servlet-api.version>
+    <jakarta.xml.bind-api.version>4.0.0</jakarta.xml.bind-api.version>
 
     <jakarta.servlet.jsp.jstl-api.version>3.0.0</jakarta.servlet.jsp.jstl-api.version>
     <jakarta.servlet.jsp.jstl.version>3.0.1</jakarta.servlet.jsp.jstl.version>
@@ -238,15 +238,10 @@
     </dependency>
 
     <!-- hibernate-jpamodelgen 추가 후 반드시 필요한 모듈 -->
-    <!--
-      hibernate-core로 부터 가져오는
-      com.sun.activation:jakarta.activation:jar:2.0.1 의 중복을 피하기위해
-      이전버전 (3.0.1)을 쓰기로 함.
-    -->
     <dependency>
       <groupId>jakarta.xml.bind</groupId>
       <artifactId>jakarta.xml.bind-api</artifactId>
-      <version>3.0.1</version>
+      <version>${jakarta.xml.bind-api.version}</version>
     </dependency>
 
     <dependency>

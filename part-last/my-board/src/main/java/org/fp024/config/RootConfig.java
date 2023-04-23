@@ -3,6 +3,7 @@ package org.fp024.config;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import jakarta.persistence.EntityManagerFactory;
+import java.util.Properties;
 import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -61,6 +62,33 @@ public class RootConfig {
     hibernateJpaVendorAdapter.setShowSql(true);
     emfBean.setJpaVendorAdapter(hibernateJpaVendorAdapter);
 
+    Properties jpaProps = new Properties();
+
+    jpaProps.put("hibernate.format_sql", "true");
+    jpaProps.put("hibernate.hbm2ddl.charset_name", "UTF-8");
+
+    jpaProps.put("jakarta.persistence.schema-generation.database.action", "drop-and-create");
+
+    jpaProps.put("jakarta.persistence.schema-generation.drop-source", "script");
+    jpaProps.put(
+        "jakarta.persistence.schema-generation.drop-script-source", "sql/hsqldb/init-drop-ddl.sql");
+
+    jpaProps.put("jakarta.persistence.schema-generation.create-source", "script");
+    jpaProps.put(
+        "jakarta.persistence.schema-generation.create-script-source",
+        "sql/hsqldb/init-create-ddl.sql");
+
+    jpaProps.put("jakarta.persistence.sql-load-script-source", "sql/hsqldb/init-data-insert.sql");
+
+    jpaProps.put(
+        "hibernate.hbm2ddl.import_files_sql_extractor",
+        "org.hibernate.tool.schema.internal.script.MultiLineSqlScriptExtractor");
+
+    jpaProps.put(
+        "hibernate.physical_naming_strategy",
+        "org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy");
+
+    emfBean.setJpaProperties(jpaProps);
     return emfBean;
   }
 
