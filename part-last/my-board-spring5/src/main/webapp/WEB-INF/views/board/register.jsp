@@ -8,6 +8,15 @@
 
 <%@include file="../includes/header.jsp"%>
 <link href="/resources/css/upload-ajax.css" rel="stylesheet">
+<link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/themes/prism.min.css"
+/>
+<link
+    rel="stylesheet"
+    href="https://uicdn.toast.com/editor-plugin-code-syntax-highlight/latest/toastui-editor-plugin-code-syntax-highlight.min.css"
+/>
+<link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css" />
 
 <body id="page-top">
 
@@ -41,8 +50,10 @@
                 <label>Title</label> <input class="form-control" name="title">
               </div>
               <div class="form-group">
-                <label>Text area</label>
-                <textarea class="form-control" rows="5" name="content"></textarea>
+                <label>Editor area</label>
+                <%--<textarea class="form-control" rows="5" name="content"></textarea>--%>
+                <input type="hidden" name="content">
+                <div id="editor"></div>
               </div>
               <div class="form-group">
                 <label>Writer</label>
@@ -100,6 +111,7 @@
     $("button[type='submit']").on("click", function (e) {
       e.preventDefault();
       console.log("submit clicked");
+      formObj.find("input[name='content']").val(editor.getMarkdown());
 
       var str = "";
 
@@ -222,6 +234,20 @@
       });
     });
 
+  });
+</script>
+
+<script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
+<script src="https://uicdn.toast.com/editor-plugin-code-syntax-highlight/latest/toastui-editor-plugin-code-syntax-highlight-all.min.js"></script>
+<script>
+  const { Editor } = toastui;
+  const { codeSyntaxHighlight } = Editor.plugin;
+  const editor = new Editor({
+    el: document.querySelector('#editor'),
+    height: '600px',
+    initialEditType: 'markdown',
+    plugins: [codeSyntaxHighlight],
+    previewStyle: 'vertical'
   });
 </script>
 </body>
