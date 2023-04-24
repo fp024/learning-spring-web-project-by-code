@@ -55,7 +55,7 @@
             <div class="form-group">
               <label>Viewer Area</label>
               <%-- <textarea class="form-control" rows="5" name="content" readonly="readonly"><c:out value='${board.content}'/></textarea>--%>
-              <div class="border rounded">
+              <div class="border rounded" style="min-height: 500px">
                 <div id="viewer"></div>
               </div>
             </div>
