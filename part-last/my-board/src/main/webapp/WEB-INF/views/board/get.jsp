@@ -513,7 +513,7 @@
     height: '600px',
     initialEditType: 'markdown',
     plugins: [codeSyntaxHighlight],
-    initialValue: `${fn:replace(fn:replace(board.content,"`","\\`"), '$', '\\$')}`
+    initialValue: ${board.jsonContent}
   });
 </script>
 

@@ -283,7 +283,7 @@
     initialEditType: 'markdown',
     plugins: [codeSyntaxHighlight],
     previewStyle: 'vertical',
-    initialValue: `${fn:replace(fn:replace(board.content,"`","\\`"), '$', '\\$')}`
+    initialValue: ${board.jsonContent}
   });
 </script>
 </body>

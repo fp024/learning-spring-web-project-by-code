@@ -13,6 +13,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.fp024.util.GsonHelper;
 import org.hibernate.annotations.DynamicInsert;
 
 @NoArgsConstructor // 컴파일 에러 회피
@@ -30,7 +31,7 @@ public class BoardVO {
   @Column(length = 200, nullable = false)
   private String title;
 
-  @Column(length = 2000, nullable = false)
+  @Column(nullable = false)
   private String content;
 
   @Column(length = 50, nullable = false)
@@ -45,4 +46,8 @@ public class BoardVO {
   private int replyCount;
 
   @Transient private List<BoardAttachVO> attachList;
+
+  public String getJsonContent() {
+    return GsonHelper.toJson(content);
+  }
 }
