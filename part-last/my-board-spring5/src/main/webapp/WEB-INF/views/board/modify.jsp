@@ -225,7 +225,7 @@
   $(document).ready(function () {
     var $formObj = $("#modify-form");
 
-    $formObj.find("button").on("click", function (e) {
+    $formObj.children(".btn").on("click", function (e) {
       e.preventDefault();
 
       var operation = $(this).data("oper"); // data-oper 속성을 이렇게 읽는구나?
