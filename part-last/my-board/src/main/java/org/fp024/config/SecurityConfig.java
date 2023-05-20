@@ -25,21 +25,27 @@ public class SecurityConfig {
 
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-    http.formLogin()
-        .loginPage("/customLogin")
-        .loginProcessingUrl("/login")
-        .defaultSuccessUrl("/board/list");
+    http.formLogin(
+        formLoginConfigurer ->
+            formLoginConfigurer
+                .loginPage("/customLogin")
+                .loginProcessingUrl("/login")
+                .defaultSuccessUrl("/board/list"));
 
-    http.logout()
-        .logoutUrl("/logout")
-        .invalidateHttpSession(true)
-        .deleteCookies("remember-me", "JSESSIONID")
-        .logoutSuccessUrl("/board/list");
+    http.logout(
+        logoutConfigurer ->
+            logoutConfigurer
+                .logoutUrl("/logout")
+                .invalidateHttpSession(true)
+                .deleteCookies("remember-me", "JSESSIONID")
+                .logoutSuccessUrl("/board/list"));
 
-    http.rememberMe()
-        .key("fp024")
-        .tokenRepository(persistentTokenRepository())
-        .tokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(7));
+    http.rememberMe(
+        rememberMeConfigurer ->
+            rememberMeConfigurer
+                .key("fp024")
+                .tokenRepository(persistentTokenRepository())
+                .tokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(7)));
 
     return http.build();
   }
