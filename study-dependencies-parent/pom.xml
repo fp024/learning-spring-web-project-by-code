@@ -29,7 +29,7 @@
 
     <quartz.version>2.3.2</quartz.version>
 
-    <jackson.version>2.15.1</jackson.version>
+    <jackson.version>2.15.2</jackson.version>
     <!-- 마이크로 보안 패치가 있을때, jackson-databind 만 패치되기도 함. 
          jackson-databind는 별도로 분리해두는게 낫겠다. -->
     <jackson-databind.version>${jackson.version}</jackson-databind.version>
@@ -37,7 +37,7 @@
 
     <log4j2.version>2.20.0</log4j2.version>
 
-    <lombok.version>1.18.26</lombok.version>
+    <lombok.version>1.18.28</lombok.version>
 
     <mybatis.version>3.5.13</mybatis.version>
     <mybatis.spring.version>2.1.1</mybatis.spring.version>
@@ -87,7 +87,7 @@
     <mybatis-generator-maven-plugin.version>1.4.2</mybatis-generator-maven-plugin.version>
     <maven-war-plugin.version>3.3.2</maven-war-plugin.version>
     <maven-resources-plugin.version>3.3.1</maven-resources-plugin.version>
-    <maven-surefire-plugin.version>3.1.0</maven-surefire-plugin.version>
+    <maven-surefire-plugin.version>3.1.2</maven-surefire-plugin.version>
     <maven-compiler-plugin.version>3.11.0</maven-compiler-plugin.version>
     <maven-toolchains-plugin.version>3.1.0</maven-toolchains-plugin.version>
 
@@ -107,7 +107,7 @@
     <!-- cargo 플러그인 설정 -->
     <cargo.version>1.10.7</cargo.version>
     <cargo-tomcat.containerId>tomcat9x</cargo-tomcat.containerId>
-    <cargo-tomcat.version>9.0.75</cargo-tomcat.version>
+    <cargo-tomcat.version>9.0.76</cargo-tomcat.version>
     <cargo-context-path>${jetty-context-path}</cargo-context-path>
     <cargo-server-port>${jetty.port}</cargo-server-port>
   </properties>
@@ -432,18 +432,6 @@
           </toolchains>
         </configuration>
       </plugin>
-
-      <!-- mvn exec:java 명령으로 자바 클래스를 실행할 수 있게하는데, 사용처가 없음 -->
-      <!--
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>exec-maven-plugin</artifactId>
-        <version>3.0.0</version>
-        <configuration>
-          <mainClass>org.test.int1.Main</mainClass>
-        </configuration>
-      </plugin>
-      -->
     </plugins>
   </build>
 </project>
