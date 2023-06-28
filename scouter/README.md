@@ -262,19 +262,18 @@ Windows 환경에서 cargo 플러그인을 통한 Tomcat 9.x에는 적용함
 
 새로운 버전을 적용하면  Spring 6 + Hibernate 6 + Tomcat 10.1 을 적용한  [my-board](../part-last/my-board) 프로젝트에 모니터링을 적용할 수 있다. 😊👍
 
-* ...
+🎇 설치는 잘 하였다. [my-board](../part-last/my-board) 프로젝트의 유입 모니터링도 잘 처리함을 확인하였음 🎉🎊✨
 
+* agent.host
 
+  *  런타임 환경을  Java 11로 실행하던 것 17로 올림 (20까지 지원 하신다고 함.)
 
+* 수집 서버 
 
-
-
-
-
-
-
-
-
-
-
+  * 수집 서버는 아직은 `Java 8`로 써야하는 것 같다. 
+    * 11에서도 동작하지만, 수집서버가 사용하는 라이브러리들이 구버전이라  Java 8  버전을 쓰는게 나을 것 같음.
+    * sun.misc.Unsafe::defineClass 를 사용하는 부분이 있는데.. JDK 17에서는 제거되서 그런 것 같음. JDK 11에서는 잘됨.
+    * `jaxb-impl-2.3.0.1.jar` 가 최신  Java  버전과 호환되지 않는 것 같음.
+    * https://github.com/scouter-project/scouter/issues/901
+    * https://stackoverflow.com/questions/55918972/unable-to-find-method-sun-misc-unsafe-defineclass
 
