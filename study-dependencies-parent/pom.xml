@@ -105,7 +105,7 @@
     <web-xml-location>${project.basedir}/src/main/webapp/WEB-INF/web.xml</web-xml-location>
 
     <!-- cargo 플러그인 설정 -->
-    <cargo.version>1.10.7</cargo.version>
+    <cargo.version>1.10.8</cargo.version>
     <cargo-tomcat.containerId>tomcat9x</cargo-tomcat.containerId>
     <cargo-tomcat.version>9.0.76</cargo-tomcat.version>
     <cargo-context-path>${jetty-context-path}</cargo-context-path>
@@ -236,6 +236,9 @@
                 <type>standalone</type>
                 <properties>
                   <cargo.servlet.port>${cargo-server-port}</cargo.servlet.port>
+                  <!-- Ctrl + C로 외부 Cargo 프로세스가 대기하지 않고 백그라운드 실행이 되야할 것 같은데,  원하는대로 안된다. ㅠㅠ -->
+                  <!-- https://codehaus-cargo.github.io/cargo/Container+Start.html -->
+                  <!-- <cargo.process.spawn>true</cargo.process.spawn> -->
                 </properties>
               </configuration>
               <deployables>
