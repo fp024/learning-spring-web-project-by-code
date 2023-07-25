@@ -21,9 +21,9 @@
     <jstl.version>1.2</jstl.version>
     <javax.annotation-api.version>1.3.2</javax.annotation-api.version>
 
-    <org.springframework-version>5.3.28</org.springframework-version>
+    <org.springframework-version>5.3.29</org.springframework-version>
 
-    <spring-security.version>5.8.4</spring-security.version>
+    <spring-security.version>5.8.5</spring-security.version>
 
     <org.aspectj-version>1.9.19</org.aspectj-version>
 
@@ -53,9 +53,9 @@
     <ojdbc11.version>23.2.0.0</ojdbc11.version>
 
     <!-- 몇몇 프로젝트에서는 hsqldb로 사용해보자... -->
-    <hsqldb.version>2.7.1</hsqldb.version>
+    <hsqldb.version>2.7.2</hsqldb.version>
 
-    <thumbnailator.version>0.4.19</thumbnailator.version>
+    <thumbnailator.version>0.4.20</thumbnailator.version>
     <!-- 
       1. web.xml기반 설정 프로젝트에서 소스파일 변경으로 Jetty의 자동재시작이 일어날때, 
          예외가 발생하여, 9.x에서 10.x로 버전업 해봤는데, 버전 문제는 아닌 것 같다.
@@ -68,7 +68,7 @@
     -->
     <jetty.version>10.0.15</jetty.version>
 
-    <junit.jupiter.version>5.9.3</junit.jupiter.version>
+    <junit.jupiter.version>5.10.0</junit.jupiter.version>
 
     <json-path.version>2.8.0</json-path.version>
 
@@ -107,7 +107,7 @@
     <!-- cargo 플러그인 설정 -->
     <cargo.version>1.10.8</cargo.version>
     <cargo-tomcat.containerId>tomcat9x</cargo-tomcat.containerId>
-    <cargo-tomcat.version>9.0.76</cargo-tomcat.version>
+    <cargo-tomcat.version>9.0.78</cargo-tomcat.version>
     <cargo-context-path>${jetty-context-path}</cargo-context-path>
     <cargo-server-port>${jetty.port}</cargo-server-port>
   </properties>
