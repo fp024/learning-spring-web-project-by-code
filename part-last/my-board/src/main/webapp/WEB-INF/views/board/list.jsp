@@ -66,21 +66,22 @@
                 <div class="col-lg-12">
                   <form id="searchForm" action="/board/list" method="get">
                     <input type="hidden" name="searchCodes" value="${pageMaker.searchCodesWithJoined}">
-                    <c:forEach var="searchType" items="${allSearchTypeSet}">                                                      
-                    <div class="form-check form-check-inline">                    
-                      <input class="form-check-input" type="checkbox" id="SEARCH_TYPE_${searchType.name}" value="${searchType.code}" 
+                    <c:forEach var="searchType" items="${allSearchTypeSet}">
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="checkbox" id="SEARCH_TYPE_${searchType.name}" value="${searchType.code}"
                           <c:if test="${fn:contains(pageMaker.searchCodes,searchType.code)}">checked="checked"</c:if>>
                       <label class="form-check-label" for="SEARCH_TYPE_${searchType.name}">${searchType.description}</label>
                     </div>
                     </c:forEach>
-                    <input type="text" name="keyword" value="${pageMaker.keyword}">                  
+                    <input type="text" name="keyword" value="${pageMaker.keyword}">
                     <input type="hidden" name="pageNum" value="${pageMaker.pageNum}">
                     <input type="hidden" name="amount" value="${pageMaker.amount}">
-                    <button type="button" class="btn btn-outline-primary">Search</button>
+                    <button type="button" class="btn btn-outline-primary search">Search</button>
+                    <button type="button" class="btn btn-outline-secondary cancel">Cancel</button>
                   </form>
                 </div>
 
-                <!-- 
+                <!--
                   BootStrap 버전이 달라서 교제와 마크업이 다르다, 아래 공식 페이지의 내용을 참조해서 넣도록 하자!
                   https://getbootstrap.com/docs/4.0/components/pagination/
                  -->
@@ -128,14 +129,14 @@
     var submitProcess = function(e) {
       // 검색조건 체크 박스에서 체크된 코드를 ,로 join하여 하나의 문자열로 만든다.
       var selectedSearchCodes = $searchForm.find("input[id^='SEARCH_TYPE_']:checked").map(function() {
-        return $(this).val();  
+        return $(this).val();
       }).get().join();
-    
+
       if (!selectedSearchCodes) {
         alert("검색 체크 박스를 하나 이상 선택해주세요!");
         return;
       }
-    
+
       if (!$searchForm.find("input[name='keyword']").val()) {
         alert("검색 키워드를 입력해주세요!");
         return;
@@ -146,19 +147,31 @@
 
       e.preventDefault();
       $searchForm.submit();
-    }; 
-        
+    };
+
     var $searchForm = $('#searchForm');
-    
+
     // form에 input box가 한개이면 엔터를 누르면 submit이 일어난다. 이와 관련해서 처리부분을 함수로 분리하여 실행되게한다.
     $('input[name="keyword"]').keydown(function(e) {
-        if (event.keyCode === 13) {
+        if (e.keyCode === 13) {
           submitProcess(e);
         }
     });
-    
-    $("#searchForm button").on("click", function(e){
+
+    $("#searchForm [class*=search]").on("click", function (e) {
       submitProcess(e);
+    });
+
+    $("#searchForm [class*=cancel]").on("click", function () {
+      $searchForm.find("input[id^='SEARCH_TYPE_']:checked").each(function () {
+        $(this).prop('checked', false);
+      });
+      $searchForm.find("input[name='keyword']").val('');
+
+      var url = new window.URL(document.location);
+      url.searchParams.delete('searchCodes');
+      url.searchParams.delete('keyword');
+      document.location = url;
     });
   });
   </script>
