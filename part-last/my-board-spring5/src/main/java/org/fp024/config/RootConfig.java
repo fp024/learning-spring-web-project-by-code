@@ -2,6 +2,9 @@ package org.fp024.config;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.Properties;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,6 +13,8 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.support.EncodedResource;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -44,7 +49,8 @@ public class RootConfig {
   }
   // 메서드 이름을 getObject로 생성될 타입이름으로 정의하는 것이 깔끔하겠다.
   @Bean
-  public LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dataSource) {
+  public LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dataSource)
+      throws IOException {
 
     LocalContainerEntityManagerFactoryBean emfBean = new LocalContainerEntityManagerFactoryBean();
 
@@ -61,8 +67,19 @@ public class RootConfig {
     hibernateJpaVendorAdapter.setShowSql(true);
     emfBean.setJpaVendorAdapter(hibernateJpaVendorAdapter);
 
+    Properties jpaProps = getJpaProperties();
+
+    emfBean.setJpaProperties(jpaProps);
     return emfBean;
   }
+
+  private static Properties getJpaProperties() throws IOException {
+    Properties jpaProps = new Properties();
+    jpaProps.load(new EncodedResource(
+        new ClassPathResource("custom-jpa.properties"), StandardCharsets.UTF_8).getInputStream());
+    return jpaProps;
+  }
+
 
   // entityManagerFactory 파라미터에 대해 IntelliJ 경고가 노출되는데..
   // `자동 주입을 할 수 없습니다. 'EntityManagerFactory' 타입의 bean을 찾을 수 없습니다.`라고 나온다.
