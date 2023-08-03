@@ -3,6 +3,8 @@ package org.fp024.config;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import jakarta.persistence.EntityManagerFactory;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Properties;
 import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,6 +13,8 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.support.EncodedResource;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -45,7 +49,8 @@ public class RootConfig {
   }
   // 메서드 이름을 getObject로 생성될 타입이름으로 정의하는 것이 깔끔하겠다.
   @Bean
-  public LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dataSource) {
+  public LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dataSource)
+      throws IOException {
 
     LocalContainerEntityManagerFactoryBean emfBean = new LocalContainerEntityManagerFactoryBean();
 
@@ -62,34 +67,17 @@ public class RootConfig {
     hibernateJpaVendorAdapter.setShowSql(true);
     emfBean.setJpaVendorAdapter(hibernateJpaVendorAdapter);
 
-    Properties jpaProps = new Properties();
-
-    jpaProps.put("hibernate.format_sql", "true");
-    jpaProps.put("hibernate.hbm2ddl.charset_name", "UTF-8");
-
-    jpaProps.put("jakarta.persistence.schema-generation.database.action", "drop-and-create");
-
-    jpaProps.put("jakarta.persistence.schema-generation.drop-source", "script");
-    jpaProps.put(
-        "jakarta.persistence.schema-generation.drop-script-source", "sql/hsqldb/init-drop-ddl.sql");
-
-    jpaProps.put("jakarta.persistence.schema-generation.create-source", "script");
-    jpaProps.put(
-        "jakarta.persistence.schema-generation.create-script-source",
-        "sql/hsqldb/init-create-ddl.sql");
-
-    jpaProps.put("jakarta.persistence.sql-load-script-source", "sql/hsqldb/init-data-insert.sql");
-
-    jpaProps.put(
-        "hibernate.hbm2ddl.import_files_sql_extractor",
-        "org.hibernate.tool.schema.internal.script.MultiLineSqlScriptExtractor");
-
-    jpaProps.put(
-        "hibernate.physical_naming_strategy",
-        "org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy");
+    Properties jpaProps = getJpaProperties();
 
     emfBean.setJpaProperties(jpaProps);
     return emfBean;
+  }
+
+  private static Properties getJpaProperties() throws IOException {
+    Properties jpaProps = new Properties();
+    jpaProps.load(new EncodedResource(
+        new ClassPathResource("custom-jpa.properties"), StandardCharsets.UTF_8).getInputStream());
+    return jpaProps;
   }
 
   // entityManagerFactory 파라미터에 대해 IntelliJ 경고가 노출되는데..
