@@ -23,9 +23,9 @@
 
     <org.springframework-version>5.3.29</org.springframework-version>
 
-    <spring-security.version>5.8.5</spring-security.version>
+    <spring-security.version>5.8.6</spring-security.version>
 
-    <org.aspectj-version>1.9.19</org.aspectj-version>
+    <org.aspectj-version>1.9.20</org.aspectj-version>
 
     <quartz.version>2.3.2</quartz.version>
 
@@ -72,7 +72,7 @@
 
     <json-path.version>2.8.0</json-path.version>
 
-    <mockito.version>5.4.0</mockito.version>
+    <mockito.version>5.5.0</mockito.version>
 
     <hamcrest.version>2.2</hamcrest.version>
     
@@ -105,9 +105,9 @@
     <web-xml-location>${project.basedir}/src/main/webapp/WEB-INF/web.xml</web-xml-location>
 
     <!-- cargo 플러그인 설정 -->
-    <cargo.version>1.10.8</cargo.version>
+    <cargo.version>1.10.9</cargo.version>
     <cargo-tomcat.containerId>tomcat9x</cargo-tomcat.containerId>
-    <cargo-tomcat.version>9.0.78</cargo-tomcat.version>
+    <cargo-tomcat.version>9.0.79</cargo-tomcat.version>
     <cargo-context-path>${jetty-context-path}</cargo-context-path>
     <cargo-server-port>${jetty.port}</cargo-server-port>
   </properties>
