@@ -17,8 +17,8 @@
         <Logger name="org.springframework.context" level="info"/>
         <Logger name="org.springframework.web" level="info"/>
 
-        <Logger name="org.hibernate.orm.jdbc.bind" level="TRACE"/>
-        <Logger name="org.hibernate.orm.jdbc.extract" level="TRACE"/>
+        <Logger name="org.hibernate.type.descriptor.sql.BasicBinder" level="TRACE"/>
+        <Logger name="org.hibernate.type.descriptor.sql.BasicExtractor" level="TRACE"/>
 
         <Logger name="org.hibernate.engine.transaction" level="DEBUG"/> <!-- 이 패키지는 최소 DEBUG 레벨인 듯.. -->
 
