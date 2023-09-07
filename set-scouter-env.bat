@@ -1,8 +1,6 @@
-@SET JAVA_HOME=C:\JDK\17
 @SET SCOUTER_JAVA_AGENT_CONF=scouter\conf\board-webapp.conf
-@SET SCOUTER_JAVA_AGENT_LIB=C:\scouter\scouter\agent.java\scouter.agent.jar
-@SET LATEST_PROJECT_HOME=part-last\my-board-spring5
-@ECHO JAVA_HOME=%JAVA_HOME%
+@SET SCOUTER_JAVA_AGENT_LIB=C:\scouter\latest\scouter\agent.java\scouter.agent.jar
+@SET LATEST_PROJECT_HOME=part-last\my-board
 @ECHO SCOUTER_JAVA_AGENT_CONF=%SCOUTER_JAVA_AGENT_CONF%
 @ECHO SCOUTER_JAVA_AGENT_LIB=%SCOUTER_JAVA_AGENT_LIB%
 @ECHO LATEST_PROJECT_HOME=%LATEST_PROJECT_HOME%

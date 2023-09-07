@@ -20,7 +20,7 @@
     <org.springframework-version>6.0.11</org.springframework-version>
     <spring-security.version>6.1.3</spring-security.version>
 
-    <hibernate.version>6.2.7.Final</hibernate.version>
+    <hibernate.version>6.2.8.Final</hibernate.version>
     <spring-data-jpa.version>3.1.3</spring-data-jpa.version>
     <querydsl.version>5.0.0</querydsl.version>
     <jakarta.servlet-api.version>6.0.0</jakarta.servlet-api.version>
@@ -32,11 +32,11 @@
     <java-time-jsptags.version>2.0.0</java-time-jsptags.version>
 
     <!-- Jetty 12 버전이 나오면 바꿀 것. -->
-    <jetty.version>11.0.15</jetty.version>
+    <jetty.version>11.0.16</jetty.version>
 
     <!-- Tomcat 10.1.x는 Servlet 6.0을 정식 지원함. -->
     <cargo-tomcat.containerId>tomcat10x</cargo-tomcat.containerId>
-    <cargo-tomcat.version>10.1.12</cargo-tomcat.version>
+    <cargo-tomcat.version>10.1.13</cargo-tomcat.version>
   </properties>
 
   <!-- web.xml에서 경로 변화를 주기위해, profile을 윈도우와 리눅스 환경으로 나눠보았다. -->

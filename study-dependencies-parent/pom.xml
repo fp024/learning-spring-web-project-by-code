@@ -66,7 +66,7 @@
       2. Jetty 11.x버전은 주요 서블릿 패키지명이 바뀌였기 때문에 Spring 5에서 사용할 수 없다.          
          https://stackoverflow.com/questions/66217350/deploying-spring-5-x-on-tomcat-10-x-with-jakarta-package        
     -->
-    <jetty.version>10.0.15</jetty.version>
+    <jetty.version>10.0.16</jetty.version>
 
     <junit.jupiter.version>5.10.0</junit.jupiter.version>
 
@@ -107,7 +107,7 @@
     <!-- cargo 플러그인 설정 -->
     <cargo.version>1.10.9</cargo.version>
     <cargo-tomcat.containerId>tomcat9x</cargo-tomcat.containerId>
-    <cargo-tomcat.version>9.0.79</cargo-tomcat.version>
+    <cargo-tomcat.version>9.0.80</cargo-tomcat.version>
     <cargo-context-path>${jetty-context-path}</cargo-context-path>
     <cargo-server-port>${jetty.port}</cargo-server-port>
   </properties>
