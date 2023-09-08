@@ -2,7 +2,6 @@ package org.fp024.repository.querydsl;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import lombok.extern.slf4j.Slf4j;
 import org.fp024.config.RootConfig;
 import org.fp024.domain.BoardVO;
 import org.fp024.domain.Criteria;
@@ -13,7 +12,6 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.transaction.annotation.Transactional;
 
 @SpringJUnitConfig(classes = {RootConfig.class})
-@Slf4j
 class BoardQuerydslRepositoryTest {
   @Autowired private BoardQuerydslRepository repository;
 

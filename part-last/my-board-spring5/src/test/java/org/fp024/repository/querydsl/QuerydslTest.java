@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.LocalDateTime;
-import lombok.extern.slf4j.Slf4j;
 import org.fp024.config.RootConfig;
 import org.fp024.domain.QBoardVO;
 import org.fp024.domain.QMemberVO;
@@ -16,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 /** Querydsl 테스트 */
 @SpringJUnitConfig(classes = {RootConfig.class})
-@Slf4j
 public class QuerydslTest {
   @Autowired private JPAQueryFactory jpaQueryFactory;
 

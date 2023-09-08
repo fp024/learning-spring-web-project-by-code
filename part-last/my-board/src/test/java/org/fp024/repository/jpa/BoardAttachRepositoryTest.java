@@ -3,7 +3,6 @@ package org.fp024.repository.jpa;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.UUID;
-import lombok.extern.slf4j.Slf4j;
 import org.fp024.config.RootConfig;
 import org.fp024.domain.BoardAttachVO;
 import org.fp024.domain.BoardAttachVO_;
@@ -15,7 +14,6 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.transaction.annotation.Transactional;
 
 @SpringJUnitConfig(classes = {RootConfig.class})
-@Slf4j
 class BoardAttachRepositoryTest {
   @Autowired private BoardAttachRepository repository;
 

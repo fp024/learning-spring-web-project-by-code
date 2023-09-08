@@ -7,10 +7,8 @@ import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.util.UriComponentsBuilder;
 
-@Slf4j
 @ToString
 public class Criteria {
   @Getter private long pageNum;
