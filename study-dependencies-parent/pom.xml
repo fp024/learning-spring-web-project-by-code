@@ -23,7 +23,7 @@
 
     <org.springframework-version>5.3.30</org.springframework-version>
 
-    <spring-security.version>5.8.6</spring-security.version>
+    <spring-security.version>5.8.7</spring-security.version>
 
     <org.aspectj-version>1.9.20.1</org.aspectj-version>
 
@@ -37,7 +37,7 @@
 
     <log4j2.version>2.20.0</log4j2.version>
 
-    <lombok.version>1.18.28</lombok.version>
+    <lombok.version>1.18.30</lombok.version>
 
     <mybatis.version>3.5.13</mybatis.version>
     <mybatis.spring.version>2.1.1</mybatis.spring.version>
