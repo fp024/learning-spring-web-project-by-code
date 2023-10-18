@@ -18,7 +18,7 @@
   <!-- Servlet 4.0 + Spring 5 + JPA 2.2 기반 버전 프로퍼티는 하위 프로젝트에서 직접 관리 -->
   <properties>
     <hibernate.version>5.6.15.Final</hibernate.version>
-    <spring-data-jpa.version>2.7.16</spring-data-jpa.version>
+    <spring-data-jpa.version>2.7.17</spring-data-jpa.version>
     <querydsl.version>5.0.0</querydsl.version>
 
     <jetbrains.annotations.version>24.0.1</jetbrains.annotations.version>
