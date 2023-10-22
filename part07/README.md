@@ -936,6 +936,7 @@ encoded text: $2a$10$cwpVKNhU4h1P4xPT0h1ss.yfLTwZT9PjcCpAAMEZ3ZAwwxNCuoXSS
 `.withDefaultPasswordEncoder()` 를 제거하고 실행하자!
 
 ```java
+  // 아마도 내가 member의 로그인만 확인했었나보다.. 잘못된 코드일 듯..
   @Bean
   public InMemoryUserDetailsManager userDetailsService() {
     UserDetails user =
@@ -951,6 +952,30 @@ encoded text: $2a$10$cwpVKNhU4h1P4xPT0h1ss.yfLTwZT9PjcCpAAMEZ3ZAwwxNCuoXSS
 ```
 
 admin은 패스워드 인코딩 처리가 되지않아 로그인이 안될 테지만, member는 로그인이 되야한다. > 잘 됨을 확인했다.
+
+* 🎃 스프링 시큐리티 5.8.8 에서 확인 했을 때.. 저런식으로 쓰면 마지막에 쓴 member만 유저로 정의된다.
+
+  ```java
+    @Bean
+    public InMemoryUserDetailsManager userDetailsService() {
+      UserDetails admin =
+          User.withUsername("admin")
+              .password("admin")
+              .roles(MemberAuthType.ROLE_ADMIN.getRoleUserName())
+          UserDetails member =
+              User.withUsername("member")
+              .password("$2a$10$cwpVKNhU4h1P4xPT0h1ss.yfLTwZT9PjcCpAAMEZ3ZAwwxNCuoXSS")
+              .roles(MemberAuthType.ROLE_MEMBER.getRoleUserName())
+              .build();
+      return new InMemoryUserDetailsManager(admin, member);
+    }
+  ```
+
+  이렇게 따로 써줘야함. 
+
+  
+
+
 
 
 
