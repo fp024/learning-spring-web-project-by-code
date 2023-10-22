@@ -962,6 +962,7 @@ admin은 패스워드 인코딩 처리가 되지않아 로그인이 안될 테�
           User.withUsername("admin")
               .password("admin")
               .roles(MemberAuthType.ROLE_ADMIN.getRoleUserName())
+              .build();
           UserDetails member =
               User.withUsername("member")
               .password("$2a$10$cwpVKNhU4h1P4xPT0h1ss.yfLTwZT9PjcCpAAMEZ3ZAwwxNCuoXSS")
