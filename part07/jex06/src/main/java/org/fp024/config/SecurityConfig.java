@@ -66,15 +66,17 @@ public class SecurityConfig {
   /*
   @Bean
   public InMemoryUserDetailsManager userDetailsService() {
-    UserDetails user =
+    UserDetails admin =
         User.withUsername("admin")
             .password("admin")
-            .roles(MemberAuthType.ROLE_ADMIN.getRoleUserName())
-            .username("member")
-            .password("$2a$10$cwpVKNhU4h1P4xPT0h1ss.yfLTwZT9PjcCpAAMEZ3ZAwwxNCuoXSS")
-            .roles(MemberAuthType.ROLE_MEMBER.getRoleUserName())
+            .roles(MemberAuthType.ROLE_ADMIN.getRoleName())
             .build();
-    return new InMemoryUserDetailsManager(user);
+    UserDetails member =
+            User.withUsername("member")
+            .password("$2a$10$cwpVKNhU4h1P4xPT0h1ss.yfLTwZT9PjcCpAAMEZ3ZAwwxNCuoXSS")
+            .roles(MemberAuthType.ROLE_MEMBER.getRoleName())
+            .build();
+    return new InMemoryUserDetailsManager(admin, member);
   }
   */
 
