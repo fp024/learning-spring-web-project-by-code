@@ -31,8 +31,9 @@
 
     <java-time-jsptags.version>2.0.0</java-time-jsptags.version>
 
-    <!-- Jetty 12 버전이 나오면 바꿀 것. -->
-    <jetty.version>11.0.17</jetty.version>
+    <!-- Jetty Maven Plugin 12.x 버전이 나오면 바꿀 것. -->
+    <!-- https://mvnrepository.com/artifact/org.eclipse.jetty/jetty-maven-plugin -->
+    <jetty.version>11.0.18</jetty.version>
 
     <!-- Tomcat 10.1.x는 Servlet 6.0을 정식 지원함. -->
     <cargo-tomcat.containerId>tomcat10x</cargo-tomcat.containerId>
