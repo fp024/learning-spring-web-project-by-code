@@ -21,7 +21,7 @@
     <jstl.version>1.2</jstl.version>
     <javax.annotation-api.version>1.3.2</javax.annotation-api.version>
 
-    <org.springframework-version>5.3.30</org.springframework-version>
+    <org.springframework-version>5.3.31</org.springframework-version>
 
     <spring-security.version>5.8.8</spring-security.version>
 
@@ -29,7 +29,7 @@
 
     <quartz.version>2.3.2</quartz.version>
 
-    <jackson.version>2.15.3</jackson.version>
+    <jackson.version>2.16.0</jackson.version>
     <!-- 마이크로 보안 패치가 있을때, jackson-databind 만 패치되기도 함. 
          jackson-databind는 별도로 분리해두는게 낫겠다. -->
     <jackson-databind.version>${jackson.version}</jackson-databind.version>
@@ -107,7 +107,7 @@
     <!-- cargo 플러그인 설정 -->
     <cargo.version>1.10.10</cargo.version>
     <cargo-tomcat.containerId>tomcat9x</cargo-tomcat.containerId>
-    <cargo-tomcat.version>9.0.82</cargo-tomcat.version>
+    <cargo-tomcat.version>9.0.83</cargo-tomcat.version>
     <cargo-context-path>${jetty-context-path}</cargo-context-path>
     <cargo-server-port>${jetty.port}</cargo-server-port>
   </properties>
