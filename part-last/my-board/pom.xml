@@ -17,10 +17,10 @@
 
   <!-- Spring 6 + JPA 3.0 기반 버전 프로퍼티는 하위 프로젝트에서 직접 관리 -->
   <properties>
-    <org.springframework-version>6.1.0</org.springframework-version>
-    <spring-security.version>6.1.5</spring-security.version>
+    <org.springframework-version>6.1.1</org.springframework-version>
+    <spring-security.version>6.2.0</spring-security.version>
 
-    <hibernate.version>6.3.1.Final</hibernate.version>
+    <hibernate.version>6.3.2.Final</hibernate.version>
     <spring-data-jpa.version>3.2.0</spring-data-jpa.version>
     <querydsl.version>5.0.0</querydsl.version>
     <jakarta.servlet-api.version>6.0.0</jakarta.servlet-api.version>
