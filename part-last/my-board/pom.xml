@@ -322,43 +322,6 @@
 
   </dependencies>
   <build>
-    <pluginManagement>
-      <plugins>
-        <!-- 이 플러그인의 구성은 Eclipse m2e 설정만 저장하는 데 사용되고, Maven 빌드 자체에는 영향을 
-            미치지 않음. toolchain 동작이 eclipse m2e에서는 의미가 없음. -->
-        <plugin>
-          <groupId>org.eclipse.m2e</groupId>
-          <artifactId>lifecycle-mapping</artifactId>
-          <version>1.0.0</version>
-          <configuration>
-            <lifecycleMappingMetadata>
-              <pluginExecutions>
-                <pluginExecution>
-                  <pluginExecutionFilter>
-                    <groupId>
-                      org.apache.maven.plugins
-                    </groupId>
-                    <artifactId>
-                      maven-toolchains-plugin
-                    </artifactId>
-                    <versionRange>
-                      [1.1,)
-                    </versionRange>
-                    <goals>
-                      <goal>toolchain</goal>
-                    </goals>
-                  </pluginExecutionFilter>
-                  <action>
-                    <ignore/>
-                    <!-- Eclipse m2e 동작에서는 무시 처리 -->
-                  </action>
-                </pluginExecution>
-              </pluginExecutions>
-            </lifecycleMappingMetadata>
-          </configuration>
-        </plugin>
-      </plugins>
-    </pluginManagement>
     <plugins>
       <!-- maven-compiler-plugin 3.10.1 환경에서는 따로 설정하지 않아도 어노테이션 프로세서가 잘 동작한다. -->
       <!--
