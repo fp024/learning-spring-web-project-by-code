@@ -6,9 +6,9 @@
 
   <parent>
     <groupId>org.fp024</groupId>
-    <artifactId>study-dependencies-parent</artifactId>
+    <artifactId>study-dependencies-parent-with-ee10-jetty</artifactId>
     <version>1.0.0-BUILD-SNAPSHOT</version>
-    <relativePath>../../study-dependencies-parent/pom.xml</relativePath>
+    <relativePath>../../study-dependencies-parent/ee10-jetty.xml</relativePath>
   </parent>
 
   <artifactId>my-board</artifactId>
@@ -31,9 +31,10 @@
 
     <java-time-jsptags.version>2.0.0</java-time-jsptags.version>
 
-    <!-- Jetty Maven Plugin 12.x 버전이 나오면 바꿀 것. -->
+    <!-- Jetty Maven Plugin 12.x 버전이 나왔는데, groupId, artifactId가 바뀌었다. -->
+    <!-- https://github.com/jetty/jetty.project/pull/10810 -->
     <!-- https://mvnrepository.com/artifact/org.eclipse.jetty/jetty-maven-plugin -->
-    <jetty.version>11.0.18</jetty.version>
+    <jetty.version>12.0.3</jetty.version>
 
     <!-- Tomcat 10.1.x는 Servlet 6.0을 정식 지원함. -->
     <cargo-tomcat.containerId>tomcat10x</cargo-tomcat.containerId>
@@ -41,7 +42,7 @@
   </properties>
 
   <!-- web.xml에서 경로 변화를 주기위해, profile을 윈도우와 리눅스 환경으로 나눠보았다. -->
-  <profiles>
+  <profiles>  
     <profile>
       <id>win</id>
       <activation>
@@ -82,8 +83,9 @@
           </resource>
         </resources>
       </build>
-    </profile>
+    </profile> 
   </profiles>
+  
 
   <dependencies>
     <!-- Spring -->
@@ -321,6 +323,11 @@
     </dependency>
 
   </dependencies>
+  
+  
+
+  
+  
   <build>
     <plugins>
       <!-- maven-compiler-plugin 3.10.1 환경에서는 따로 설정하지 않아도 어노테이션 프로세서가 잘 동작한다. -->

@@ -4,9 +4,9 @@
 
   <parent>
     <groupId>org.fp024</groupId>
-    <artifactId>study-dependencies-parent</artifactId>
+    <artifactId>study-dependencies-parent-with-legacy-jetty</artifactId>
     <version>1.0.0-BUILD-SNAPSHOT</version>
-    <relativePath>../../study-dependencies-parent/pom.xml</relativePath>
+    <relativePath>../../study-dependencies-parent/legacy-jetty.xml</relativePath>
   </parent>
 
   <artifactId>jex01</artifactId>

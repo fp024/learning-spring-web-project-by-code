@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+ 
+  <!--
+    Jetty 12 부터는 groupId와 artifactId가 바뀌어서 따로 별도 설정 pom을 분리했음.
+  -->
+  <parent>
+    <groupId>org.fp024</groupId>
+    <artifactId>study-dependencies-parent</artifactId>
+    <version>1.0.0-BUILD-SNAPSHOT</version>
+    <relativePath>pom.xml</relativePath>
+  </parent>
+
+  <artifactId>study-dependencies-parent-with-ee10-jetty</artifactId>
+  <name>${project.artifactId}</name>
+  <packaging>pom</packaging>
+ 
+  <profiles>
+    <!-- Jetty 기본 웹 애플리케이션 실행  -->
+    <profile>
+      <id>jetty-run</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <properties>
+        <jstl-scope.type>provided</jstl-scope.type>
+      </properties>
+      <build>
+        <plugins>
+          <!-- Jetty 서버 구동 -->
+          <!-- 도움말 자세히보기: mvnw jetty:help -Ddetail=true -Dgoal=run -->
+          <plugin>
+            <!-- https://eclipse.dev/jetty/documentation/jetty-12/programming-guide/index.html#jetty-maven-plugin -->
+            <!-- 문서에는 언급이 따로 없음. -->
+            <!-- https://eclipse.dev/jetty/documentation/jetty-12/programming-guide/index.html#pg-migration-11-to-12 -->
+            <!-- 여기서는 가이드가 있긴한데.. 여전히 groupId가 잘못된 것 같은데...😅 
+                org.eclipse.jetty.ee{8,9,10}:jetty-ee{8,9,10}-jetty-maven-plugin 가 아니고,
+                org.eclipse.jetty.ee{8,9,10}:jetty-ee{8,9,10}-maven-plugin 가 되야하는 것이 아닌지?
+            -->
+            <groupId>org.eclipse.jetty.ee10</groupId>
+            <artifactId>jetty-ee10-maven-plugin</artifactId>
+            <version>${jetty.version}</version>
+            <configuration>
+              <httpConnector>
+                <!--host>localhost</host-->
+                <port>${jetty.port}</port>
+              </httpConnector>
+              <webApp>
+                <contextPath>${jetty-context-path}</contextPath>
+                <descriptor>${web-xml-location}</descriptor>
+                <sessionHandler>
+                  <sessionIdPathParameterName>none</sessionIdPathParameterName>
+                </sessionHandler>
+              </webApp>
+              <deployMode>EMBED</deployMode>
+              <stopKey>CTRL+C</stopKey>
+              <stopPort>8999</stopPort>
+              <!-- 9.x 설정: <scanIntervalSeconds> 대신 <scan> 사용 -->
+              <!-- 
+                변경 감지 자동 재시작시 ContextLoaderListener가 제대로 실행되지 않는 오류가 발생한다.
+                설정을 -1로하여 자동 재시작이 일어나지 않도록 한다.
+               -->
+              <scan>${jetty-auto-deploy-seconds}</scan>
+              <scanTargetPatterns>
+                <scanTargetPattern>
+                  <directory>src/main/webapp/WEB-INF</directory>
+                  <includes>
+                    <include>**/*.properties</include>
+                    <include>**/*.xml</include>
+                  </includes>
+                  <excludes>
+                    <exclude>**/*.jsp</exclude>
+                  </excludes>
+                </scanTargetPattern>
+              </scanTargetPatterns>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <!-- Jetty - Scouter를 활성화하여 웹 애플리케이션 실행 -->
+    <profile>
+      <id>jetty-run-with-scouter</id>
+      <properties>
+        <jstl-scope.type>provided</jstl-scope.type>
+      </properties>
+      <build>
+        <plugins>
+          <!-- Jetty 서버 구동 -->
+          <!-- 도움말 자세히보기: mvnw jetty:help -Ddetail=true -Dgoal=run -->
+          <plugin>
+            <!-- https://www.eclipse.org/jetty/documentation/jetty-10/programming-guide/index.html#jetty-maven-plugin -->
+            <groupId>org.eclipse.jetty.ee10</groupId>
+            <artifactId>jetty-ee10-maven-plugin</artifactId>
+            <version>${jetty.version}</version>
+            <configuration>
+              <httpConnector>
+                <!--host>localhost</host-->
+                <port>${jetty.port}</port>
+              </httpConnector>
+              <!-- jvmArgs는 FORK 모드에서만 동작한다. -->
+              <jvmArgs><!-- 
+                  -->-javaagent:${scouter.agent.lib} <!--
+                  -->--illegal-access=warn <!--
+                  -->--add-opens=java.base/java.lang=ALL-UNNAMED <!--
+                  -->-Djdk.attach.allowAttachSelf=true <!--
+                  -->-Dscouter.config=${project.basedir}/../../${scouter.config.file} <!--
+              --></jvmArgs>
+              <webApp>
+                <contextPath>${jetty-context-path}</contextPath>
+                <descriptor>${web-xml-location}</descriptor>
+                <sessionHandler>
+                  <sessionIdPathParameterName>none</sessionIdPathParameterName>
+                </sessionHandler>
+              </webApp>
+              <deployMode>FORK</deployMode>
+              <stopKey>CTRL+C</stopKey>
+              <stopPort>8999</stopPort>
+              <!-- 9.x 설정: <scanIntervalSeconds> 대신 <scan> 사용 -->
+              <!-- 
+                변경 감지 자동 재시작시 ContextLoaderListener가 제대로 실행되지 않는 오류가 발생한다.
+                설정을 -1로하여 자동 재시작이 일어나지 않도록 한다.
+               -->
+              <scan>${jetty-auto-deploy-seconds}</scan>
+              <scanTargetPatterns>
+                <scanTargetPattern>
+                  <directory>src/main/webapp/WEB-INF</directory>
+                  <includes>
+                    <include>**/*.properties</include>
+                    <include>**/*.xml</include>
+                  </includes>
+                  <excludes>
+                    <exclude>**/*.jsp</exclude>
+                  </excludes>
+                </scanTargetPattern>
+              </scanTargetPatterns>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>   
+  </profiles>
+</project>
