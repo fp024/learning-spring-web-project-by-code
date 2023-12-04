@@ -21,9 +21,10 @@ jobs:
       id: setup-java-17-21
       uses: actions/setup-java@v4
       with:                
-        distribution: 'temurin'
+        distribution: 'temurin'        
         server-id: github # Value of the distributionManagement/repository/id field of the pom.xml
         settings-path: ${{ github.workspace }} # location for the settings.xml file
+        cache: 'maven'
         mvn-toolchain-vendor: Eclipse Temurin
         java-version: |
           17
