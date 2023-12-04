@@ -17,8 +17,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - name: Set up JDK 17-21
-      id: setup-java-17-21
+    - name: Set up JDK 17
+      id: setup-java-17
       uses: actions/setup-java@v4
       with:                
         distribution: 'temurin'        
@@ -28,10 +28,8 @@ jobs:
         mvn-toolchain-vendor: Eclipse Temurin
         java-version: |
           17
-          21
         mvn-toolchain-id: |
           17
-          21
 
     - name: Build with Maven (my-board-spring5 test)
       run: mvn -B clean test --file part-last/my-board-spring5/pom.xml -t toolchains.xml
