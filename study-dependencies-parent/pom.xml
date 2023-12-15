@@ -25,7 +25,7 @@
 
     <spring-security.version>5.8.9-SNAPSHOT</spring-security.version>
 
-    <org.aspectj-version>1.9.20.1</org.aspectj-version>
+    <org.aspectj-version>1.9.21</org.aspectj-version>
 
     <quartz.version>2.3.2</quartz.version>
 
@@ -39,7 +39,7 @@
 
     <lombok.version>1.18.30</lombok.version>
 
-    <mybatis.version>3.5.14</mybatis.version>
+    <mybatis.version>3.5.15</mybatis.version>
     <mybatis.spring.version>2.1.2</mybatis.spring.version>
     <mybatis.dynamic.sql.version>1.5.0</mybatis.dynamic.sql.version>
 
@@ -61,7 +61,7 @@
 
     <json-path.version>2.8.0</json-path.version>
 
-    <mockito.version>5.7.0</mockito.version>
+    <mockito.version>5.8.0</mockito.version>
 
     <hamcrest.version>2.2</hamcrest.version>
     
@@ -76,7 +76,7 @@
     <mybatis-generator-maven-plugin.version>1.4.2</mybatis-generator-maven-plugin.version>
     <maven-war-plugin.version>3.4.0</maven-war-plugin.version>
     <maven-resources-plugin.version>3.3.1</maven-resources-plugin.version>
-    <maven-surefire-plugin.version>3.2.2</maven-surefire-plugin.version>
+    <maven-surefire-plugin.version>3.2.3</maven-surefire-plugin.version>
     <maven-compiler-plugin.version>3.11.0</maven-compiler-plugin.version>
     <maven-toolchains-plugin.version>3.1.0</maven-toolchains-plugin.version>
 
@@ -92,9 +92,14 @@
               
       2. Jetty 11.x버전은 주요 서블릿 패키지명이 바뀌였기 때문에 Spring 5에서 사용할 수 없다.          
          https://stackoverflow.com/questions/66217350/deploying-spring-5-x-on-tomcat-10-x-with-jakarta-package        
-    -->
-    <jetty.version>10.0.18</jetty.version>
-    
+    -->    
+    <jetty10.version>10.0.18</jetty10.version>
+    <!-- Jetty Maven Plugin 12.x 버전이 나왔는데, groupId, artifactId가 바뀌었다. -->
+    <!-- https://github.com/jetty/jetty.project/pull/10810 -->
+    <!-- https://mvnrepository.com/artifact/org.eclipse.jetty/jetty-maven-plugin -->
+    <jetty12.version>12.0.4</jetty12.version>
+
+
     <!-- Jetty Http 포트 기본값 -->
     <jetty.port>8080</jetty.port>
     <!-- Jetty Context Path 설정 기본값 -->
@@ -106,9 +111,9 @@
     <web-xml-location>${project.basedir}/src/main/webapp/WEB-INF/web.xml</web-xml-location>
 
     <!-- cargo 플러그인 설정 -->
-    <cargo.version>1.10.10</cargo.version>
+    <cargo.version>1.10.11</cargo.version>
     <cargo-tomcat.containerId>tomcat9x</cargo-tomcat.containerId>
-    <cargo-tomcat.version>9.0.83</cargo-tomcat.version>
+    <cargo-tomcat.version>9.0.84</cargo-tomcat.version>
     <cargo-context-path>${jetty-context-path}</cargo-context-path>
     <cargo-server-port>${jetty.port}</cargo-server-port>
   </properties>

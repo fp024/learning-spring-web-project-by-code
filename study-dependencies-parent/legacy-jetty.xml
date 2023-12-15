@@ -14,14 +14,27 @@
   <artifactId>study-dependencies-parent-with-legacy-jetty</artifactId>
   <name>${project.artifactId}</name>
   <packaging>pom</packaging>
- 
+
+  <properties>
+    <jetty.version>${jetty10.version}</jetty.version>
+  </properties>
+
   <profiles>
     <!-- Jetty 기본 웹 애플리케이션 실행  -->
     <profile>
       <id>jetty-run</id>
+     <!-- 
+        여기서 activeByDefault를 true 지정해버리면 이 프로필에 속한 properties가 무조건 우선 된다. 
+        상위의 tomcat-run 프로필을 설정해서 실행하더라도 jstl-scope.type 속성 값이 provided로 덮어씌어 져버림.
+        혼란 방지를 위해 설정 제거해놔야겠다.
+        
+        그래도 불편한 점이 생기긴함.. jetty 실행시 프로필을 꼭 지정해야함.
+      -->
+      <!--
       <activation>
         <activeByDefault>true</activeByDefault>
       </activation>
+      -->
       <properties>
         <jstl-scope.type>provided</jstl-scope.type>
       </properties>

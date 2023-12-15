@@ -6,6 +6,7 @@
  
   <!--
     Jetty 12 부터는 groupId와 artifactId가 바뀌어서 따로 별도 설정 pom을 분리했음.
+    ee8 버전을 사용하면 Jetty 12에서도 Servlet 4를 사용할 수 있음.
   -->
   <parent>
     <groupId>org.fp024</groupId>
@@ -14,19 +15,19 @@
     <relativePath>pom.xml</relativePath>
   </parent>
 
-  <artifactId>study-dependencies-parent-with-ee10-jetty</artifactId>
+  <artifactId>study-dependencies-parent-with-ee8-jetty</artifactId>
   <name>${project.artifactId}</name>
   <packaging>pom</packaging>
  
   <properties>
     <jetty.version>${jetty12.version}</jetty.version>
   </properties>
- 
+
   <profiles>
     <!-- Jetty 기본 웹 애플리케이션 실행  -->
     <profile>
       <id>jetty-run</id>
-      <!-- 
+     <!-- 
         여기서 activeByDefault를 true 지정해버리면 이 프로필에 속한 properties가 무조건 우선 된다. 
         상위의 tomcat-run 프로필을 설정해서 실행하더라도 jstl-scope.type 속성 값이 provided로 덮어씌어 져버림.
         혼란 방지를 위해 설정 제거해놔야겠다.
@@ -39,7 +40,7 @@
       </activation>
       -->
       <properties>
-        <jstl-scope.type>provided</jstl-scope.type>
+        <jstl-scope.type>compile</jstl-scope.type>
       </properties>
       <build>
         <plugins>
@@ -53,8 +54,8 @@
                 org.eclipse.jetty.ee{8,9,10}:jetty-ee{8,9,10}-jetty-maven-plugin 가 아니고,
                 org.eclipse.jetty.ee{8,9,10}:jetty-ee{8,9,10}-maven-plugin 가 되야하는 것이 아닌지?
             -->
-            <groupId>org.eclipse.jetty.ee10</groupId>
-            <artifactId>jetty-ee10-maven-plugin</artifactId>
+            <groupId>org.eclipse.jetty.ee8</groupId>
+            <artifactId>jetty-ee8-maven-plugin</artifactId>
             <version>${jetty.version}</version>
             <configuration>
               <httpConnector>
@@ -107,8 +108,8 @@
           <!-- 도움말 자세히보기: mvnw jetty:help -Ddetail=true -Dgoal=run -->
           <plugin>
             <!-- https://www.eclipse.org/jetty/documentation/jetty-10/programming-guide/index.html#jetty-maven-plugin -->
-            <groupId>org.eclipse.jetty.ee10</groupId>
-            <artifactId>jetty-ee10-maven-plugin</artifactId>
+            <groupId>org.eclipse.jetty.ee8</groupId>
+            <artifactId>jetty-ee8-maven-plugin</artifactId>
             <version>${jetty.version}</version>
             <configuration>
               <httpConnector>
