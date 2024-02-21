@@ -21,11 +21,11 @@
     <jstl.version>1.2</jstl.version>
     <javax.annotation-api.version>1.3.2</javax.annotation-api.version>
 
-    <org.springframework-version>5.3.31</org.springframework-version>
+    <org.springframework-version>5.3.32</org.springframework-version>
 
-    <spring-security.version>5.8.9</spring-security.version>
+    <spring-security.version>5.8.10</spring-security.version>
 
-    <org.aspectj-version>1.9.21</org.aspectj-version>
+    <org.aspectj-version>1.9.21.1</org.aspectj-version>
 
     <quartz.version>2.3.2</quartz.version>
 
@@ -113,7 +113,7 @@
     <!-- cargo 플러그인 설정 -->
     <cargo.version>1.10.12</cargo.version>
     <cargo-tomcat.containerId>tomcat9x</cargo-tomcat.containerId>
-    <cargo-tomcat.version>9.0.85</cargo-tomcat.version>
+    <cargo-tomcat.version>9.0.86</cargo-tomcat.version>
     <cargo-context-path>${jetty-context-path}</cargo-context-path>
     <cargo-server-port>${jetty.port}</cargo-server-port>
   </properties>
@@ -199,6 +199,12 @@
               <configuration>
                 <type>standalone</type>
                 <properties>
+                  <cargo.jvmargs><!-- 
+                  -->--illegal-access=warn <!--
+                  -->--add-opens=java.base/java.io=ALL-UNNAMED <!--
+                  -->--add-opens=java.base/java.lang=ALL-UNNAMED <!--
+                  -->--add-opens=java.rmi/sun.rmi.transport=ALL-UNNAMED <!--
+                  --></cargo.jvmargs>
                   <cargo.servlet.port>${cargo-server-port}</cargo.servlet.port>
                   <!-- Ctrl + C로 외부 Cargo 프로세스가 대기하지 않고 백그라운드 실행이 되야할 것 같은데,  원하는대로 안된다. ㅠㅠ -->
                   <!-- https://codehaus-cargo.github.io/cargo/Container+Start.html -->
@@ -255,7 +261,9 @@
                   <cargo.jvmargs><!-- 
                   -->-javaagent:${scouter.agent.lib} <!--
                   -->--illegal-access=warn <!--
+                  -->--add-opens=java.base/java.io=ALL-UNNAMED <!--
                   -->--add-opens=java.base/java.lang=ALL-UNNAMED <!--
+                  -->--add-opens=java.rmi/sun.rmi.transport=ALL-UNNAMED <!--
                   -->-Djdk.attach.allowAttachSelf=true <!--
                   --></cargo.jvmargs>
                   <cargo.servlet.port>${cargo-server-port}</cargo.servlet.port>
