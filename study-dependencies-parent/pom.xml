@@ -21,27 +21,27 @@
     <jstl.version>1.2</jstl.version>
     <javax.annotation-api.version>1.3.2</javax.annotation-api.version>
 
-    <org.springframework-version>5.3.33</org.springframework-version>
+    <org.springframework-version>5.3.37</org.springframework-version>
 
-    <spring-security.version>5.8.11</spring-security.version>
+    <spring-security.version>5.8.13</spring-security.version>
 
-    <org.aspectj-version>1.9.21.2</org.aspectj-version>
+    <org.aspectj-version>1.9.22.1</org.aspectj-version>
 
     <quartz.version>2.3.2</quartz.version>
 
-    <jackson.version>2.17.0</jackson.version>
+    <jackson.version>2.17.2</jackson.version>
     <!-- 마이크로 보안 패치가 있을때, jackson-databind 만 패치되기도 함. 
          jackson-databind는 별도로 분리해두는게 낫겠다. -->
     <jackson-databind.version>${jackson.version}</jackson-databind.version>
-    <gson.version>2.10.1</gson.version>
+    <gson.version>2.11.0</gson.version>
 
     <log4j2.version>2.23.1</log4j2.version>
 
-    <lombok.version>1.18.30</lombok.version>
+    <lombok.version>1.18.34</lombok.version>
 
-    <mybatis.version>3.5.15</mybatis.version>
+    <mybatis.version>3.5.16</mybatis.version>
     <mybatis.spring.version>2.1.2</mybatis.spring.version>
-    <mybatis.dynamic.sql.version>1.5.0</mybatis.dynamic.sql.version>
+    <mybatis.dynamic.sql.version>1.5.2</mybatis.dynamic.sql.version>
 
     <hikaricp.version>5.1.0</hikaricp.version>
 
@@ -50,22 +50,22 @@
       최신버전을 쓰더라도 특별한 문제는 없었다.
       https://mvnrepository.com/artifact/com.oracle.database.jdbc/ojdbc11
     -->
-    <ojdbc11.version>23.3.0.23.09</ojdbc11.version>
+    <ojdbc11.version>23.5.0.24.07</ojdbc11.version>
 
     <!-- 몇몇 프로젝트에서는 hsqldb로 사용해보자... -->
-    <hsqldb.version>2.7.2</hsqldb.version>
+    <hsqldb.version>2.7.3</hsqldb.version>
 
     <thumbnailator.version>0.4.20</thumbnailator.version>
 
-    <junit.jupiter.version>5.10.2</junit.jupiter.version>
+    <junit.jupiter.version>5.10.3</junit.jupiter.version>
 
     <json-path.version>2.9.0</json-path.version>
 
-    <mockito.version>5.11.0</mockito.version>
+    <mockito.version>5.12.0</mockito.version>
 
-    <hamcrest.version>2.2</hamcrest.version>
+    <hamcrest.version>3.0</hamcrest.version>
     
-    <assertj.version>3.25.3</assertj.version>
+    <assertj.version>3.26.3</assertj.version>
 
     <!-- 2.0.0 부터는 Servlet 5.0이상, Java 17이 요구사항이다. 1.1.4 버전을 유지한다. -->
     <java-time-jsptags.version>1.1.4</java-time-jsptags.version>
@@ -76,9 +76,9 @@
     <mybatis-generator-maven-plugin.version>1.4.2</mybatis-generator-maven-plugin.version>
     <maven-war-plugin.version>3.4.0</maven-war-plugin.version>
     <maven-resources-plugin.version>3.3.1</maven-resources-plugin.version>
-    <maven-surefire-plugin.version>3.2.5</maven-surefire-plugin.version>
-    <maven-compiler-plugin.version>3.12.1</maven-compiler-plugin.version>
-    <maven-toolchains-plugin.version>3.1.0</maven-toolchains-plugin.version>
+    <maven-surefire-plugin.version>3.3.1</maven-surefire-plugin.version>
+    <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
+    <maven-toolchains-plugin.version>3.2.0</maven-toolchains-plugin.version>
 
     <!-- WAS에 따라서 JSTL포함되어있는 경우가 있음 (예: Jetty), 기본은 포함되지 않은 것으로 설정 -->
     <jstl-scope.type>compile</jstl-scope.type>
@@ -93,10 +93,14 @@
       2. Jetty 11.x버전은 주요 서블릿 패키지명이 바뀌였기 때문에 Spring 5에서 사용할 수 없다.          
          https://stackoverflow.com/questions/66217350/deploying-spring-5-x-on-tomcat-10-x-with-jakarta-package        
     -->    
-    <jetty10.version>10.0.20</jetty10.version>
+    <jetty10.version>10.0.22</jetty10.version>
     <!-- Jetty Maven Plugin 12.x 버전이 나왔는데, groupId, artifactId가 바뀌었다. -->
     <!-- https://github.com/jetty/jetty.project/pull/10810 -->
     <!-- https://mvnrepository.com/artifact/org.eclipse.jetty/jetty-maven-plugin -->
+    <!-- 
+      Jetty 12.0.8 부터 Spring의 WebApplicationInitializer 들을 인식을 못해서 
+      web.xml이 없다고 하면서 오류가 난다. 😅, 해결될 때까지 12.0.7로 두자!
+    -->
     <jetty12.version>12.0.7</jetty12.version>
 
 
@@ -111,9 +115,9 @@
     <web-xml-location>${project.basedir}/src/main/webapp/WEB-INF/web.xml</web-xml-location>
 
     <!-- cargo 플러그인 설정 -->
-    <cargo.version>1.10.12</cargo.version>
+    <cargo.version>1.10.14</cargo.version>
     <cargo-tomcat.containerId>tomcat9x</cargo-tomcat.containerId>
-    <cargo-tomcat.version>9.0.87</cargo-tomcat.version>
+    <cargo-tomcat.version>9.0.93</cargo-tomcat.version>
     <cargo-context-path>${jetty-context-path}</cargo-context-path>
     <cargo-server-port>${jetty.port}</cargo-server-port>
   </properties>
