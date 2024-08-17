@@ -64,7 +64,6 @@
               </httpConnector>
               <webApp>
                 <contextPath>${jetty-context-path}</contextPath>
-                <descriptor>${web-xml-location}</descriptor>
                 <sessionHandler>
                   <sessionIdPathParameterName>none</sessionIdPathParameterName>
                 </sessionHandler>
@@ -126,7 +125,6 @@
               --></jvmArgs>
               <webApp>
                 <contextPath>${jetty-context-path}</contextPath>
-                <descriptor>${web-xml-location}</descriptor>
                 <sessionHandler>
                   <sessionIdPathParameterName>none</sessionIdPathParameterName>
                 </sessionHandler>

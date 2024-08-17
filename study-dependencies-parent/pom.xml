@@ -101,7 +101,7 @@
       Jetty 12.0.8 부터 Spring의 WebApplicationInitializer 들을 인식을 못해서 
       web.xml이 없다고 하면서 오류가 난다. 😅, 해결될 때까지 12.0.7로 두자!
     -->
-    <jetty12.version>12.0.7</jetty12.version>
+    <jetty12.version>12.0.12</jetty12.version>
 
 
     <!-- Jetty Http 포트 기본값 -->
@@ -110,9 +110,6 @@
     <jetty-context-path>/</jetty-context-path>
     <!-- XML 컨텍스트 설정일 때는 잘 되는데, Spring Java Config 설정일 때는 예외가 난다. 일단 자동 재배포 재시작의 기본 값은 비활성화 상태로 두자 -->
     <jetty-auto-deploy-seconds>-1</jetty-auto-deploy-seconds>
-
-    <!-- Embedded Jetty로 실행할 때, web.xml을 환경별로 바꿀 상황이 생겨 환경변수로 분리했다.  -->
-    <web-xml-location>${project.basedir}/src/main/webapp/WEB-INF/web.xml</web-xml-location>
 
     <!-- cargo 플러그인 설정 -->
     <cargo.version>1.10.14</cargo.version>

@@ -6,9 +6,9 @@
 
   <parent>
     <groupId>org.fp024</groupId>
-    <artifactId>study-dependencies-parent-with-legacy-jetty</artifactId>
+    <artifactId>study-dependencies-parent-with-ee8-jetty</artifactId>
     <version>1.0.0-BUILD-SNAPSHOT</version>
-    <relativePath>../../study-dependencies-parent/legacy-jetty.xml</relativePath>
+    <relativePath>../../study-dependencies-parent/ee8-jetty.xml</relativePath>
   </parent>
 
   <artifactId>jex06-board</artifactId>
