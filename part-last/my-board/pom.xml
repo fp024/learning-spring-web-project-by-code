@@ -17,23 +17,17 @@
 
   <!-- Spring 6 + JPA 3.0 기반 버전 프로퍼티는 하위 프로젝트에서 직접 관리 -->
   <properties>
-    <org.springframework-version>6.1.11</org.springframework-version>
-    <spring-security.version>6.3.1</spring-security.version>
+    <org.springframework-version>${spring-v6.version}</org.springframework-version>
+    <spring-security.version>${spring-security-v6.version}</spring-security.version>
 
-    <hibernate.version>6.6.0.Final</hibernate.version>
-    <spring-data-jpa.version>3.3.2</spring-data-jpa.version>
-    <querydsl.version>5.1.0</querydsl.version>
-    <jakarta.servlet-api.version>6.0.0</jakarta.servlet-api.version>
-    <jakarta.xml.bind-api.version>4.0.1</jakarta.xml.bind-api.version>
+    <hibernate.version>${hibernate-v6.version}</hibernate.version>
+    <spring-data-jpa.version>${spring-data-jpa-v3.version}</spring-data-jpa.version>
 
-    <jakarta.servlet.jsp.jstl-api.version>3.0.0</jakarta.servlet.jsp.jstl-api.version>
-    <jakarta.servlet.jsp.jstl.version>3.0.1</jakarta.servlet.jsp.jstl.version>
-
-    <java-time-jsptags.version>2.0.2</java-time-jsptags.version>
+    <java-time-jsptags.version>${java-time-jsptags-jakarta.version}</java-time-jsptags.version>
 
     <!-- Tomcat 10.1.x는 Servlet 6.0을 정식 지원함. -->
     <cargo-tomcat.containerId>tomcat10x</cargo-tomcat.containerId>
-    <cargo-tomcat.version>10.1.28</cargo-tomcat.version>
+    <cargo-tomcat.version>${cargo-tomcat10.version}</cargo-tomcat.version>
   </properties>
 
   <!-- web.xml에서 경로 변화를 주기위해, profile을 윈도우와 리눅스 환경으로 나눠보았다. -->
