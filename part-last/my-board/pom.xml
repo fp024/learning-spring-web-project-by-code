@@ -42,7 +42,8 @@
       </activation>
       <properties>
         <env>win</env>
-        <web-xml-location>${project.basedir}/src/main/webapp/WEB-INF/web.xml</web-xml-location>
+        <!-- 💡 이 프로젝트는 web.xml을 사용하지 않으므로, 빈값으로 둔다. -->
+        <web-xml-location></web-xml-location>
       </properties>
     </profile>
 
@@ -55,8 +56,8 @@
       </activation>
       <properties>
         <env>linux</env>
-        <web-xml-location>${project.basedir}/src/main/webapp/WEB-INF/web-${env}.xml
-        </web-xml-location>
+        <!-- 💡 이 프로젝트는 web.xml을 사용하지 않으므로, 빈값으로 둔다. -->
+        <web-xml-location></web-xml-location>
       </properties>
 
       <build>
