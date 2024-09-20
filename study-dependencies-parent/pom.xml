@@ -35,7 +35,7 @@
     <jackson-databind.version>${jackson.version}</jackson-databind.version>
     <gson.version>2.11.0</gson.version>
 
-    <log4j2.version>2.23.1</log4j2.version>
+    <log4j2.version>2.24.0</log4j2.version>
 
     <lombok.version>1.18.34</lombok.version>
 
@@ -61,7 +61,7 @@
 
     <json-path.version>2.9.0</json-path.version>
 
-    <mockito.version>5.12.0</mockito.version>
+    <mockito.version>5.13.0</mockito.version>
 
     <hamcrest.version>3.0</hamcrest.version>
     
@@ -76,7 +76,7 @@
     <mybatis-generator-maven-plugin.version>1.4.2</mybatis-generator-maven-plugin.version>
     <maven-war-plugin.version>3.4.0</maven-war-plugin.version>
     <maven-resources-plugin.version>3.3.1</maven-resources-plugin.version>
-    <maven-surefire-plugin.version>3.4.0</maven-surefire-plugin.version>
+    <maven-surefire-plugin.version>3.5.0</maven-surefire-plugin.version>
     <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
     <maven-toolchains-plugin.version>3.2.0</maven-toolchains-plugin.version>
 
@@ -93,7 +93,7 @@
       2. Jetty 11.x버전은 주요 서블릿 패키지명이 바뀌였기 때문에 Spring 5에서 사용할 수 없다.          
          https://stackoverflow.com/questions/66217350/deploying-spring-5-x-on-tomcat-10-x-with-jakarta-package        
     -->    
-    <jetty10.version>10.0.23</jetty10.version>
+    <jetty10.version>10.0.24</jetty10.version>
     <!-- Jetty Maven Plugin 12.x 버전이 나왔는데, groupId, artifactId가 바뀌었다. -->
     <!-- https://github.com/jetty/jetty.project/pull/10810 -->
     <!-- https://mvnrepository.com/artifact/org.eclipse.jetty/jetty-maven-plugin -->
@@ -101,7 +101,7 @@
       Jetty 12.0.8 부터 Spring의 WebApplicationInitializer 들을 인식을 못해서 
       web.xml이 없다고 하면서 오류가 난다. 😅, 해결될 때까지 12.0.7로 두자!
     -->
-    <jetty12.version>12.0.12</jetty12.version>
+    <jetty12.version>12.0.13</jetty12.version>
 
 
     <!-- Jetty Http 포트 기본값 -->
@@ -114,8 +114,8 @@
     <!-- cargo 플러그인 설정 -->
     <cargo.version>1.10.14</cargo.version>
     <cargo-tomcat.containerId>tomcat9x</cargo-tomcat.containerId>
-    <cargo-tomcat.version>9.0.93</cargo-tomcat.version>
-    <cargo-tomcat10.version>10.1.28</cargo-tomcat10.version>
+    <cargo-tomcat.version>9.0.95</cargo-tomcat.version>
+    <cargo-tomcat10.version>10.1.30</cargo-tomcat10.version>
     <cargo-context-path>${jetty-context-path}</cargo-context-path>
     <cargo-server-port>${jetty.port}</cargo-server-port>
     
@@ -129,11 +129,11 @@
     <spring-data-jpa-v2.version>2.7.18</spring-data-jpa-v2.version>
     <jetbrains.annotations.version>24.1.0</jetbrains.annotations.version>
     <!-- Spring 6 -->
-    <spring-v6.version>6.1.12</spring-v6.version>
+    <spring-v6.version>6.1.13</spring-v6.version>
     <spring-security-v6.version>6.3.3</spring-security-v6.version>
 
-    <hibernate-v6.version>6.6.0.Final</hibernate-v6.version>
-    <spring-data-jpa-v3.version>3.3.3</spring-data-jpa-v3.version>
+    <hibernate-v6.version>6.6.1.Final</hibernate-v6.version>
+    <spring-data-jpa-v3.version>3.3.4</spring-data-jpa-v3.version>
 
     <jakarta.servlet-api.version>6.0.0</jakarta.servlet-api.version>
     <jakarta.xml.bind-api.version>4.0.1</jakarta.xml.bind-api.version>
