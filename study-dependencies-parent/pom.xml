@@ -29,13 +29,13 @@
 
     <quartz.version>2.3.2</quartz.version>
 
-    <jackson.version>2.17.2</jackson.version>
+    <jackson.version>2.18.0</jackson.version>
     <!-- 마이크로 보안 패치가 있을때, jackson-databind 만 패치되기도 함. 
          jackson-databind는 별도로 분리해두는게 낫겠다. -->
     <jackson-databind.version>${jackson.version}</jackson-databind.version>
     <gson.version>2.11.0</gson.version>
 
-    <log4j2.version>2.24.0</log4j2.version>
+    <log4j2.version>2.24.1</log4j2.version>
 
     <lombok.version>1.18.34</lombok.version>
 
@@ -43,7 +43,7 @@
     <mybatis.spring.version>2.1.2</mybatis.spring.version>
     <mybatis.dynamic.sql.version>1.5.2</mybatis.dynamic.sql.version>
 
-    <hikaricp.version>5.1.0</hikaricp.version>
+    <hikaricp.version>6.0.0</hikaricp.version>
 
     <!-- 
       설치해서 사용중인 Oracle DB 버전이 XE 18.3이여서, 드라이버 버전도 동일하게 두었었는데, 
@@ -57,7 +57,7 @@
 
     <thumbnailator.version>0.4.20</thumbnailator.version>
 
-    <junit.jupiter.version>5.11.0</junit.jupiter.version>
+    <junit.jupiter.version>5.11.2</junit.jupiter.version>
 
     <json-path.version>2.9.0</json-path.version>
 
@@ -101,7 +101,7 @@
       Jetty 12.0.8 부터 Spring의 WebApplicationInitializer 들을 인식을 못해서 
       web.xml이 없다고 하면서 오류가 난다. 😅, 해결될 때까지 12.0.7로 두자!
     -->
-    <jetty12.version>12.0.13</jetty12.version>
+    <jetty12.version>12.0.14</jetty12.version>
 
 
     <!-- Jetty Http 포트 기본값 -->
@@ -112,7 +112,7 @@
     <jetty-auto-deploy-seconds>-1</jetty-auto-deploy-seconds>
 
     <!-- cargo 플러그인 설정 -->
-    <cargo.version>1.10.14</cargo.version>
+    <cargo.version>1.10.15</cargo.version>
     <cargo-tomcat.containerId>tomcat9x</cargo-tomcat.containerId>
     <cargo-tomcat.version>9.0.95</cargo-tomcat.version>
     <cargo-tomcat10.version>10.1.30</cargo-tomcat10.version>
