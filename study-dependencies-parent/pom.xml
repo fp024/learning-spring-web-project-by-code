@@ -64,7 +64,7 @@
     <!--
       Hibernate 5.6에 기본 포함된 byte-buddy 버전과 mockito가 사용하는 버전이 안맞아서
       Mockito를 사용한 테스트가 실패한다.
-      최신 프로젝트는 계속 버전업 해보고 Hibernate 5.6 사용 프로젝트만 프로젝트는 유지해보자!
+      최신 프로젝트는 계속 버전업 해보고 Hibernate 5.6 사용 프로젝트만 5.13.0으로 유지해보자!
 
       https://github.com/mockito/mockito/issues/3463
     -->
@@ -90,7 +90,7 @@
     <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
     <maven-toolchains-plugin.version>3.2.0</maven-toolchains-plugin.version>
 
-    <!-- WAS에 따라서 JSTL포함되어있는 경우가 있음 (예: Jetty), 기본은 포함되지 않은 것으로 설정 -->
+    <!-- WAS에 따라서 JSTL이 포함되어있는 경우가 있음 (예: Jetty), 기본은 포함되지 않은 것으로 설정 -->
     <jstl-scope.type>compile</jstl-scope.type>
 
     <!-- 
