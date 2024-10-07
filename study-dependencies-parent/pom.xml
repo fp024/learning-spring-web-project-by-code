@@ -61,7 +61,17 @@
 
     <json-path.version>2.9.0</json-path.version>
 
-    <mockito.version>5.13.0</mockito.version>
+    <!--
+      Hibernate 5.6에 기본 포함된 byte-buddy 버전과 mockito가 사용하는 버전이 안맞아서
+      Mockito를 사용한 테스트가 실패한다.
+      최신 프로젝트는 계속 버전업 해보고 Hibernate 5.6 사용 프로젝트만 프로젝트는 유지해보자!
+
+      https://github.com/mockito/mockito/issues/3463
+    -->
+    <!-- Hibernate 5.6 사용 프로젝트는 5.13.0까지 유지 -->
+    <mockito-5-13.version>5.13.0</mockito-5-13.version>
+    <!-- 최신 프로젝트는 계속 버전업 -->
+    <mockito.version>5.14.1</mockito.version>
 
     <hamcrest.version>3.0</hamcrest.version>
     
