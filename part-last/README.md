@@ -17,7 +17,7 @@
 
   3. Spring 6
   4. WAS
-     * Jetty 12 (Jetty Maven 플러그인 또는 Cargo Maven 플러그인)
+     * Jetty 12 (Jetty Maven 플러그인)
      * Tomcat 10.1.x  (Cargo Maven 플러그인)
 
 
