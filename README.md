@@ -5,7 +5,7 @@
 * 도서 판매처
 
     * yes24
-        * http://www.yes24.com/Product/Goods/64340061
+        * https://www.yes24.com/Product/Goods/64340061
     * 교보문고
         * https://www.kyobobook.co.kr/product/detailViewKor.laf?barcode=9791189184018
 
@@ -31,8 +31,11 @@
     * WAS
         * [Jetty 10.x](https://mvnrepository.com/artifact/org.eclipse.jetty/jetty-maven-plugin) (Maven Jetty 플러그인 실행)
         * [Tomcat 9.0.x](https://tomcat.apache.org/download-90.cgi) (Cargo Maven 플러그인을 사용해서 실행)
+        * part-last의 Spring 6 + Servlet 6 프로젝트
+          * Jetty 12.x
+          * Tomcat 10.1.x
     * 빌드 도구
-        * [Maven 3.8.x](https://maven.apache.org/index.html)
+        * [Maven 3.x](https://maven.apache.org/index.html)
     
 
 ## 스터디 진행 목차
