@@ -12,12 +12,12 @@
 * 적용 내용
 
   1. JPA 3.0
-     * 프로젝트에서 mybatis는 완전히 겉어냈다. NestedIOException도 일부러 만들어둘 필요없어졌고...
+     * 프로젝트에서 mybatis는 완전히 겉어냈다. [NestedIOException](https://github.com/mybatis/spring/pull/663)도 일부러 만들어둘 필요없어졌고...
   2. HSQL DB (완료되면 메모리 DB설정으로 바꿈)
 
   3. Spring 6
   4. WAS
-     * Jetty 11 (12버전을 사용하는게 좋은데 아직 정식버전이 안나옴)
+     * Jetty 12 (Jetty Maven 플러그인 또는 Cargo Maven 플러그인)
      * Tomcat 10.1.x  (Cargo Maven 플러그인)
 
 
@@ -50,7 +50,7 @@
 
 # Servlet 4.0 + Spring 5 + Hibernate 5 프로젝트 분기 추가
 
->  Scouter가 Servlet 5.0 부터는 지원을 안해서 `Servlet 4.0 + Spring 5 + Hibernate 5` 환경 기반으로도 프로젝트를 만들어보기로 했다.
+>  Scouter의 구버전([v2.20.0 이전 버전](https://github.com/scouter-project/scouter/releases/tag/v2.20.0))이 Servlet 5.0 부터는 지원을 안해서 `Servlet 4.0 + Spring 5 + Hibernate 5` 환경 기반으로도 프로젝트를 만들어보기로 했었다.
 
 * 프로젝트
   * [my-board-spring5](my-board-spring5)
