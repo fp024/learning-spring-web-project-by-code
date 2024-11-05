@@ -47,6 +47,7 @@ public class RootConfig {
 
     return new HikariDataSource(hikariConfig);
   }
+
   // 메서드 이름을 getObject로 생성될 타입이름으로 정의하는 것이 깔끔하겠다.
   @Bean
   public LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dataSource)
@@ -75,8 +76,9 @@ public class RootConfig {
 
   private static Properties getJpaProperties() throws IOException {
     Properties jpaProps = new Properties();
-    jpaProps.load(new EncodedResource(
-        new ClassPathResource("custom-jpa.properties"), StandardCharsets.UTF_8).getInputStream());
+    jpaProps.load(
+        new EncodedResource(new ClassPathResource("custom-jpa.properties"), StandardCharsets.UTF_8)
+            .getInputStream());
     return jpaProps;
   }
 

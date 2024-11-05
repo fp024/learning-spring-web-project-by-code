@@ -11,10 +11,10 @@ import lombok.Setter;
 import lombok.ToString;
 import org.fp024.enumconverter.FileTypeConverter;
 
-@NoArgsConstructor // TODO: 컴파일 오류 방지
+@NoArgsConstructor
 @ToString
 @Getter
-@Setter // TODO: 컴파일 오류 방지
+@Setter
 @Entity
 @Table(name = "tbl_attach")
 public class BoardAttachVO {

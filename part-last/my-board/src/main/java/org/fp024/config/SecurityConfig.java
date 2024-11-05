@@ -4,6 +4,7 @@ import java.util.concurrent.TimeUnit;
 import javax.sql.DataSource;
 import lombok.RequiredArgsConstructor;
 import org.fp024.security.CustomUserDetailsService;
+import org.fp024.service.MemberService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -49,8 +50,8 @@ public class SecurityConfig {
   }
 
   @Bean
-  public UserDetailsService customUserDetailsService() {
-    return new CustomUserDetailsService();
+  public UserDetailsService customUserDetailsService(MemberService memberService) {
+    return new CustomUserDetailsService(memberService);
   }
 
   @Bean

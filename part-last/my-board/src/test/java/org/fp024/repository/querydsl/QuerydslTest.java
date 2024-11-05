@@ -11,7 +11,7 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 /** Querydsl 테스트 */
 @SpringJUnitConfig(classes = {RootConfig.class})
-public class QuerydslTest {
+class QuerydslTest {
   @Autowired private JPAQueryFactory jpaQueryFactory;
 
   @Test

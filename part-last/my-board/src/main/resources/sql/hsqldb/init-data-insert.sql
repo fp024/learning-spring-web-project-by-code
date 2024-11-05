@@ -1,4 +1,5 @@
 -- 회원 등록
+-- 암호: 아이디가 user00이면 pw00 이런 방식으로 초기 데이터를 넣었음.
 INSERT INTO tbl_member (userid, userpw, username, enabled)
 VALUES ('user00', '{bcrypt}$2a$10$CdNsrwk7cDs7eBNuW7cp8unvLAA8NKXSqA3UfRgysCjvtZyqCLsWm', '일반사용자00', 'Y');
 INSERT INTO tbl_member (userid, userpw, username, enabled)

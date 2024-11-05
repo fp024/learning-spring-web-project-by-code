@@ -70,8 +70,8 @@ class FileCheckTaskTest {
     attachFile.createNewFile();
     thumbnailAttachFile.createNewFile();
 
-    assertThat(attachFile.exists()).isTrue();
-    assertThat(thumbnailAttachFile.exists()).isTrue();
+    assertThat(attachFile).exists();
+    assertThat(thumbnailAttachFile).exists();
   }
 
   @AfterEach
@@ -95,8 +95,8 @@ class FileCheckTaskTest {
     task.checkFiles();
 
     // then
-    assertThat(attachFile.exists()).isTrue().as("게시물과 연관된 첨부파일은 삭제하지 않음");
-    assertThat(brokenAttachFile.exists()).isFalse().as("게시물과 연관이 끊긴 첨부파일은 삭제함");
+    assertThat(attachFile).as("게시물과 연관된 첨부파일은 삭제하지 않음").exists();
+    assertThat(brokenAttachFile).as("게시물과 연관이 끊긴 첨부파일은 삭제함").doesNotExist();
   }
 
   @Test

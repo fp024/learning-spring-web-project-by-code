@@ -39,7 +39,7 @@ class MemberRepositoryTest {
   @Test
   void testFindById() {
     Optional<MemberVO> memberVOOptional = repository.findById("admin90");
-    assertThat(memberVOOptional.isPresent()).isTrue();
+    assertThat(memberVOOptional).isPresent();
 
     assertThat(memberVOOptional.get()) //
         .hasFieldOrPropertyWithValue("userId", "admin90")

@@ -73,7 +73,7 @@ class BoardControllerTest {
                 MockMvcRequestBuilders.post("/board/register")
                     .param("title", "테스트 새글 제목")
                     .param("content", "테스트 새글 내용")
-                    .param("writer", "useer00"))
+                    .param("writer", "user00"))
             .andReturn()
             .getModelAndView()
             .getViewName();

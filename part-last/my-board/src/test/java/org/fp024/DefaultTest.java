@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 @SpringJUnitConfig(classes = {RootConfig.class})
-public class DefaultTest {
+class DefaultTest {
 
   @DisplayName("Context 로드 테스트")
   @Test

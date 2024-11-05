@@ -77,7 +77,7 @@ public class Criteria {
    * Querydsl에 사용할 offset은 0보다 작으면 안된다.
    */
   public long getOffset() {
-    long pageNum = (getPageNum() < 1) ? 1 : getPageNum();
-    return (pageNum - 1) * getAmount();
+    long pageNumber = (getPageNum() < 1) ? 1 : getPageNum();
+    return (pageNumber - 1) * getAmount();
   }
 }
