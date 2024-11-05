@@ -2,6 +2,8 @@ package org.fp024.util;
 
 import java.io.IOException;
 import java.util.Properties;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.support.PropertiesLoaderUtils;
@@ -14,6 +16,7 @@ import org.springframework.core.io.support.PropertiesLoaderUtils;
  * 이제는 그것을 사용하자!
  */
 @Slf4j
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ProjectDataUtil {
   /** 프로퍼티 파일은 한번만 로드 */
   private static final Properties PROPERTIES = ProjectDataUtilsHolder.PROPERTIES;
