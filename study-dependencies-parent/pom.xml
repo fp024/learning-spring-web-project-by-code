@@ -23,41 +23,46 @@
 
     <org.springframework-version>5.3.39</org.springframework-version>
 
-    <spring-security.version>5.8.14</spring-security.version>
+    <spring-security.version>5.8.16</spring-security.version>
 
-    <org.aspectj-version>1.9.22.1</org.aspectj-version>
+    <org.aspectj-version>1.9.24</org.aspectj-version>
 
-    <quartz.version>2.3.2</quartz.version>
+    <quartz.version>2.5.0</quartz.version>
 
-    <jackson.version>2.18.0</jackson.version>
+    <jackson.version>2.20.0</jackson.version>
     <!-- 마이크로 보안 패치가 있을때, jackson-databind 만 패치되기도 함. 
          jackson-databind는 별도로 분리해두는게 낫겠다. -->
     <jackson-databind.version>${jackson.version}</jackson-databind.version>
-    <gson.version>2.11.0</gson.version>
+    <gson.version>2.13.2</gson.version>
 
-    <log4j2.version>2.24.1</log4j2.version>
+    <log4j2.version>2.25.2</log4j2.version>
 
-    <lombok.version>1.18.34</lombok.version>
+    <lombok.version>1.18.42</lombok.version>
 
-    <mybatis.version>3.5.16</mybatis.version>
+    <mybatis.version>3.5.19</mybatis.version>
     <mybatis.spring.version>2.1.2</mybatis.spring.version>
     <mybatis.dynamic.sql.version>1.5.2</mybatis.dynamic.sql.version>
 
-    <hikaricp.version>6.0.0</hikaricp.version>
+    <hikaricp.version>7.0.2</hikaricp.version>
 
     <!-- 
       설치해서 사용중인 Oracle DB 버전이 XE 18.3이여서, 드라이버 버전도 동일하게 두었었는데, 
       최신버전을 쓰더라도 특별한 문제는 없었다.
       https://mvnrepository.com/artifact/com.oracle.database.jdbc/ojdbc11
     -->
-    <ojdbc11.version>23.5.0.24.07</ojdbc11.version>
+    <ojdbc11.version>23.9.0.25.07</ojdbc11.version>
 
     <!-- 몇몇 프로젝트에서는 hsqldb로 사용해보자... -->
-    <hsqldb.version>2.7.3</hsqldb.version>
+    <hsqldb.version>2.7.4</hsqldb.version>
 
-    <thumbnailator.version>0.4.20</thumbnailator.version>
+    <thumbnailator.version>0.4.21</thumbnailator.version>
 
-    <junit.jupiter.version>5.11.2</junit.jupiter.version>
+    
+    <junit-v5.version>5.14.0</junit-v5.version>
+    <junit-v6.version>6.0.0</junit-v6.version>
+    <!-- 기본은 Junit 5.x 버전 유지 -->
+    <!-- part-last는 최신 버전을 사용하도록 하위에서 재정의한다 -->
+    <junit.version>${junit-v5.version}</junit.version>
 
     <json-path.version>2.9.0</json-path.version>
 
@@ -71,24 +76,25 @@
     <!-- Hibernate 5.6 사용 프로젝트는 5.13.0까지 유지 -->
     <mockito-5-13.version>5.13.0</mockito-5-13.version>
     <!-- 최신 프로젝트는 계속 버전업 -->
-    <mockito.version>5.14.1</mockito.version>
+    <mockito.version>5.20.0</mockito.version>
 
     <hamcrest.version>3.0</hamcrest.version>
     
-    <assertj.version>3.26.3</assertj.version>
+    <assertj.version>3.27.6</assertj.version>
 
     <!-- 2.0.0 부터는 Servlet 5.0이상, Java 17이 요구사항이다. 1.1.4 버전을 유지한다. -->
     <java-time-jsptags.version>1.1.4</java-time-jsptags.version>
 
-    <commons-fileupload.version>1.5</commons-fileupload.version>
+    <commons-fileupload.version>1.6.0</commons-fileupload.version>
 
     <!-- Maven 플러그인 버전 관리 -->
     <mybatis-generator-maven-plugin.version>1.4.2</mybatis-generator-maven-plugin.version>
     <maven-war-plugin.version>3.4.0</maven-war-plugin.version>
     <maven-resources-plugin.version>3.3.1</maven-resources-plugin.version>
-    <maven-surefire-plugin.version>3.5.0</maven-surefire-plugin.version>
-    <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
+    <maven-surefire-plugin.version>3.5.4</maven-surefire-plugin.version>
+    <maven-compiler-plugin.version>3.14.1</maven-compiler-plugin.version>
     <maven-toolchains-plugin.version>3.2.0</maven-toolchains-plugin.version>
+    <maven-clean-plugin.version>3.5.0</maven-clean-plugin.version>
 
     <!-- WAS에 따라서 JSTL이 포함되어있는 경우가 있음 (예: Jetty), 기본은 포함되지 않은 것으로 설정 -->
     <jstl-scope.type>compile</jstl-scope.type>
@@ -103,7 +109,7 @@
       2. Jetty 11.x버전은 주요 서블릿 패키지명이 바뀌였기 때문에 Spring 5에서 사용할 수 없다.          
          https://stackoverflow.com/questions/66217350/deploying-spring-5-x-on-tomcat-10-x-with-jakarta-package        
     -->    
-    <jetty10.version>10.0.24</jetty10.version>
+    <jetty10.version>10.0.26</jetty10.version>
     <!-- Jetty Maven Plugin 12.x 버전이 나왔는데, groupId, artifactId가 바뀌었다. -->
     <!-- https://github.com/jetty/jetty.project/pull/10810 -->
     <!-- https://mvnrepository.com/artifact/org.eclipse.jetty/jetty-maven-plugin -->
@@ -111,7 +117,7 @@
       Jetty 12.0.8 부터 Spring의 WebApplicationInitializer 들을 인식을 못해서 
       web.xml이 없다고 하면서 오류가 난다. 😅, 해결될 때까지 12.0.7로 두자!
     -->
-    <jetty12.version>12.0.14</jetty12.version>
+    <jetty12.version>12.1.1</jetty12.version>
 
 
     <!-- Jetty Http 포트 기본값 -->
@@ -122,10 +128,10 @@
     <jetty-auto-deploy-seconds>-1</jetty-auto-deploy-seconds>
 
     <!-- cargo 플러그인 설정 -->
-    <cargo.version>1.10.15</cargo.version>
+    <cargo.version>1.10.22</cargo.version>
     <cargo-tomcat.containerId>tomcat9x</cargo-tomcat.containerId>
-    <cargo-tomcat.version>9.0.95</cargo-tomcat.version>
-    <cargo-tomcat10.version>10.1.30</cargo-tomcat10.version>
+    <cargo-tomcat.version>9.0.109</cargo-tomcat.version>
+    <cargo-tomcat10.version>10.1.46</cargo-tomcat10.version>
     <cargo-context-path>${jetty-context-path}</cargo-context-path>
     <cargo-server-port>${jetty.port}</cargo-server-port>
     
@@ -137,13 +143,15 @@
     <!-- Spring 5 -->
     <hibernate-v5.version>5.6.15.Final</hibernate-v5.version>
     <spring-data-jpa-v2.version>2.7.18</spring-data-jpa-v2.version>
-    <jetbrains.annotations.version>24.1.0</jetbrains.annotations.version>
+    <jetbrains.annotations.version>26.0.2-1</jetbrains.annotations.version>
     <!-- Spring 6 -->
-    <spring-v6.version>6.1.13</spring-v6.version>
-    <spring-security-v6.version>6.3.3</spring-security-v6.version>
+    <spring-v6.version>6.2.11</spring-v6.version>
+    <spring-security-v6.version>6.5.5</spring-security-v6.version>
 
-    <hibernate-v6.version>6.6.1.Final</hibernate-v6.version>
-    <spring-data-jpa-v3.version>3.3.4</spring-data-jpa-v3.version>
+    <!-- ⚠️ QueryDSL 5.1.0이 Hibernate 7.x에는 호환되지 않는 것 같다. -->
+    <hibernate-v6.version>6.6.30.Final</hibernate-v6.version>
+    
+    <spring-data-jpa-v3.version>3.5.4</spring-data-jpa-v3.version>
 
     <jakarta.servlet-api.version>6.0.0</jakarta.servlet-api.version>
     <jakarta.xml.bind-api.version>4.0.1</jakarta.xml.bind-api.version>
@@ -182,7 +190,7 @@
       <dependency>
         <groupId>org.junit</groupId>
         <artifactId>junit-bom</artifactId>
-        <version>${junit.jupiter.version}</version>
+        <version>${junit.version}</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -324,21 +332,24 @@
 
   <build>
     <pluginManagement>
-      <plugins>       
+      <plugins>
         <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-clean-plugin</artifactId>
+          <version>${maven-clean-plugin.version}</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>${maven-compiler-plugin.version}</version>
+        </plugin>
+        <plugin>
           <artifactId>maven-resources-plugin</artifactId>
           <version>${maven-resources-plugin.version}</version>
         </plugin>
-        <!-- JUnit 5 사용을 위해서 maven-surefire-plugin 버전을 올려두자! -->
         <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-surefire-plugin</artifactId>
           <version>${maven-surefire-plugin.version}</version>
         </plugin>
-
         <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-war-plugin</artifactId>
           <version>${maven-war-plugin.version}</version>
         </plugin>
@@ -347,7 +358,6 @@
 
     <plugins>
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
         <version>${maven-compiler-plugin.version}</version>
         <configuration>
@@ -363,7 +373,6 @@
         </configuration>
       </plugin>
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-toolchains-plugin</artifactId>
         <version>${maven-toolchains-plugin.version}</version>
         <executions>

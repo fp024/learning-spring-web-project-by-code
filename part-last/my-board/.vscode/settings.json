@@ -19,5 +19,11 @@
     "userid",
     "userpw",
     "zaxxer"
-  ]
+  ],
+  "java.test.config": {
+    "vmArgs": [
+      "-javaagent:${workspaceFolder}/javaagent-libs/mockito-core-5.20.0.jar",
+      "-Xshare:off"
+    ]
+  }
 }
