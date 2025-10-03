@@ -14,7 +14,7 @@ public class CustomUser extends User {
    */
   private static final long serialVersionUID = SpringSecurityCoreVersion.SERIAL_VERSION_UID;
 
-  @Getter private final MemberVO member;
+  @Getter private final transient MemberVO member;
 
   public CustomUser(MemberVO vo) {
     super(

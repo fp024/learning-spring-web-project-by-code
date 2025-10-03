@@ -17,8 +17,10 @@
 
   <!-- Spring 6 + JPA 3.0 기반 버전 프로퍼티는 하위 프로젝트에서 직접 관리 -->
   <properties>
-    <!-- Java 버전을 21 이상으로 사용하고 싶을 때, 바꿔보자! 21은 경고, 25는 오류다 😂 -->
-    <java.version>17</java.version>
+    <!-- Java 버전을 21 이상으로 사용하고 싶을 때, 바꿔보자! -->
+    <!-- Java 21: 경고 발생: 꺼도 문제 없는 경고로 보이는 것들은 껏음 -->
+    <!-- Java 25: 오류 발생: Maven 4 + maven-compiler-plugin 4.0.0 부터 지원 할 것 같다 -->
+    <java.version>21</java.version>
     <junit.version>${junit-v6.version}</junit.version>
 
     <org.springframework-version>${spring-v6.version}</org.springframework-version>
@@ -351,9 +353,11 @@
           <target>${java.version}</target>
           <compilerArgs>
             <arg>-Xlint:all</arg>
-            <arg>-Xlint:-processing
-            </arg> <!-- No processor claimed any of these annotations 경고는 노출되지않게 설정 -->
+            <!-- <arg>-Xlint:-options</arg> annotation processing 경고 무시 (Java 21에서는 아직 INFO 레벨여서, 정보를 노출한다.) -->
+            <arg>-Xlint:-processing</arg> <!-- No processor claimed any of these annotations 경고는 노출되지않게 설정 -->
             <arg>-Xlint:-path</arg> <!-- bad path element 경고 무시 -->
+            <arg>-Xlint:-classfile</arg> <!-- 참조하는 클래스 파일 없음 경고 무시 -->
+            <arg>-Xlint:-this-escape</arg> <!-- QueryDSL 생성 코드의 this escape 경고 무시 -->
             <arg>-parameters</arg>
           </compilerArgs>
           <showWarnings>true</showWarnings>
