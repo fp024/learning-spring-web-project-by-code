@@ -148,13 +148,11 @@ class BoardServiceTest {
                     .from(BoardVODynamicSqlSupport.boardVO),
                 criteria)
             .where()
-            .and(rn, isLessThanOrEqualTo(criteria.getPageNum() * criteria.getAmount()));
+            .and(rownum, isLessThanOrEqualTo(criteria.getPageNum() * criteria.getAmount()));
 
     return select(BoardMapper.selectList)
         .from(selectDSL)
-        .where(
-            DerivedColumn.of("rn"),
-            isGreaterThan((criteria.getPageNum() - 1) * criteria.getAmount()))
+        .where(rn, isGreaterThan((criteria.getPageNum() - 1) * criteria.getAmount()))
         .orderBy(bno.descending())
         .build()
         .render(RenderingStrategies.MYBATIS3);
