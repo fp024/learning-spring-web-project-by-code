@@ -3,8 +3,8 @@ package org.fp024.mapper;
 import java.sql.JDBCType;
 import java.time.LocalDateTime;
 import javax.annotation.Generated;
+import org.mybatis.dynamic.sql.AliasableSqlTable;
 import org.mybatis.dynamic.sql.SqlColumn;
-import org.mybatis.dynamic.sql.SqlTable;
 
 public final class BoardVODynamicSqlSupport {
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
@@ -29,7 +29,7 @@ public final class BoardVODynamicSqlSupport {
     public static final SqlColumn<LocalDateTime> updateDate = boardVO.updateDate;
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
-    public static final class BoardVO extends SqlTable {
+    public static final class BoardVO extends AliasableSqlTable<BoardVO> {
         public final SqlColumn<Long> bno = column("BNO", JDBCType.BIGINT);
 
         public final SqlColumn<String> title = column("TITLE", JDBCType.VARCHAR);
@@ -43,7 +43,7 @@ public final class BoardVODynamicSqlSupport {
         public final SqlColumn<LocalDateTime> updateDate = column("UPDATEDATE", JDBCType.DATE);
 
         public BoardVO() {
-            super("TBL_BOARD");
+            super("TBL_BOARD", BoardVO::new);
         }
     }
 }

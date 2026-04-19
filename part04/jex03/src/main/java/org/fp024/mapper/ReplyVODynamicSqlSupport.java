@@ -3,8 +3,8 @@ package org.fp024.mapper;
 import java.sql.JDBCType;
 import java.time.LocalDateTime;
 import javax.annotation.Generated;
+import org.mybatis.dynamic.sql.AliasableSqlTable;
 import org.mybatis.dynamic.sql.SqlColumn;
-import org.mybatis.dynamic.sql.SqlTable;
 
 public final class ReplyVODynamicSqlSupport {
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
@@ -29,7 +29,7 @@ public final class ReplyVODynamicSqlSupport {
     public static final SqlColumn<LocalDateTime> updateDate = replyVO.updateDate;
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
-    public static final class ReplyVO extends SqlTable {
+    public static final class ReplyVO extends AliasableSqlTable<ReplyVO> {
         public final SqlColumn<Long> rno = column("RNO", JDBCType.BIGINT);
 
         public final SqlColumn<Long> bno = column("BNO", JDBCType.NUMERIC);
@@ -43,7 +43,7 @@ public final class ReplyVODynamicSqlSupport {
         public final SqlColumn<LocalDateTime> updateDate = column("UPDATEDATE", JDBCType.DATE);
 
         public ReplyVO() {
-            super("TBL_REPLY");
+            super("TBL_REPLY", ReplyVO::new);
         }
     }
 }

@@ -1,12 +1,11 @@
 package org.fp024.mapper;
 
 import static org.fp024.mapper.ReplyVODynamicSqlSupport.*;
-import static org.mybatis.dynamic.sql.SqlBuilder.*;
+import static org.mybatis.dynamic.sql.SqlBuilder.isEqualTo;
 
 import java.util.List;
 import java.util.Optional;
 import javax.annotation.Generated;
-import org.apache.ibatis.annotations.DeleteProvider;
 import org.apache.ibatis.annotations.InsertProvider;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Result;
@@ -14,12 +13,10 @@ import org.apache.ibatis.annotations.ResultMap;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.SelectKey;
 import org.apache.ibatis.annotations.SelectProvider;
-import org.apache.ibatis.annotations.UpdateProvider;
 import org.apache.ibatis.type.JdbcType;
 import org.fp024.domain.ReplyVO;
 import org.mybatis.dynamic.sql.BasicColumn;
 import org.mybatis.dynamic.sql.delete.DeleteDSLCompleter;
-import org.mybatis.dynamic.sql.delete.render.DeleteStatementProvider;
 import org.mybatis.dynamic.sql.insert.render.InsertStatementProvider;
 import org.mybatis.dynamic.sql.select.CountDSLCompleter;
 import org.mybatis.dynamic.sql.select.SelectDSLCompleter;
@@ -27,32 +24,21 @@ import org.mybatis.dynamic.sql.select.render.SelectStatementProvider;
 import org.mybatis.dynamic.sql.update.UpdateDSL;
 import org.mybatis.dynamic.sql.update.UpdateDSLCompleter;
 import org.mybatis.dynamic.sql.update.UpdateModel;
-import org.mybatis.dynamic.sql.update.render.UpdateStatementProvider;
 import org.mybatis.dynamic.sql.util.SqlProviderAdapter;
+import org.mybatis.dynamic.sql.util.mybatis3.CommonCountMapper;
+import org.mybatis.dynamic.sql.util.mybatis3.CommonDeleteMapper;
+import org.mybatis.dynamic.sql.util.mybatis3.CommonUpdateMapper;
 import org.mybatis.dynamic.sql.util.mybatis3.MyBatis3Utils;
 
 @Mapper
-public interface ReplyMapper {
+public interface ReplyMapper extends CommonCountMapper, CommonDeleteMapper, CommonUpdateMapper {
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
     BasicColumn[] selectList = BasicColumn.columnList(rno, bno, reply, replyer, replyDate, updateDate);
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
-    @SelectProvider(type=SqlProviderAdapter.class, method="select")
-    long count(SelectStatementProvider selectStatement);
-
-    @Generated("org.mybatis.generator.api.MyBatisGenerator")
-    @DeleteProvider(type=SqlProviderAdapter.class, method="delete")
-    int delete(DeleteStatementProvider deleteStatement);
-
-    @Generated("org.mybatis.generator.api.MyBatisGenerator")
     @InsertProvider(type=SqlProviderAdapter.class, method="insert")
-    @SelectKey(statement="SELECT seq_reply.nextval FROM DUAL", keyProperty="record.rno", before=true, resultType=Long.class)
+    @SelectKey(statement="SELECT seq_reply.nextval FROM DUAL", keyProperty="row.rno", before=true, resultType=Long.class)
     int insert(InsertStatementProvider<ReplyVO> insertStatement);
-
-    @Generated("org.mybatis.generator.api.MyBatisGenerator")
-    @SelectProvider(type=SqlProviderAdapter.class, method="select")
-    @ResultMap("ReplyVOResult")
-    Optional<ReplyVO> selectOne(SelectStatementProvider selectStatement);
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
     @SelectProvider(type=SqlProviderAdapter.class, method="select")
@@ -67,8 +53,9 @@ public interface ReplyMapper {
     List<ReplyVO> selectMany(SelectStatementProvider selectStatement);
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
-    @UpdateProvider(type=SqlProviderAdapter.class, method="update")
-    int update(UpdateStatementProvider updateStatement);
+    @SelectProvider(type=SqlProviderAdapter.class, method="select")
+    @ResultMap("ReplyVOResult")
+    Optional<ReplyVO> selectOne(SelectStatementProvider selectStatement);
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
     default long count(CountDSLCompleter completer) {
@@ -88,8 +75,8 @@ public interface ReplyMapper {
     }
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
-    default int insert(ReplyVO record) {
-        return MyBatis3Utils.insert(this::insert, record, replyVO, c ->
+    default int insert(ReplyVO row) {
+        return MyBatis3Utils.insert(this::insert, row, replyVO, c ->
             c.map(rno).toProperty("rno")
             .map(bno).toProperty("bno")
             .map(reply).toProperty("reply")
@@ -100,14 +87,14 @@ public interface ReplyMapper {
     }
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
-    default int insertSelective(ReplyVO record) {
-        return MyBatis3Utils.insert(this::insert, record, replyVO, c ->
+    default int insertSelective(ReplyVO row) {
+        return MyBatis3Utils.insert(this::insert, row, replyVO, c ->
             c.map(rno).toProperty("rno")
-            .map(bno).toPropertyWhenPresent("bno", record::getBno)
-            .map(reply).toPropertyWhenPresent("reply", record::getReply)
-            .map(replyer).toPropertyWhenPresent("replyer", record::getReplyer)
-            .map(replyDate).toPropertyWhenPresent("replyDate", record::getReplyDate)
-            .map(updateDate).toPropertyWhenPresent("updateDate", record::getUpdateDate)
+            .map(bno).toPropertyWhenPresent("bno", row::getBno)
+            .map(reply).toPropertyWhenPresent("reply", row::getReply)
+            .map(replyer).toPropertyWhenPresent("replyer", row::getReplyer)
+            .map(replyDate).toPropertyWhenPresent("replyDate", row::getReplyDate)
+            .map(updateDate).toPropertyWhenPresent("updateDate", row::getUpdateDate)
         );
     }
 
@@ -139,46 +126,46 @@ public interface ReplyMapper {
     }
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
-    static UpdateDSL<UpdateModel> updateAllColumns(ReplyVO record, UpdateDSL<UpdateModel> dsl) {
-        return dsl.set(rno).equalTo(record::getRno)
-                .set(bno).equalTo(record::getBno)
-                .set(reply).equalTo(record::getReply)
-                .set(replyer).equalTo(record::getReplyer)
-                .set(replyDate).equalTo(record::getReplyDate)
-                .set(updateDate).equalTo(record::getUpdateDate);
+    static UpdateDSL<UpdateModel> updateAllColumns(ReplyVO row, UpdateDSL<UpdateModel> dsl) {
+        return dsl.set(rno).equalTo(row::getRno)
+                .set(bno).equalTo(row::getBno)
+                .set(reply).equalTo(row::getReply)
+                .set(replyer).equalTo(row::getReplyer)
+                .set(replyDate).equalTo(row::getReplyDate)
+                .set(updateDate).equalTo(row::getUpdateDate);
     }
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
-    static UpdateDSL<UpdateModel> updateSelectiveColumns(ReplyVO record, UpdateDSL<UpdateModel> dsl) {
-        return dsl.set(rno).equalToWhenPresent(record::getRno)
-                .set(bno).equalToWhenPresent(record::getBno)
-                .set(reply).equalToWhenPresent(record::getReply)
-                .set(replyer).equalToWhenPresent(record::getReplyer)
-                .set(replyDate).equalToWhenPresent(record::getReplyDate)
-                .set(updateDate).equalToWhenPresent(record::getUpdateDate);
+    static UpdateDSL<UpdateModel> updateSelectiveColumns(ReplyVO row, UpdateDSL<UpdateModel> dsl) {
+        return dsl.set(rno).equalToWhenPresent(row::getRno)
+                .set(bno).equalToWhenPresent(row::getBno)
+                .set(reply).equalToWhenPresent(row::getReply)
+                .set(replyer).equalToWhenPresent(row::getReplyer)
+                .set(replyDate).equalToWhenPresent(row::getReplyDate)
+                .set(updateDate).equalToWhenPresent(row::getUpdateDate);
     }
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
-    default int updateByPrimaryKey(ReplyVO record) {
+    default int updateByPrimaryKey(ReplyVO row) {
         return update(c ->
-            c.set(bno).equalTo(record::getBno)
-            .set(reply).equalTo(record::getReply)
-            .set(replyer).equalTo(record::getReplyer)
-            .set(replyDate).equalTo(record::getReplyDate)
-            .set(updateDate).equalTo(record::getUpdateDate)
-            .where(rno, isEqualTo(record::getRno))
+            c.set(bno).equalTo(row::getBno)
+            .set(reply).equalTo(row::getReply)
+            .set(replyer).equalTo(row::getReplyer)
+            .set(replyDate).equalTo(row::getReplyDate)
+            .set(updateDate).equalTo(row::getUpdateDate)
+            .where(rno, isEqualTo(row::getRno))
         );
     }
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
-    default int updateByPrimaryKeySelective(ReplyVO record) {
+    default int updateByPrimaryKeySelective(ReplyVO row) {
         return update(c ->
-            c.set(bno).equalToWhenPresent(record::getBno)
-            .set(reply).equalToWhenPresent(record::getReply)
-            .set(replyer).equalToWhenPresent(record::getReplyer)
-            .set(replyDate).equalToWhenPresent(record::getReplyDate)
-            .set(updateDate).equalToWhenPresent(record::getUpdateDate)
-            .where(rno, isEqualTo(record::getRno))
+            c.set(bno).equalToWhenPresent(row::getBno)
+            .set(reply).equalToWhenPresent(row::getReply)
+            .set(replyer).equalToWhenPresent(row::getReplyer)
+            .set(replyDate).equalToWhenPresent(row::getReplyDate)
+            .set(updateDate).equalToWhenPresent(row::getUpdateDate)
+            .where(rno, isEqualTo(row::getRno))
         );
     }
 }

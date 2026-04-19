@@ -1,12 +1,11 @@
 package org.fp024.mapper;
 
 import static org.fp024.mapper.BoardVODynamicSqlSupport.*;
-import static org.mybatis.dynamic.sql.SqlBuilder.*;
+import static org.mybatis.dynamic.sql.SqlBuilder.isEqualTo;
 
 import java.util.List;
 import java.util.Optional;
 import javax.annotation.Generated;
-import org.apache.ibatis.annotations.DeleteProvider;
 import org.apache.ibatis.annotations.InsertProvider;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Result;
@@ -14,12 +13,10 @@ import org.apache.ibatis.annotations.ResultMap;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.SelectKey;
 import org.apache.ibatis.annotations.SelectProvider;
-import org.apache.ibatis.annotations.UpdateProvider;
 import org.apache.ibatis.type.JdbcType;
 import org.fp024.domain.BoardVO;
 import org.mybatis.dynamic.sql.BasicColumn;
 import org.mybatis.dynamic.sql.delete.DeleteDSLCompleter;
-import org.mybatis.dynamic.sql.delete.render.DeleteStatementProvider;
 import org.mybatis.dynamic.sql.insert.render.InsertStatementProvider;
 import org.mybatis.dynamic.sql.select.CountDSLCompleter;
 import org.mybatis.dynamic.sql.select.SelectDSLCompleter;
@@ -27,32 +24,21 @@ import org.mybatis.dynamic.sql.select.render.SelectStatementProvider;
 import org.mybatis.dynamic.sql.update.UpdateDSL;
 import org.mybatis.dynamic.sql.update.UpdateDSLCompleter;
 import org.mybatis.dynamic.sql.update.UpdateModel;
-import org.mybatis.dynamic.sql.update.render.UpdateStatementProvider;
 import org.mybatis.dynamic.sql.util.SqlProviderAdapter;
+import org.mybatis.dynamic.sql.util.mybatis3.CommonCountMapper;
+import org.mybatis.dynamic.sql.util.mybatis3.CommonDeleteMapper;
+import org.mybatis.dynamic.sql.util.mybatis3.CommonUpdateMapper;
 import org.mybatis.dynamic.sql.util.mybatis3.MyBatis3Utils;
 
 @Mapper
-public interface BoardMapper {
+public interface BoardMapper extends CommonCountMapper, CommonDeleteMapper, CommonUpdateMapper {
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
     BasicColumn[] selectList = BasicColumn.columnList(bno, title, content, writer, regdate, updateDate);
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
-    @SelectProvider(type=SqlProviderAdapter.class, method="select")
-    long count(SelectStatementProvider selectStatement);
-
-    @Generated("org.mybatis.generator.api.MyBatisGenerator")
-    @DeleteProvider(type=SqlProviderAdapter.class, method="delete")
-    int delete(DeleteStatementProvider deleteStatement);
-
-    @Generated("org.mybatis.generator.api.MyBatisGenerator")
     @InsertProvider(type=SqlProviderAdapter.class, method="insert")
-    @SelectKey(statement="SELECT seq_board.nextval FROM DUAL", keyProperty="record.bno", before=true, resultType=Long.class)
+    @SelectKey(statement="SELECT seq_board.nextval FROM DUAL", keyProperty="row.bno", before=true, resultType=Long.class)
     int insert(InsertStatementProvider<BoardVO> insertStatement);
-
-    @Generated("org.mybatis.generator.api.MyBatisGenerator")
-    @SelectProvider(type=SqlProviderAdapter.class, method="select")
-    @ResultMap("BoardVOResult")
-    Optional<BoardVO> selectOne(SelectStatementProvider selectStatement);
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
     @SelectProvider(type=SqlProviderAdapter.class, method="select")
@@ -67,8 +53,9 @@ public interface BoardMapper {
     List<BoardVO> selectMany(SelectStatementProvider selectStatement);
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
-    @UpdateProvider(type=SqlProviderAdapter.class, method="update")
-    int update(UpdateStatementProvider updateStatement);
+    @SelectProvider(type=SqlProviderAdapter.class, method="select")
+    @ResultMap("BoardVOResult")
+    Optional<BoardVO> selectOne(SelectStatementProvider selectStatement);
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
     default long count(CountDSLCompleter completer) {
@@ -88,8 +75,8 @@ public interface BoardMapper {
     }
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
-    default int insert(BoardVO record) {
-        return MyBatis3Utils.insert(this::insert, record, boardVO, c ->
+    default int insert(BoardVO row) {
+        return MyBatis3Utils.insert(this::insert, row, boardVO, c ->
             c.map(bno).toProperty("bno")
             .map(title).toProperty("title")
             .map(content).toProperty("content")
@@ -100,14 +87,14 @@ public interface BoardMapper {
     }
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
-    default int insertSelective(BoardVO record) {
-        return MyBatis3Utils.insert(this::insert, record, boardVO, c ->
+    default int insertSelective(BoardVO row) {
+        return MyBatis3Utils.insert(this::insert, row, boardVO, c ->
             c.map(bno).toProperty("bno")
-            .map(title).toPropertyWhenPresent("title", record::getTitle)
-            .map(content).toPropertyWhenPresent("content", record::getContent)
-            .map(writer).toPropertyWhenPresent("writer", record::getWriter)
-            .map(regdate).toPropertyWhenPresent("regdate", record::getRegdate)
-            .map(updateDate).toPropertyWhenPresent("updateDate", record::getUpdateDate)
+            .map(title).toPropertyWhenPresent("title", row::getTitle)
+            .map(content).toPropertyWhenPresent("content", row::getContent)
+            .map(writer).toPropertyWhenPresent("writer", row::getWriter)
+            .map(regdate).toPropertyWhenPresent("regdate", row::getRegdate)
+            .map(updateDate).toPropertyWhenPresent("updateDate", row::getUpdateDate)
         );
     }
 
@@ -139,46 +126,46 @@ public interface BoardMapper {
     }
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
-    static UpdateDSL<UpdateModel> updateAllColumns(BoardVO record, UpdateDSL<UpdateModel> dsl) {
-        return dsl.set(bno).equalTo(record::getBno)
-                .set(title).equalTo(record::getTitle)
-                .set(content).equalTo(record::getContent)
-                .set(writer).equalTo(record::getWriter)
-                .set(regdate).equalTo(record::getRegdate)
-                .set(updateDate).equalTo(record::getUpdateDate);
+    static UpdateDSL<UpdateModel> updateAllColumns(BoardVO row, UpdateDSL<UpdateModel> dsl) {
+        return dsl.set(bno).equalTo(row::getBno)
+                .set(title).equalTo(row::getTitle)
+                .set(content).equalTo(row::getContent)
+                .set(writer).equalTo(row::getWriter)
+                .set(regdate).equalTo(row::getRegdate)
+                .set(updateDate).equalTo(row::getUpdateDate);
     }
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
-    static UpdateDSL<UpdateModel> updateSelectiveColumns(BoardVO record, UpdateDSL<UpdateModel> dsl) {
-        return dsl.set(bno).equalToWhenPresent(record::getBno)
-                .set(title).equalToWhenPresent(record::getTitle)
-                .set(content).equalToWhenPresent(record::getContent)
-                .set(writer).equalToWhenPresent(record::getWriter)
-                .set(regdate).equalToWhenPresent(record::getRegdate)
-                .set(updateDate).equalToWhenPresent(record::getUpdateDate);
+    static UpdateDSL<UpdateModel> updateSelectiveColumns(BoardVO row, UpdateDSL<UpdateModel> dsl) {
+        return dsl.set(bno).equalToWhenPresent(row::getBno)
+                .set(title).equalToWhenPresent(row::getTitle)
+                .set(content).equalToWhenPresent(row::getContent)
+                .set(writer).equalToWhenPresent(row::getWriter)
+                .set(regdate).equalToWhenPresent(row::getRegdate)
+                .set(updateDate).equalToWhenPresent(row::getUpdateDate);
     }
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
-    default int updateByPrimaryKey(BoardVO record) {
+    default int updateByPrimaryKey(BoardVO row) {
         return update(c ->
-            c.set(title).equalTo(record::getTitle)
-            .set(content).equalTo(record::getContent)
-            .set(writer).equalTo(record::getWriter)
-            .set(regdate).equalTo(record::getRegdate)
-            .set(updateDate).equalTo(record::getUpdateDate)
-            .where(bno, isEqualTo(record::getBno))
+            c.set(title).equalTo(row::getTitle)
+            .set(content).equalTo(row::getContent)
+            .set(writer).equalTo(row::getWriter)
+            .set(regdate).equalTo(row::getRegdate)
+            .set(updateDate).equalTo(row::getUpdateDate)
+            .where(bno, isEqualTo(row::getBno))
         );
     }
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
-    default int updateByPrimaryKeySelective(BoardVO record) {
+    default int updateByPrimaryKeySelective(BoardVO row) {
         return update(c ->
-            c.set(title).equalToWhenPresent(record::getTitle)
-            .set(content).equalToWhenPresent(record::getContent)
-            .set(writer).equalToWhenPresent(record::getWriter)
-            .set(regdate).equalToWhenPresent(record::getRegdate)
-            .set(updateDate).equalToWhenPresent(record::getUpdateDate)
-            .where(bno, isEqualTo(record::getBno))
+            c.set(title).equalToWhenPresent(row::getTitle)
+            .set(content).equalToWhenPresent(row::getContent)
+            .set(writer).equalToWhenPresent(row::getWriter)
+            .set(regdate).equalToWhenPresent(row::getRegdate)
+            .set(updateDate).equalToWhenPresent(row::getUpdateDate)
+            .where(bno, isEqualTo(row::getBno))
         );
     }
 }
