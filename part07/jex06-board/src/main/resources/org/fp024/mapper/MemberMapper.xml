@@ -3,7 +3,7 @@
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.fp024.mapper.MemberMapper">
   <!--
-      JOIN의 결과로는 ReulstMap을 XML로 만들어야한다고 한다.
+      JOIN의 결과로는 ResultMap을 XML로 만들어야한다고 한다.
       https://mybatis.org/mybatis-dynamic-sql/docs/select.html#xml-mapper-for-join-statements
 
       아래 부분은 MyBatis의 제약 때문에 Java 코드만으로는 처리할 수가 없어서 그런 것 같다.

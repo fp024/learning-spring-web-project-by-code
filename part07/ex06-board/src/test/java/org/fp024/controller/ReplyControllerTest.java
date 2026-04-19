@@ -116,7 +116,7 @@ class ReplyControllerTest {
   @Test
   void testModify() throws Exception {
     ReplyVO reply = new ReplyVO();
-    reply.setRno(1L);
+    reply.setRno(2L);
     reply.setReply(LocalDateTime.now().toString());
 
     String jsonBody = ObjectMapperHelper.objectMapper().writeValueAsString(reply);
@@ -124,7 +124,7 @@ class ReplyControllerTest {
     String responseContent =
         mockMvc
             .perform(
-                MockMvcRequestBuilders.put("/replies/1")
+                MockMvcRequestBuilders.put("/replies/2")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(jsonBody))
             .andExpect(status().isOk())
