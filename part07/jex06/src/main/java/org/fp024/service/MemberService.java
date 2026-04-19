@@ -35,7 +35,7 @@ public class MemberService {
             .leftJoin(
                 AuthVODynamicSqlSupport.authVO,
                 "a",
-                on(MemberVODynamicSqlSupport.userId, equalTo(AuthVODynamicSqlSupport.userId)))
+                on(MemberVODynamicSqlSupport.userId, isEqualTo(AuthVODynamicSqlSupport.userId)))
             .where(MemberVODynamicSqlSupport.userId, isEqualTo(userId))
             .build()
             .render(RenderingStrategies.MYBATIS3));

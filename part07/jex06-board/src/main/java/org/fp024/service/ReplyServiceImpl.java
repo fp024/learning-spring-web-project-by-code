@@ -89,19 +89,20 @@ public class ReplyServiceImpl implements ReplyService {
     LOGGER.info("get Reply List of a board {}", boardNo);
 
     DerivedColumn<Long> rownum = DerivedColumn.of("ROWNUM");
+    DerivedColumn<Long> rn = rownum.as("rn");
     Constant<String> hint = Constant.of("/*+INDEX(tbl_reply idx_reply) */ 'dummy'");
 
     List<ReplyVO> list =
         replyMapper.selectMany(
             select(ReplyMapper.selectList)
                 .from(
-                    select(hint, rownum.as("rn"), rno, bno, reply, replyer, replyDate, updateDate)
+                    select(hint, rn, rno, bno, reply, replyer, replyDate, updateDate)
                         .from(replyVO)
                         .where(bno, isEqualTo(boardNo))
                         .and(rno, isGreaterThan(0L))
                         .and(rownum, isLessThanOrEqualTo(cri.getPageNum() * cri.getAmount())))
                 .where(
-                    DerivedColumn.of("rn"), isGreaterThan((cri.getPageNum() - 1) * cri.getAmount()))
+                    rn, isGreaterThan((cri.getPageNum() - 1) * cri.getAmount()))
                 .orderBy(bno.descending())
                 .build()
                 .render(RenderingStrategies.MYBATIS3));

@@ -659,11 +659,9 @@ FROM
             .from(
                 SqlBuilder.select(rn, bno, title, content, writer, regdate, updateDate)
                     .from(BoardVODynamicSqlSupport.boardVO)
-                    .where(rn, SqlBuilder.isLessThanOrEqualTo(10L))
+                    .where(ROWNUM, SqlBuilder.isLessThanOrEqualTo(10L))
                     .orderBy(bno.descending()))
-            // 여기에 위에서 만든 rn을 넣으면 ROWNOM으로 쿼리가 만들어진다.
-            // 쿼리 모양을 완전히 동일하게 하려면 DerivedColumn.of("rn")으로 넣어야한다.
-            .where(DerivedColumn.of("rn"), SqlBuilder.isGreaterThan(0L))
+            .where(rn, SqlBuilder.isGreaterThan(0L))
             .orderBy(bno.descending())
             .build()
             .render(RenderingStrategies.MYBATIS3));
@@ -709,8 +707,8 @@ FROM
             .from(
                 SqlBuilder.select(hint, rn, bno, title, content, writer, regdate, updateDate)
                     .from(BoardVODynamicSqlSupport.boardVO)
-                    .where(rn, SqlBuilder.isLessThanOrEqualTo(10L)))
-            .where(DerivedColumn.of("rn"), SqlBuilder.isGreaterThan(0L))
+                    .where(ROWNUM, SqlBuilder.isLessThanOrEqualTo(10L)))
+            .where(rn, SqlBuilder.isGreaterThan(0L))
             .orderBy(bno.descending())
             .build()
             .render(RenderingStrategies.MYBATIS3));

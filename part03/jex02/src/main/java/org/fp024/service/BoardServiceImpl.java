@@ -137,13 +137,13 @@ public class BoardServiceImpl implements BoardService {
                     .from(BoardVODynamicSqlSupport.boardVO),
                 criteria)
             .where()
-            .and(rn, isLessThanOrEqualTo(criteria.getPageNum() * criteria.getAmount()));
+            .and(rownum, isLessThanOrEqualTo(criteria.getPageNum() * criteria.getAmount()));
 
     return mapper.selectMany(
         select(BoardMapper.selectList)
             .from(select)
             .where(
-                DerivedColumn.of("rn"),
+                rn,
                 isGreaterThan((criteria.getPageNum() - 1) * criteria.getAmount()))
             .orderBy(bno.descending())
             .build()
@@ -169,7 +169,7 @@ public class BoardServiceImpl implements BoardService {
   private QueryExpressionDSL<SelectModel> addSearchWhereClause(
       QueryExpressionDSL<SelectModel> selectDSL, Criteria criteria) {
     List<SearchType> searchTypeList =
-        criteria.getSearchTypeSet().stream().collect(Collectors.toList());
+        criteria.getSearchTypeSet().stream().toList();
     List<AndOrCriteriaGroup> subCriteriaList = new ArrayList<>();
 
     for (int i = 0; i < searchTypeList.size(); i++) {

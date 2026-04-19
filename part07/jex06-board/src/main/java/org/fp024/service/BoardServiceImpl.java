@@ -36,15 +36,15 @@ import org.springframework.transaction.annotation.Transactional;
 /**
  * 쿼리 DSL 작성 참조 링크
  *
- * <p>SELECT: https://mybatis.org/mybatis-dynamic-sql/docs/select.html
+ * <p>SELECT: <a href="https://mybatis.org/mybatis-dynamic-sql/docs/select.html">SELECT</a>
  *
- * <p>UPDATE: https://mybatis.org/mybatis-dynamic-sql/docs/update.html
+ * <p>UPDATE: <a href="https://mybatis.org/mybatis-dynamic-sql/docs/update.html">UPDATE</a>
  *
- * <p>INSERT: https://mybatis.org/mybatis-dynamic-sql/docs/insert.html
+ * <p>INSERT: <a href="https://mybatis.org/mybatis-dynamic-sql/docs/insert.html">INSERT</a>
  *
- * <p>DELETE: https://mybatis.org/mybatis-dynamic-sql/docs/delete.html
+ * <p>DELETE: <a href="https://mybatis.org/mybatis-dynamic-sql/docs/delete.html">DELETE</a>
  *
- * <p>예제:https://github.com/mybatis/mybatis-dynamic-sql/tree/master/src/test/java/examples
+ * <p>예제:<a href="https://github.com/mybatis/mybatis-dynamic-sql/tree/master/src/test/java/examples">예제</a>
  *
  * <p>SqlBuilder 클래스는 import static 해주는게 낫겠다. 이래야 보기가 편함.
  *
@@ -175,13 +175,13 @@ public class BoardServiceImpl implements BoardService {
                     .from(BoardVODynamicSqlSupport.boardVO),
                 criteria)
             .where()
-            .and(rn, isLessThanOrEqualTo(criteria.getPageNum() * criteria.getAmount()));
+            .and(rownum, isLessThanOrEqualTo(criteria.getPageNum() * criteria.getAmount()));
 
     return mapper.selectMany(
         select(BoardMapper.selectList)
             .from(select)
             .where(
-                DerivedColumn.of("rn"),
+                rn,
                 isGreaterThan((criteria.getPageNum() - 1) * criteria.getAmount()))
             .orderBy(bno.descending())
             .build()
