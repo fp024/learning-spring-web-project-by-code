@@ -180,6 +180,24 @@
 
 
 
+## 모델/매퍼 재생성
+
+`MyBatis Generator Plugin` 또는 `mybatis-dynamic-sql` 버전이 변경된 경우,  
+💡 생성 코드와 현재 라이브러리 버전의 호환성을 맞추기 위해 모델과 매퍼를 한 번 재생성하는 것을 권장한다.
+
+```sh
+mvn mybatis-generator:generate
+```
+
+그리고 자동생성되는 VO나 Mapper에다가 기능 추가는 자제하자!
+
+### ⚠️자동 생성 코드 관리
+
+`VO`와 `Mapper`는 MyBatis Generator로 자동 생성되므로,  
+가능하면 직접 수정하지 말고 생성된 구조를 그대로 유지하는게 낫다.
+
+추가 기능이나 비즈니스 로직은 `service` 계층 또는 별도 클래스로 분리하는 것이 좋을 것 같다.
+
 
 
 ## 정오표

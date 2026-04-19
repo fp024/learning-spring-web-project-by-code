@@ -68,7 +68,7 @@ class ReplyServiceImplTest {
   @Transactional
   @Test
   void testUpdate() {
-    long targetRno = 1L;
+    long targetRno = 2L;
 
     ReplyVO vo = replyService.get(targetRno);
 

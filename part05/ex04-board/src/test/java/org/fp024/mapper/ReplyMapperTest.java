@@ -71,7 +71,7 @@ public class ReplyMapperTest {
   @Transactional
   @Test
   void testUpdate() {
-    long targetRno = 1L;
+    long targetRno = 2L;
 
     ReplyVO vo = mapper.read(targetRno);
 
