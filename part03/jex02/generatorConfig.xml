@@ -52,6 +52,7 @@
       <columnOverride column="bno" property="bno" jdbcType='BIGINT' javaType='java.lang.Long'/>
       <columnOverride column="regdate" property="regdate" jdbcType='DATE' javaType='java.time.LocalDateTime'/>
       <columnOverride column="updatedate" property="updateDate" jdbcType='DATE' javaType='java.time.LocalDateTime'/>
+      <!-- 댓글 수는 현재 예제에서는 사용하지 않음 -->
       <ignoreColumn column="replycnt"/>
     </table>
   </context>
