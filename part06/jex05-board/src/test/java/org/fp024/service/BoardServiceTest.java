@@ -19,6 +19,7 @@ import java.util.Arrays;
 import java.util.Objects;
 import lombok.extern.slf4j.Slf4j;
 import org.fp024.config.RootConfig;
+import org.fp024.domain.BoardDTO;
 import org.fp024.domain.BoardVO;
 import org.fp024.domain.Criteria;
 import org.fp024.domain.PageSize;
@@ -54,7 +55,10 @@ class BoardServiceTest {
     board.setContent("새로 작성하는 내용");
     board.setWriter("newbie");
 
-    service.register(board);
+    BoardDTO boardDTO = new BoardDTO();
+    boardDTO.setBoardVO(board);
+
+    service.register(boardDTO);
 
     LOGGER.info("생성된 게시물 번호: {}", board.getBno());
   }
@@ -95,8 +99,11 @@ class BoardServiceTest {
       return;
     }
 
+    BoardDTO boardDTO = new BoardDTO();
+    boardDTO.setBoardVO(board);
+
     board.setTitle("제목 수정합니다. - " + LocalDateTime.now().getSecond());
-    LOGGER.info("MODIFY RESULT: {}", service.modify(board));
+    LOGGER.info("MODIFY RESULT: {}", service.modify(boardDTO));
   }
 
   /*

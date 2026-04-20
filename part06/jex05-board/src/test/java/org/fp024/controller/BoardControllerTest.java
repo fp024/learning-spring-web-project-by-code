@@ -3,7 +3,7 @@ package org.fp024.controller;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.EnumSet;
-
+import lombok.extern.slf4j.Slf4j;
 import org.fp024.config.RootConfig;
 import org.fp024.config.ServletConfig;
 import org.fp024.domain.Criteria;
@@ -17,8 +17,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.ui.ModelMap;
-
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * https://www.baeldung.com/spring-5-junit-config<br>
@@ -71,9 +69,9 @@ class BoardControllerTest {
         mockMvc
             .perform(
                 MockMvcRequestBuilders.post("/board/register")
-                    .param("title", "테스트 새글 제목")
-                    .param("content", "테스트 새글 내용")
-                    .param("writer", "useer00"))
+                    .param("boardVO.title", "테스트 새글 제목")
+                    .param("boardVO.content", "테스트 새글 내용")
+                    .param("boardVO.writer", "useer00"))
             .andReturn()
             .getModelAndView()
             .getViewName();
@@ -102,10 +100,10 @@ class BoardControllerTest {
         mockMvc
             .perform(
                 MockMvcRequestBuilders.post("/board/modify")
-                    .param("bno", "1")
-                    .param("title", "수정된 테스트 새글 제목")
-                    .param("content", "수정된 테스트 새글 내용")
-                    .param("writer", "user00"))
+                    .param("boardVO.bno", "1")
+                    .param("boardVO.title", "수정된 테스트 새글 제목")
+                    .param("boardVO.content", "수정된 테스트 새글 내용")
+                    .param("boardVO.writer", "user00"))
             .andReturn()
             .getModelAndView()
             .getViewName();

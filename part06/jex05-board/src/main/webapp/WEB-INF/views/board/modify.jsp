@@ -35,23 +35,24 @@
           </div>
           <div class="card-body">
             <form role="form" action="/board/modify" method="post">
+              <input type="hidden" name="bno" value="<c:out value="${board.bno}"/>">
               <input type="hidden" name="pageNum" value="<c:out value="${criteria.pageNum}"/>">
               <input type="hidden" name="amount" value="<c:out value="${criteria.amount}"/>">
               <input type="hidden" name="searchCodes" value="<c:out value="${criteria.searchCodesWithJoined}"/>">
               <input type="hidden" name="keyword" value="<c:out value="${criteria.keyword}"/>">
 
               <div class="form-group">
-                <label>Bno</label> <input class="form-control" name="bno" value="<c:out value='${board.bno}'/>" readonly="readonly">
+                <label>Bno</label> <input class="form-control" name="boardVO.bno" value="<c:out value='${board.bno}'/>" readonly="readonly">
               </div>
               <div class="form-group">
-                <label>Title</label> <input class="form-control" name="title" value="<c:out value='${board.title}'/>">
+                <label>Title</label> <input class="form-control" name="boardVO.title" value="<c:out value='${board.title}'/>">
               </div>
               <div class="form-group">
                 <label>Text area</label>
-                <textarea class="form-control" rows="5" name="content"><c:out value='${board.content}' /></textarea>
+                <textarea class="form-control" rows="5" name="boardVO.content"><c:out value='${board.content}' /></textarea>
               </div>
               <div class="form-group">
-                <label>Writer</label> <input class="form-control" name="writer" readonly="readonly" value="<c:out value='${board.writer}'/>">
+                <label>Writer</label> <input class="form-control" name="boardVO.writer" readonly="readonly" value="<c:out value='${board.writer}'/>">
               </div>
               <button type="submit" data-oper="modify" class="btn btn-warning">Modify</button>
               <button type="submit" data-oper="remove" class="btn btn-danger">Remove</button>

@@ -11,6 +11,7 @@ import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.fp024.domain.BoardAttachVO;
+import org.fp024.domain.BoardDTO;
 import org.fp024.domain.BoardVO;
 import org.fp024.domain.Criteria;
 import org.fp024.domain.PageDTO;
@@ -64,16 +65,16 @@ public class BoardController {
   public void register() {}
 
   @PostMapping("/register")
-  public String register(BoardVO board, RedirectAttributes rttr) {
+  public String register(BoardDTO boardDTO, RedirectAttributes rttr) {
     LOGGER.info("====================================");
-    LOGGER.info("register: {}", board);
+    LOGGER.info("register: {}", boardDTO);
 
-    if (board.getAttachList() != null) {
-      board.getAttachList().forEach(attach -> LOGGER.info(attach.toString()));
+    if (boardDTO.getAttachList() != null) {
+      boardDTO.getAttachList().forEach(attach -> LOGGER.info(attach.toString()));
     }
     LOGGER.info("====================================");
-    service.register(board);
-    rttr.addFlashAttribute("result", board.getBno());
+    service.register(boardDTO);
+    rttr.addFlashAttribute("result", boardDTO.getBoardVO().getBno());
     // Spring MVC가 내부적으로 response.sendRedirect()처리를 함
     return "redirect:/board/list";
   }
@@ -87,10 +88,10 @@ public class BoardController {
 
   @PostMapping("/modify")
   public String modify(
-      BoardVO board, @ModelAttribute("criteria") Criteria criteria, RedirectAttributes rttr) {
-    LOGGER.info("modify: {}", board);
+      BoardDTO boardDTO, @ModelAttribute("criteria") Criteria criteria, RedirectAttributes rttr) {
+    LOGGER.info("modify: {}", boardDTO);
 
-    if (service.modify(board)) {
+    if (service.modify(boardDTO)) {
       rttr.addFlashAttribute("result", "success");
     }
     return "redirect:/board/list" + criteria.getLink();
