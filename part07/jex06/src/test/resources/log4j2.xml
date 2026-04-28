@@ -18,6 +18,7 @@
         <Logger name="org.springframework.web" level="info"/>
 
         <Logger name="org.fp024.mapper" level="trace"/>
+        <Logger name="org.fp024.mapper.generated" level="trace"/>
 
         <!-- Root Logger -->
         <Root level="info">
