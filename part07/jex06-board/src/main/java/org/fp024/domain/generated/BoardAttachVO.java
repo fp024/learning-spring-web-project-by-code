@@ -1,6 +1,7 @@
-package org.fp024.domain;
+package org.fp024.domain.generated;
 
 import javax.annotation.Generated;
+import org.fp024.domain.FileType;
 
 public class BoardAttachVO {
     @Generated("org.mybatis.generator.api.MyBatisGenerator")

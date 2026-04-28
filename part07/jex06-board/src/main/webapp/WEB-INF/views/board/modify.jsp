@@ -36,6 +36,7 @@
           </div>
           <div class="card-body">
             <form id="modify-form" role="form" action="/board/modify" method="post">
+              <input type="hidden" name="bno" value="<c:out value="${board.bno}"/>">
               <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
               <input type="hidden" name="pageNum" value="<c:out value="${criteria.pageNum}"/>">
               <input type="hidden" name="amount" value="<c:out value="${criteria.amount}"/>">
@@ -43,17 +44,17 @@
               <input type="hidden" name="keyword" value="<c:out value="${criteria.keyword}"/>">
 
               <div class="form-group">
-                <label>Bno</label> <input class="form-control" name="bno" value="<c:out value='${board.bno}'/>" readonly="readonly">
+                <label>Bno</label> <input class="form-control" name="boardVO.bno" value="<c:out value='${board.bno}'/>" readonly="readonly">
               </div>
               <div class="form-group">
-                <label>Title</label> <input class="form-control" name="title" value="<c:out value='${board.title}'/>">
+                <label>Title</label> <input class="form-control" name="boardVO.title" value="<c:out value='${board.title}'/>">
               </div>
               <div class="form-group">
                 <label>Text area</label>
-                <textarea class="form-control" rows="5" name="content"><c:out value='${board.content}' /></textarea>
+                <textarea class="form-control" rows="5" name="boardVO.content"><c:out value='${board.content}' /></textarea>
               </div>
               <div class="form-group">
-                <label>Writer</label> <input name="writer" class="form-control" readonly="readonly" value="<c:out value='${board.writer}'/>">
+                <label>Writer</label> <input name="boardVO.writer" class="form-control" readonly="readonly" value="<c:out value='${board.writer}'/>">
               </div>
               <sec:authentication property="principal" var="pinfo" />
               <sec:authorize access="isAuthenticated()">

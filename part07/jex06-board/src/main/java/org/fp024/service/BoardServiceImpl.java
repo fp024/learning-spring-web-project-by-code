@@ -1,12 +1,12 @@
 package org.fp024.service;
 
-import static org.fp024.mapper.BoardVODynamicSqlSupport.bno;
-import static org.fp024.mapper.BoardVODynamicSqlSupport.content;
-import static org.fp024.mapper.BoardVODynamicSqlSupport.regdate;
-import static org.fp024.mapper.BoardVODynamicSqlSupport.replyCount;
-import static org.fp024.mapper.BoardVODynamicSqlSupport.title;
-import static org.fp024.mapper.BoardVODynamicSqlSupport.updateDate;
-import static org.fp024.mapper.BoardVODynamicSqlSupport.writer;
+import static org.fp024.mapper.generated.BoardVODynamicSqlSupport.bno;
+import static org.fp024.mapper.generated.BoardVODynamicSqlSupport.content;
+import static org.fp024.mapper.generated.BoardVODynamicSqlSupport.regdate;
+import static org.fp024.mapper.generated.BoardVODynamicSqlSupport.replyCount;
+import static org.fp024.mapper.generated.BoardVODynamicSqlSupport.title;
+import static org.fp024.mapper.generated.BoardVODynamicSqlSupport.updateDate;
+import static org.fp024.mapper.generated.BoardVODynamicSqlSupport.writer;
 import static org.fp024.util.CommonUtil.currentSystemPathToUnixPath;
 import static org.mybatis.dynamic.sql.SqlBuilder.count;
 import static org.mybatis.dynamic.sql.SqlBuilder.isEqualTo;
@@ -14,17 +14,19 @@ import static org.mybatis.dynamic.sql.SqlBuilder.isGreaterThan;
 import static org.mybatis.dynamic.sql.SqlBuilder.isLessThanOrEqualTo;
 import static org.mybatis.dynamic.sql.SqlBuilder.select;
 
+import org.fp024.domain.generated.BoardAttachVO;
+import org.fp024.mapper.generated.BoardAttachVODynamicSqlSupport;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.fp024.domain.BoardAttachVO;
-import org.fp024.domain.BoardVO;
+import org.fp024.domain.BoardDTO;
 import org.fp024.domain.Criteria;
-import org.fp024.mapper.BoardAttachMapper;
-import org.fp024.mapper.BoardAttachVODynamicSqlSupport;
-import org.fp024.mapper.BoardMapper;
-import org.fp024.mapper.BoardVODynamicSqlSupport;
+import org.fp024.domain.generated.BoardVO;
+import org.fp024.mapper.generated.BoardAttachMapper;
+import org.fp024.mapper.generated.BoardMapper;
+import org.fp024.mapper.generated.BoardVODynamicSqlSupport;
 import org.mybatis.dynamic.sql.Constant;
 import org.mybatis.dynamic.sql.DerivedColumn;
 import org.mybatis.dynamic.sql.render.RenderingStrategies;
@@ -63,8 +65,9 @@ public class BoardServiceImpl implements BoardService {
   private final BoardAttachMapper attachMapper;
 
   @Override
-  public void register(BoardVO board) {
-    LOGGER.info("register..... {}", board);
+  public void register(BoardDTO boardDTO) {
+    LOGGER.info("register..... {}", boardDTO);
+    BoardVO board = boardDTO.getBoardVO();
     // insertSelectKey와 insert를 따로 분리해서 만들지 않았다, 항상 Key 프로퍼티를 설정해서 반환한다.
     // 바로 모델을 insert를 하면 board 모델의 등록/수정일시가 null일 경우 null로 업데이트를 할 수 있으므로 명시적으로 정해준다.
     // 테이블 생성시 SYSDATE 기본값이 동작하도록 명시적으로 지정해줄 필요가 있었다.
@@ -89,11 +92,11 @@ public class BoardServiceImpl implements BoardService {
     board.setUpdateDate(null);
     mapper.insertSelective(board);
 
-    if (board.getAttachList() == null || board.getAttachList().isEmpty()) {
+    if (boardDTO.getAttachList() == null || boardDTO.getAttachList().isEmpty()) {
       return;
     }
 
-    board
+    boardDTO
         .getAttachList()
         .forEach(
             attach -> {
@@ -114,8 +117,9 @@ public class BoardServiceImpl implements BoardService {
 
   @Transactional
   @Override
-  public boolean modify(BoardVO board) {
-    LOGGER.info("modify..... {}", board);
+  public boolean modify(BoardDTO boardDTO) {
+    LOGGER.info("modify..... {}", boardDTO);
+    BoardVO board = boardDTO.getBoardVO();
 
     attachMapper.delete(
         c -> c.where(BoardAttachVODynamicSqlSupport.bno, isEqualTo(board.getBno())));
@@ -132,8 +136,8 @@ public class BoardServiceImpl implements BoardService {
                         .where(BoardVODynamicSqlSupport.bno, isEqualTo(board.getBno())))
             == 1;
 
-    if (modifyResult && board.getAttachList() != null && !board.getAttachList().isEmpty()) {
-      board
+    if (modifyResult && boardDTO.getAttachList() != null && !boardDTO.getAttachList().isEmpty()) {
+      boardDTO
           .getAttachList()
           .forEach(
               attach -> {

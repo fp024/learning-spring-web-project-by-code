@@ -1,4 +1,4 @@
-package org.fp024.domain;
+package org.fp024.domain.generated;
 
 import java.time.LocalDateTime;
 import javax.annotation.Generated;

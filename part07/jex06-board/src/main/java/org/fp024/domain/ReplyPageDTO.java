@@ -3,6 +3,7 @@ package org.fp024.domain;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
+import org.fp024.domain.generated.ReplyVO;
 
 import java.util.List;
 

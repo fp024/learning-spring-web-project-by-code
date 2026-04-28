@@ -1,14 +1,15 @@
 package org.fp024.mapper;
 
-import static org.fp024.mapper.BoardAttachVODynamicSqlSupport.bno;
+import static org.fp024.mapper.generated.BoardAttachVODynamicSqlSupport.bno;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mybatis.dynamic.sql.SqlBuilder.isEqualTo;
 
 import java.util.List;
 import java.util.UUID;
 import org.fp024.config.RootConfig;
-import org.fp024.domain.BoardAttachVO;
 import org.fp024.domain.FileType;
+import org.fp024.domain.generated.BoardAttachVO;
+import org.fp024.mapper.generated.BoardAttachMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;

@@ -1,6 +1,6 @@
-package org.fp024.mapper;
+package org.fp024.mapper.generated;
 
-import static org.fp024.mapper.MemberVODynamicSqlSupport.*;
+import static org.fp024.mapper.generated.MemberVODynamicSqlSupport.*;
 import static org.mybatis.dynamic.sql.SqlBuilder.isEqualTo;
 
 import java.util.Collection;
@@ -13,7 +13,7 @@ import org.apache.ibatis.annotations.ResultMap;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.SelectProvider;
 import org.apache.ibatis.type.JdbcType;
-import org.fp024.domain.MemberVO;
+import org.fp024.domain.generated.MemberVO;
 import org.fp024.typehandler.CustomEnumTypeHandler;
 import org.mybatis.dynamic.sql.BasicColumn;
 import org.mybatis.dynamic.sql.delete.DeleteDSLCompleter;
@@ -47,16 +47,10 @@ public interface MemberMapper extends CommonCountMapper, CommonDeleteMapper, Com
     })
     List<MemberVO> selectMany(SelectStatementProvider selectStatement);
 
-  /**
-   * 회원과 권한이 1:N이여서 ResultMap을 꼭 구성해야했다. Mapper XML에 정의했다. <br>
-   * 가이드에서도 ResultMap을 사용하라고 했다. <br>
-   * 기본 쿼리문에서 없으면 없는대로 null로 들어가니 메서드를 따로 만들 필요는 없고 selectOne에만 추가해주면 되겠다.<br>
-   * https://mybatis.org/mybatis-dynamic-sql/docs/select.html#xml-mapper-for-join-statements
-   */
-  @Generated("org.mybatis.generator.api.MyBatisGenerator")
-  @SelectProvider(type = SqlProviderAdapter.class, method = "select")
-  @ResultMap("MemberResultMap")
-  Optional<MemberVO> selectOne(SelectStatementProvider selectStatement);
+    @Generated("org.mybatis.generator.api.MyBatisGenerator")
+    @SelectProvider(type=SqlProviderAdapter.class, method="select")
+    @ResultMap("MemberVOResult")
+    Optional<MemberVO> selectOne(SelectStatementProvider selectStatement);
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
     default long count(CountDSLCompleter completer) {

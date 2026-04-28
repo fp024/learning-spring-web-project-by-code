@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.fp024.domain.Criteria;
 import org.fp024.domain.PageSize;
 import org.fp024.domain.ReplyPageDTO;
-import org.fp024.domain.ReplyVO;
+import org.fp024.domain.generated.ReplyVO;
 import org.fp024.service.ReplyService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

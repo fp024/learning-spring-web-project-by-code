@@ -1,16 +1,17 @@
 package org.fp024.service;
 
 import java.util.List;
-import org.fp024.domain.BoardAttachVO;
-import org.fp024.domain.BoardVO;
+import org.fp024.domain.BoardDTO;
 import org.fp024.domain.Criteria;
+import org.fp024.domain.generated.BoardAttachVO;
+import org.fp024.domain.generated.BoardVO;
 
 public interface BoardService {
-  void register(BoardVO board);
+  void register(BoardDTO board);
 
   BoardVO get(Long bno);
 
-  boolean modify(BoardVO board);
+  boolean modify(BoardDTO board);
 
   boolean remove(Long bno);
 

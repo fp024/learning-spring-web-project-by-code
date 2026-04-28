@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 import lombok.extern.slf4j.Slf4j;
 import org.fp024.config.RootConfig;
 import org.fp024.config.ServletConfig;
-import org.fp024.domain.ReplyVO;
+import org.fp024.domain.generated.ReplyVO;
 import org.fp024.service.ReplyService;
 import org.fp024.util.GsonHelper;
 import org.junit.jupiter.api.BeforeEach;

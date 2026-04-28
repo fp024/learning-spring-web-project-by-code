@@ -1,12 +1,12 @@
 package org.fp024.service;
 
-import static org.fp024.mapper.BoardVODynamicSqlSupport.bno;
-import static org.fp024.mapper.BoardVODynamicSqlSupport.content;
-import static org.fp024.mapper.BoardVODynamicSqlSupport.regdate;
-import static org.fp024.mapper.BoardVODynamicSqlSupport.replyCount;
-import static org.fp024.mapper.BoardVODynamicSqlSupport.title;
-import static org.fp024.mapper.BoardVODynamicSqlSupport.updateDate;
-import static org.fp024.mapper.BoardVODynamicSqlSupport.writer;
+import static org.fp024.mapper.generated.BoardVODynamicSqlSupport.bno;
+import static org.fp024.mapper.generated.BoardVODynamicSqlSupport.content;
+import static org.fp024.mapper.generated.BoardVODynamicSqlSupport.regdate;
+import static org.fp024.mapper.generated.BoardVODynamicSqlSupport.replyCount;
+import static org.fp024.mapper.generated.BoardVODynamicSqlSupport.title;
+import static org.fp024.mapper.generated.BoardVODynamicSqlSupport.updateDate;
+import static org.fp024.mapper.generated.BoardVODynamicSqlSupport.writer;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mybatis.dynamic.sql.SqlBuilder.count;
@@ -19,11 +19,12 @@ import java.util.Arrays;
 import java.util.Objects;
 import lombok.extern.slf4j.Slf4j;
 import org.fp024.config.RootConfig;
-import org.fp024.domain.BoardVO;
+import org.fp024.domain.BoardDTO;
 import org.fp024.domain.Criteria;
 import org.fp024.domain.PageSize;
-import org.fp024.mapper.BoardMapper;
-import org.fp024.mapper.BoardVODynamicSqlSupport;
+import org.fp024.domain.generated.BoardVO;
+import org.fp024.mapper.generated.BoardMapper;
+import org.fp024.mapper.generated.BoardVODynamicSqlSupport;
 import org.junit.jupiter.api.Test;
 import org.mybatis.dynamic.sql.Constant;
 import org.mybatis.dynamic.sql.DerivedColumn;
@@ -49,12 +50,16 @@ class BoardServiceTest {
 
   @Test
   void testRegister() {
+    BoardDTO boardDTO = new BoardDTO();
+
     BoardVO board = new BoardVO();
     board.setTitle("1새로 작성하는 글");
     board.setContent("새로 작성하는 내용");
     board.setWriter("newbie");
 
-    service.register(board);
+    boardDTO.setBoardVO(board);
+
+    service.register(boardDTO);
 
     LOGGER.info("생성된 게시물 번호: {}", board.getBno());
   }
@@ -94,9 +99,12 @@ class BoardServiceTest {
     if (board == null) {
       return;
     }
-
     board.setTitle("제목 수정합니다. - " + LocalDateTime.now().getSecond());
-    LOGGER.info("MODIFY RESULT: {}", service.modify(board));
+
+    BoardDTO boardDTO = new BoardDTO();
+    boardDTO.setBoardVO(board);
+
+    LOGGER.info("MODIFY RESULT: {}", service.modify(boardDTO));
   }
 
   /*
@@ -152,9 +160,7 @@ class BoardServiceTest {
 
     return select(BoardMapper.selectList)
         .from(selectDSL)
-        .where(
-            rn,
-            isGreaterThan((criteria.getPageNum() - 1) * criteria.getAmount()))
+        .where(rn, isGreaterThan((criteria.getPageNum() - 1) * criteria.getAmount()))
         .orderBy(bno.descending())
         .build()
         .render(RenderingStrategies.MYBATIS3);

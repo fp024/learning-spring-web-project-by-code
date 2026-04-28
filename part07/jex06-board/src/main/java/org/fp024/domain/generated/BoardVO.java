@@ -1,7 +1,6 @@
-package org.fp024.domain;
+package org.fp024.domain.generated;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import javax.annotation.Generated;
 
 public class BoardVO {
@@ -26,17 +25,10 @@ public class BoardVO {
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
     private int replyCount;
 
-  /**
-   * 첨부파일 목록
-   *
-   * <p>1:N 관계를 Mybatis Generator 로 만들어낼 수 없어서, 수동으로 기입한 필드
-   */
-  private List<BoardAttachVO> attachList;
-
-  @Generated("org.mybatis.generator.api.MyBatisGenerator")
-  public Long getBno() {
-    return bno;
-  }
+    @Generated("org.mybatis.generator.api.MyBatisGenerator")
+    public Long getBno() {
+        return bno;
+    }
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
     public void setBno(Long bno) {
@@ -103,30 +95,21 @@ public class BoardVO {
         this.replyCount = replyCount;
     }
 
-  public void setAttachList(List<BoardAttachVO> attachList) {
-    this.attachList = attachList;
-  }
-
-  public List<BoardAttachVO> getAttachList() {
-    return attachList;
-  }
-
-  @Override
-  @Generated("org.mybatis.generator.api.MyBatisGenerator")
-  public String toString() {
-    StringBuilder sb = new StringBuilder();
-    sb.append(getClass().getSimpleName());
-    sb.append(" [");
-    sb.append("Hash = ").append(hashCode());
-    sb.append(", bno=").append(bno);
-    sb.append(", title=").append(title);
-    sb.append(", content=").append(content);
-    sb.append(", writer=").append(writer);
-    sb.append(", regdate=").append(regdate);
-    sb.append(", updateDate=").append(updateDate);
-    sb.append(", replyCount=").append(replyCount);
-    sb.append(", attachList=").append(attachList);
-    sb.append("]");
-    return sb.toString();
-  }
+    @Override
+    @Generated("org.mybatis.generator.api.MyBatisGenerator")
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(getClass().getSimpleName());
+        sb.append(" [");
+        sb.append("Hash = ").append(hashCode());
+        sb.append(", bno=").append(bno);
+        sb.append(", title=").append(title);
+        sb.append(", content=").append(content);
+        sb.append(", writer=").append(writer);
+        sb.append(", regdate=").append(regdate);
+        sb.append(", updateDate=").append(updateDate);
+        sb.append(", replyCount=").append(replyCount);
+        sb.append("]");
+        return sb.toString();
+    }
 }

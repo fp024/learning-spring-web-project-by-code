@@ -1,4 +1,4 @@
-package org.fp024.mapper;
+package org.fp024.mapper.generated;
 
 import java.sql.JDBCType;
 import javax.annotation.Generated;

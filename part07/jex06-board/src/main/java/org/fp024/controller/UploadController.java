@@ -300,7 +300,7 @@ public class UploadController {
 
     if (type == FileType.IMAGE) {
       String largeFileName = file.getAbsolutePath().replace("s_", "");
-      LOGGER.info("largeFileName: ", largeFileName);
+      LOGGER.info("largeFileName: {}", largeFileName);
       File largeFile = new File(largeFileName);
       largeFile.delete();
     }

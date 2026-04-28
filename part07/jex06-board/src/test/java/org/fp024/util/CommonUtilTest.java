@@ -1,16 +1,15 @@
 package org.fp024.util;
 
-import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.Test;
-import org.mockito.MockedStatic;
-import org.mockito.Mockito;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.mockStatic;
 
 import java.io.File;
 import java.time.LocalDateTime;
 import java.util.stream.IntStream;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.mockStatic;
+import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Test;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
 
 @Slf4j
 class CommonUtilTest {
@@ -21,7 +20,7 @@ class CommonUtilTest {
 
     try (MockedStatic<LocalDateTime> mockedLocalDateTime =
         mockStatic(LocalDateTime.class, Mockito.CALLS_REAL_METHODS)) {
-      mockedLocalDateTime.when(() -> LocalDateTime.now()).thenReturn(currentDateTime);
+      mockedLocalDateTime.when(LocalDateTime::now).thenReturn(currentDateTime);
 
       assertEquals("2022" + File.separator + "04" + File.separator + "20", CommonUtil.getFolder());
     }

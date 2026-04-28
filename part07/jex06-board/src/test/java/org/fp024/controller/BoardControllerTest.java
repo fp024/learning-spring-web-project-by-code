@@ -69,9 +69,9 @@ class BoardControllerTest {
         mockMvc
             .perform(
                 MockMvcRequestBuilders.post("/board/register")
-                    .param("title", "테스트 새글 제목")
-                    .param("content", "테스트 새글 내용")
-                    .param("writer", "useer00"))
+                    .param("boardVO.title", "테스트 새글 제목")
+                    .param("boardVO.content", "테스트 새글 내용")
+                    .param("boardVO.writer", "useer00"))
             .andReturn()
             .getModelAndView()
             .getViewName();
@@ -100,10 +100,10 @@ class BoardControllerTest {
         mockMvc
             .perform(
                 MockMvcRequestBuilders.post("/board/modify")
-                    .param("bno", "1")
-                    .param("title", "수정된 테스트 새글 제목")
-                    .param("content", "수정된 테스트 새글 내용")
-                    .param("writer", "user00"))
+                    .param("boardVO.bno", "1")
+                    .param("boardVO.title", "수정된 테스트 새글 제목")
+                    .param("boardVO.content", "수정된 테스트 새글 내용")
+                    .param("boardVO.writer", "user00"))
             .andReturn()
             .getModelAndView()
             .getViewName();

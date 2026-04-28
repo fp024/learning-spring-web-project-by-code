@@ -1,6 +1,6 @@
-package org.fp024.mapper;
+package org.fp024.mapper.generated;
 
-import static org.fp024.mapper.BoardAttachVODynamicSqlSupport.*;
+import static org.fp024.mapper.generated.BoardAttachVODynamicSqlSupport.*;
 import static org.mybatis.dynamic.sql.SqlBuilder.isEqualTo;
 
 import java.util.Collection;
@@ -13,7 +13,7 @@ import org.apache.ibatis.annotations.ResultMap;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.SelectProvider;
 import org.apache.ibatis.type.JdbcType;
-import org.fp024.domain.BoardAttachVO;
+import org.fp024.domain.generated.BoardAttachVO;
 import org.fp024.typehandler.CustomEnumTypeHandler;
 import org.mybatis.dynamic.sql.BasicColumn;
 import org.mybatis.dynamic.sql.delete.DeleteDSLCompleter;

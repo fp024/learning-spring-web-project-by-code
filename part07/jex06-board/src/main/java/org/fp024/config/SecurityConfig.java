@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.fp024.domain.MemberAuthType;
 import org.fp024.security.CustomUserDetailsService;
+import org.fp024.service.MemberService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -87,8 +88,8 @@ public class SecurityConfig {
   */
 
   @Bean
-  public UserDetailsService customUserDetailsService() {
-    return new CustomUserDetailsService();
+  public UserDetailsService customUserDetailsService(MemberService memberService) {
+    return new CustomUserDetailsService(memberService);
   }
 
   /*

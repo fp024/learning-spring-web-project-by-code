@@ -1,6 +1,7 @@
-package org.fp024.domain;
+package org.fp024.domain.generated;
 
 import javax.annotation.Generated;
+import org.fp024.domain.MemberAuthType;
 
 public class AuthVO {
     @Generated("org.mybatis.generator.api.MyBatisGenerator")

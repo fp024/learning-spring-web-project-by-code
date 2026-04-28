@@ -1,16 +1,14 @@
 package org.fp024.domain;
 
-import static org.fp024.mapper.BoardVODynamicSqlSupport.content;
-import static org.fp024.mapper.BoardVODynamicSqlSupport.title;
-import static org.fp024.mapper.BoardVODynamicSqlSupport.writer;
+import static org.fp024.mapper.generated.BoardVODynamicSqlSupport.content;
+import static org.fp024.mapper.generated.BoardVODynamicSqlSupport.title;
+import static org.fp024.mapper.generated.BoardVODynamicSqlSupport.writer;
 
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.Set;
-
-import org.mybatis.dynamic.sql.SqlColumn;
-
 import lombok.Getter;
+import org.mybatis.dynamic.sql.SqlColumn;
 
 /** 검색 타입 */
 public enum SearchType {
