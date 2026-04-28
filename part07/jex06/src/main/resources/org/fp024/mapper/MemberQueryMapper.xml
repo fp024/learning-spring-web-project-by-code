@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="org.fp024.mapper.MemberMapper">
+<mapper namespace="org.fp024.mapper.MemberQueryMapper">
   <!--
       JOIN의 결과로는 ReulstMap을 XML로 만들어야한다고 한다.
       https://mybatis.org/mybatis-dynamic-sql/docs/select.html#xml-mapper-for-join-statements
   -->
-  <resultMap id="MemberResultMap" type="memberVO">
-    <id property="userId" column="userid"/>
-    <result property="userPassword" column="userpw"/>
-    <result property="userName" column="username"/>
-    <result property="enabled" column="enabled" typeHandler="org.fp024.typehandler.CustomEnumTypeHandler"/>
-    <result property="registerDate" column="regdate"/>
-    <result property="updateDate" column="updateDate"/>
+  <resultMap id="MemberResultMap" type="memberDTO">
+    <id property="memberVO.userId" column="userid"/>
+    <result property="memberVO.userPassword" column="userpw"/>
+    <result property="memberVO.userName" column="username"/>
+    <result property="memberVO.enabled" column="enabled" typeHandler="org.fp024.typehandler.CustomEnumTypeHandler"/>
+    <result property="memberVO.registerDate" column="regdate"/>
+    <result property="memberVO.updateDate" column="updateDate"/>
     <collection property="authList" resultMap="AuthResultMap"/>
   </resultMap>
 

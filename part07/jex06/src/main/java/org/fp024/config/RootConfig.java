@@ -40,7 +40,7 @@ public class RootConfig {
   public SqlSessionFactory sqlSessionFactory(DataSource dataSource) throws Exception {
     SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
     sqlSessionFactoryBean.setDataSource(dataSource);
-    sqlSessionFactoryBean.setTypeAliasesPackage("org.fp024.domain");
+    sqlSessionFactoryBean.setTypeAliasesPackage("org.fp024.domain.generated,org.fp024.domain");
     return sqlSessionFactoryBean.getObject();
   }
 

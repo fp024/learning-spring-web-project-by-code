@@ -1,28 +1,26 @@
 package org.fp024.service;
 
-import lombok.RequiredArgsConstructor;
-import org.fp024.domain.MemberVO;
-import org.fp024.mapper.AuthVODynamicSqlSupport;
-import org.fp024.mapper.MemberMapper;
-import org.fp024.mapper.MemberVODynamicSqlSupport;
-import org.mybatis.dynamic.sql.render.RenderingStrategies;
-import org.springframework.stereotype.Service;
-
-import java.util.Optional;
-
-import static org.mybatis.dynamic.sql.SqlBuilder.equalTo;
 import static org.mybatis.dynamic.sql.SqlBuilder.isEqualTo;
 import static org.mybatis.dynamic.sql.SqlBuilder.on;
 import static org.mybatis.dynamic.sql.SqlBuilder.select;
+
+import java.util.Optional;
+import lombok.RequiredArgsConstructor;
+import org.fp024.domain.MemberDTO;
+import org.fp024.mapper.MemberQueryMapper;
+import org.fp024.mapper.generated.AuthVODynamicSqlSupport;
+import org.fp024.mapper.generated.MemberVODynamicSqlSupport;
+import org.mybatis.dynamic.sql.render.RenderingStrategies;
+import org.springframework.stereotype.Service;
 
 /** 회원 서비스 */
 @RequiredArgsConstructor
 @Service
 public class MemberService {
-  private final MemberMapper memberMapper;
+  private final MemberQueryMapper memberQueryMapper;
 
-  public Optional<MemberVO> read(String userId) {
-    return memberMapper.selectOne(
+  public Optional<MemberDTO> read(String userId) {
+    return memberQueryMapper.selectOne(
         select(
                 MemberVODynamicSqlSupport.userId,
                 MemberVODynamicSqlSupport.userPassword,

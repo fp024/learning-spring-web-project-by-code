@@ -1,10 +1,12 @@
 package org.fp024.security.domain;
 
 import lombok.Getter;
-import org.fp024.domain.MemberVO;
+import org.fp024.domain.MemberDTO;
 import org.springframework.security.core.SpringSecurityCoreVersion;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
+
+import java.io.Serial;
 
 public class CustomUser extends User {
   /**
@@ -12,18 +14,19 @@ public class CustomUser extends User {
    * 주의. 클래스는 다른 버전 간에 직렬화할 수 없습니다. <br>
    * 여전히 직렬 버전이 필요한 이유는 SEC-1709를 참조하십시오.
    */
+  @Serial
   private static final long serialVersionUID = SpringSecurityCoreVersion.SERIAL_VERSION_UID;
 
-  @Getter private final MemberVO member;
+  @Getter private final MemberDTO member;
 
-  public CustomUser(MemberVO vo) {
+  public CustomUser(MemberDTO dto) {
     super(
-        vo.getUserId(),
-        vo.getUserPassword(),
-        vo.getAuthList().stream()
+        dto.getMemberVO().getUserId(),
+        dto.getMemberVO().getUserPassword(),
+        dto.getAuthList().stream()
             .map(auth -> new SimpleGrantedAuthority(auth.getAuth().name()))
             .toList());
 
-    this.member = vo;
+    this.member = dto;
   }
 }

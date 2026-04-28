@@ -1,12 +1,11 @@
 package org.fp024.config;
 
-import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
-
 import javax.sql.DataSource;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.fp024.security.CustomLoginSuccessHandler;
 import org.fp024.security.CustomUserDetailsService;
+import org.fp024.service.MemberService;
 import org.fp024.type.MemberAuthType;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -96,8 +95,8 @@ public class SecurityConfig {
   */
 
   @Bean
-  public UserDetailsService customUserDetailsService() {
-    return new CustomUserDetailsService();
+  public UserDetailsService customUserDetailsService(MemberService memberService) {
+    return new CustomUserDetailsService(memberService);
   }
 
   @Bean

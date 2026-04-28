@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.fp024.config.RootConfig;
-import org.fp024.domain.MemberVO;
+import org.fp024.domain.MemberDTO;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
@@ -18,7 +18,7 @@ class MemberServiceTest {
 
   @Test
   void testRead() {
-    Optional<MemberVO> member = memberService.read("admin90");
+    Optional<MemberDTO> member = memberService.read("admin90");
 
     assertTrue(member.isPresent());
 

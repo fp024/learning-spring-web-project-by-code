@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE generatorConfiguration PUBLIC
     "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
-    "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+    "https://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
 <generatorConfiguration>
   <!-- MyBatis Dynamic SQL Library를 사용. XML매퍼는 생성하지 않음. -->
   <!-- 참조: https://mybatis.org/generator/quickstart.html -->
@@ -14,6 +14,7 @@
     <!-- 자동생성 주석 금지 -->
     <commentGenerator>
       <property name="suppressAllComments" value="true"/>
+      <property name="useLegacyGeneratedAnnotation" value="true"/>
     </commentGenerator>
 
     <jdbcConnection
@@ -25,7 +26,7 @@
 
     <!-- Java 도메인 모델 생성 -->
     <javaModelGenerator
-        targetPackage="org.fp024.domain"
+        targetPackage="org.fp024.domain.generated"
         targetProject="src/main/java"> <!-- eclipse의 generator에서는 프로젝트 폴더명부터 시작해야하지만, Maven 플러그인으로 실행시는 src부터 시작한다. -->
       <property name="enableSubPackages" value="true"/>
       <property name="trimStrings" value="true"/>
@@ -33,7 +34,7 @@
 
     <!-- 메퍼 인터페이스 (레파지토리 인터페이스 ) -->
     <javaClientGenerator
-        targetPackage="org.fp024.mapper"
+        targetPackage="org.fp024.mapper.generated"
         targetProject="src/main/java">
       <property name="enableSubPackages" value="true"/>
     </javaClientGenerator>
@@ -59,7 +60,6 @@
                       javaType="org.fp024.type.EnabledType"
                       typeHandler="org.fp024.typehandler.CustomEnumTypeHandler"/>
     </table>
-
 
 
     <!--
