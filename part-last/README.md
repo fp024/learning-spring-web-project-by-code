@@ -66,3 +66,29 @@
   * 버전환경을 내리고보니 Querydsl 의 insert문 수행시 오류가 난다. 🎃
   * Spring Data JPA의 save()로 바꾸고 관련 엔티티에는 `@DynamicInsert`를 붙혔다.
 
+
+
+
+
+---
+
+## mybatis-dynamic-sql 적용한 프로젝트를 Spring 7로 마이그레이션
+
+* 프로젝트
+  * [my-board-mds](my-board-mds)
+
+part07의 jex06-board 프로젝트를 Spring 7 + Spring Security 7 + Java 21 환경으로 마이그레이션해보았다.
+
+
+
+#### 변경내용
+
+* Spring 5 -> Spring 7
+* Spring Security 5.8 -> Spring Security 7
+* Tomcat 9 -> Tomcat 11
+
+
+
+### 특이사항
+
+* [프로젝트 README 참조..](my-board-mds/README.md) 
