@@ -43,12 +43,12 @@ public interface ReplyMapper extends CommonCountMapper, CommonDeleteMapper, Comm
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
     @SelectProvider(type=SqlProviderAdapter.class, method="select")
     @Results(id="ReplyVOResult", value = {
-        @Result(column="RNO", property="rno", jdbcType=JdbcType.BIGINT, id=true),
+        @Result(column="RNO", property="rno", jdbcType=JdbcType.NUMERIC, id=true),
         @Result(column="BNO", property="bno", jdbcType=JdbcType.NUMERIC),
         @Result(column="REPLY", property="reply", jdbcType=JdbcType.VARCHAR),
         @Result(column="REPLYER", property="replyer", jdbcType=JdbcType.VARCHAR),
-        @Result(column="REPLYDATE", property="replyDate", jdbcType=JdbcType.DATE),
-        @Result(column="UPDATEDATE", property="updateDate", jdbcType=JdbcType.DATE)
+        @Result(column="REPLYDATE", property="replyDate", jdbcType=JdbcType.TIMESTAMP),
+        @Result(column="UPDATEDATE", property="updateDate", jdbcType=JdbcType.TIMESTAMP)
     })
     List<ReplyVO> selectMany(SelectStatementProvider selectStatement);
 

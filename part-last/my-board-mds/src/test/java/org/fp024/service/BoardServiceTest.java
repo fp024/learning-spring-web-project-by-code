@@ -176,7 +176,7 @@ class BoardServiceTest {
     assertEquals(
         "select count(*) from TBL_BOARD where (TITLE like #{parameters.p1,jdbcType=VARCHAR} or"
             + " WRITER like #{parameters.p2,jdbcType=VARCHAR}) and BNO >"
-            + " #{parameters.p3,jdbcType=BIGINT}",
+            + " #{parameters.p3,jdbcType=NUMERIC}",
         selectStatementProvider.getSelectStatement());
     assertEquals("{p1=%검색어%, p2=%검색어%, p3=0}", selectStatementProvider.getParameters().toString());
   }

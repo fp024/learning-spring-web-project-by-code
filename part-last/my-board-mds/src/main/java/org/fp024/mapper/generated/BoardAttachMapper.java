@@ -42,7 +42,7 @@ public interface BoardAttachMapper extends CommonCountMapper, CommonDeleteMapper
         @Result(column="UPLOADPATH", property="uploadPath", jdbcType=JdbcType.VARCHAR),
         @Result(column="FILENAME", property="fileName", jdbcType=JdbcType.VARCHAR),
         @Result(column="FILETYPE", property="fileType", typeHandler=CustomEnumTypeHandler.class, jdbcType=JdbcType.CHAR),
-        @Result(column="BNO", property="bno", jdbcType=JdbcType.BIGINT)
+        @Result(column="BNO", property="bno", jdbcType=JdbcType.NUMERIC)
     })
     List<BoardAttachVO> selectMany(SelectStatementProvider selectStatement);
 

@@ -37,9 +37,9 @@ public final class MemberVODynamicSqlSupport {
 
         public final SqlColumn<String> userName = column("USERNAME", JDBCType.VARCHAR);
 
-        public final SqlColumn<LocalDateTime> registerDate = column("REGDATE", JDBCType.DATE);
+        public final SqlColumn<LocalDateTime> registerDate = column("REGDATE", JDBCType.TIMESTAMP);
 
-        public final SqlColumn<LocalDateTime> updateDate = column("UPDATEDATE", JDBCType.DATE);
+        public final SqlColumn<LocalDateTime> updateDate = column("UPDATEDATE", JDBCType.TIMESTAMP);
 
         public final SqlColumn<EnabledType> enabled = column("ENABLED", JDBCType.CHAR, "org.fp024.typehandler.CustomEnumTypeHandler");
 

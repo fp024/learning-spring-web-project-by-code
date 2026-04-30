@@ -1,6 +1,7 @@
 package org.fp024.mapper.generated;
 
 import static org.fp024.mapper.generated.AuthVODynamicSqlSupport.*;
+import static org.mybatis.dynamic.sql.SqlBuilder.isEqualTo;
 
 import jakarta.annotation.Generated;
 import java.util.Collection;
@@ -12,6 +13,7 @@ import org.apache.ibatis.annotations.ResultMap;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.SelectProvider;
 import org.apache.ibatis.type.JdbcType;
+import org.fp024.domain.MemberAuthType;
 import org.fp024.domain.generated.AuthVO;
 import org.fp024.typehandler.CustomEnumTypeHandler;
 import org.mybatis.dynamic.sql.BasicColumn;
@@ -37,8 +39,8 @@ public interface AuthMapper extends CommonCountMapper, CommonDeleteMapper, Commo
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
     @SelectProvider(type=SqlProviderAdapter.class, method="select")
     @Results(id="AuthVOResult", value = {
-        @Result(column="USERID", property="userId", jdbcType=JdbcType.VARCHAR),
-        @Result(column="AUTH", property="auth", typeHandler=CustomEnumTypeHandler.class, jdbcType=JdbcType.VARCHAR)
+        @Result(column="USERID", property="userId", jdbcType=JdbcType.VARCHAR, id=true),
+        @Result(column="AUTH", property="auth", typeHandler=CustomEnumTypeHandler.class, jdbcType=JdbcType.VARCHAR, id=true)
     })
     List<AuthVO> selectMany(SelectStatementProvider selectStatement);
 
@@ -55,6 +57,14 @@ public interface AuthMapper extends CommonCountMapper, CommonDeleteMapper, Commo
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
     default int delete(DeleteDSLCompleter completer) {
         return MyBatis3Utils.deleteFrom(this::delete, authVO, completer);
+    }
+
+    @Generated("org.mybatis.generator.api.MyBatisGenerator")
+    default int deleteByPrimaryKey(String userId_, MemberAuthType auth_) {
+        return delete(c -> 
+            c.where(userId, isEqualTo(userId_))
+            .and(auth, isEqualTo(auth_))
+        );
     }
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")

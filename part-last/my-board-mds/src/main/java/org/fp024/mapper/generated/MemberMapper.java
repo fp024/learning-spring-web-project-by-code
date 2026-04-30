@@ -41,8 +41,8 @@ public interface MemberMapper extends CommonCountMapper, CommonDeleteMapper, Com
         @Result(column="USERID", property="userId", jdbcType=JdbcType.VARCHAR, id=true),
         @Result(column="USERPW", property="userPassword", jdbcType=JdbcType.VARCHAR),
         @Result(column="USERNAME", property="userName", jdbcType=JdbcType.VARCHAR),
-        @Result(column="REGDATE", property="registerDate", jdbcType=JdbcType.DATE),
-        @Result(column="UPDATEDATE", property="updateDate", jdbcType=JdbcType.DATE),
+        @Result(column="REGDATE", property="registerDate", jdbcType=JdbcType.TIMESTAMP),
+        @Result(column="UPDATEDATE", property="updateDate", jdbcType=JdbcType.TIMESTAMP),
         @Result(column="ENABLED", property="enabled", typeHandler=CustomEnumTypeHandler.class, jdbcType=JdbcType.CHAR)
     })
     List<MemberVO> selectMany(SelectStatementProvider selectStatement);

@@ -30,7 +30,7 @@ public final class ReplyVODynamicSqlSupport {
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
     public static final class ReplyVO extends AliasableSqlTable<ReplyVO> {
-        public final SqlColumn<Long> rno = column("RNO", JDBCType.BIGINT);
+        public final SqlColumn<Long> rno = column("RNO", JDBCType.NUMERIC);
 
         public final SqlColumn<Long> bno = column("BNO", JDBCType.NUMERIC);
 
@@ -38,9 +38,9 @@ public final class ReplyVODynamicSqlSupport {
 
         public final SqlColumn<String> replyer = column("REPLYER", JDBCType.VARCHAR);
 
-        public final SqlColumn<LocalDateTime> replyDate = column("REPLYDATE", JDBCType.DATE);
+        public final SqlColumn<LocalDateTime> replyDate = column("REPLYDATE", JDBCType.TIMESTAMP);
 
-        public final SqlColumn<LocalDateTime> updateDate = column("UPDATEDATE", JDBCType.DATE);
+        public final SqlColumn<LocalDateTime> updateDate = column("UPDATEDATE", JDBCType.TIMESTAMP);
 
         public ReplyVO() {
             super("TBL_REPLY", ReplyVO::new);

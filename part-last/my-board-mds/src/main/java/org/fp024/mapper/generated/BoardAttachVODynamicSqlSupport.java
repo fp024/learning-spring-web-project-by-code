@@ -35,7 +35,7 @@ public final class BoardAttachVODynamicSqlSupport {
 
         public final SqlColumn<FileType> fileType = column("FILETYPE", JDBCType.CHAR, "org.fp024.typehandler.CustomEnumTypeHandler");
 
-        public final SqlColumn<Long> bno = column("BNO", JDBCType.BIGINT);
+        public final SqlColumn<Long> bno = column("BNO", JDBCType.NUMERIC);
 
         public BoardAttachVO() {
             super("TBL_ATTACH", BoardAttachVO::new);

@@ -43,13 +43,13 @@ public interface BoardMapper extends CommonCountMapper, CommonDeleteMapper, Comm
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
     @SelectProvider(type=SqlProviderAdapter.class, method="select")
     @Results(id="BoardVOResult", value = {
-        @Result(column="BNO", property="bno", jdbcType=JdbcType.BIGINT, id=true),
+        @Result(column="BNO", property="bno", jdbcType=JdbcType.NUMERIC, id=true),
         @Result(column="TITLE", property="title", jdbcType=JdbcType.VARCHAR),
         @Result(column="CONTENT", property="content", jdbcType=JdbcType.VARCHAR),
         @Result(column="WRITER", property="writer", jdbcType=JdbcType.VARCHAR),
-        @Result(column="REGDATE", property="regdate", jdbcType=JdbcType.DATE),
-        @Result(column="UPDATEDATE", property="updateDate", jdbcType=JdbcType.DATE),
-        @Result(column="REPLYCNT", property="replyCount", jdbcType=JdbcType.BIGINT)
+        @Result(column="REGDATE", property="regdate", jdbcType=JdbcType.TIMESTAMP),
+        @Result(column="UPDATEDATE", property="updateDate", jdbcType=JdbcType.TIMESTAMP),
+        @Result(column="REPLYCNT", property="replyCount", jdbcType=JdbcType.NUMERIC)
     })
     List<BoardVO> selectMany(SelectStatementProvider selectStatement);
 

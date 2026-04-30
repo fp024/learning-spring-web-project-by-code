@@ -33,7 +33,7 @@ public final class BoardVODynamicSqlSupport {
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
     public static final class BoardVO extends AliasableSqlTable<BoardVO> {
-        public final SqlColumn<Long> bno = column("BNO", JDBCType.BIGINT);
+        public final SqlColumn<Long> bno = column("BNO", JDBCType.NUMERIC);
 
         public final SqlColumn<String> title = column("TITLE", JDBCType.VARCHAR);
 
@@ -41,11 +41,11 @@ public final class BoardVODynamicSqlSupport {
 
         public final SqlColumn<String> writer = column("WRITER", JDBCType.VARCHAR);
 
-        public final SqlColumn<LocalDateTime> regdate = column("REGDATE", JDBCType.DATE);
+        public final SqlColumn<LocalDateTime> regdate = column("REGDATE", JDBCType.TIMESTAMP);
 
-        public final SqlColumn<LocalDateTime> updateDate = column("UPDATEDATE", JDBCType.DATE);
+        public final SqlColumn<LocalDateTime> updateDate = column("UPDATEDATE", JDBCType.TIMESTAMP);
 
-        public final SqlColumn<Integer> replyCount = column("REPLYCNT", JDBCType.BIGINT);
+        public final SqlColumn<Integer> replyCount = column("REPLYCNT", JDBCType.NUMERIC);
 
         public BoardVO() {
             super("TBL_BOARD", BoardVO::new);

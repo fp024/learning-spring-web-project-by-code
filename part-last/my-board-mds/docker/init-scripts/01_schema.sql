@@ -10,21 +10,21 @@ CONNECT book_ex/book_ex@//localhost:1521/FREEPDB1
 CREATE SEQUENCE IF NOT EXISTS seq_board START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE;
 CREATE TABLE IF NOT EXISTS tbl_board
 (
-    bno        NUMBER(10, 0),
+    bno        NUMBER(18),
     title      VARCHAR2(200)  NOT NULL,
     content    VARCHAR2(2000) NOT NULL,
     writer     VARCHAR2(50)   NOT NULL,
-    regdate    DATE       DEFAULT SYSDATE,
-    updatedate DATE       DEFAULT SYSDATE,
-    replycnt   NUMBER(10) DEFAULT 0,
+    regdate    TIMESTAMP(6) DEFAULT SYSTIMESTAMP,
+    updatedate TIMESTAMP(6) DEFAULT SYSTIMESTAMP,
+    replycnt   NUMBER(10)   DEFAULT 0,
     CONSTRAINT pk_board PRIMARY KEY (bno)
 );
 
 CREATE SEQUENCE IF NOT EXISTS seq_reply START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE;
 CREATE TABLE IF NOT EXISTS tbl_reply
 (
-    rno        NUMBER(19)     NOT NULL,
-    bno        NUMBER(19)     NOT NULL,
+    rno        NUMBER(18)     NOT NULL,
+    bno        NUMBER(18)     NOT NULL,
     reply      VARCHAR2(1000) NOT NULL,
     replyer    VARCHAR2(50)   NOT NULL,
     replydate  TIMESTAMP(6) DEFAULT SYSTIMESTAMP,
@@ -42,7 +42,7 @@ CREATE TABLE IF NOT EXISTS tbl_attach
     uploadpath VARCHAR2(200) NOT NULL,
     filename   VARCHAR2(100) NOT NULL,
     filetype   CHAR(1) DEFAULT 'I',
-    bno        NUMBER(10, 0),
+    bno        NUMBER(18),
     CONSTRAINT pk_attach PRIMARY KEY (uuid)
 );
 
@@ -54,9 +54,9 @@ CREATE TABLE IF NOT EXISTS tbl_member
     userid     VARCHAR2(50)                          NOT NULL,
     userpw     VARCHAR2(200)                         NOT NULL,
     username   VARCHAR2(100)                         NOT NULL,
+    regdate    TIMESTAMP(6) DEFAULT SYSTIMESTAMP,
+    updatedate TIMESTAMP(6) DEFAULT SYSTIMESTAMP,
     enabled    CHAR(1) CHECK (enabled IN ('Y', 'N')) NOT NULL,
-    regdate    DATE DEFAULT SYSDATE,
-    updatedate DATE DEFAULT SYSDATE,
     CONSTRAINT pk_member PRIMARY KEY (userid)
 );
 
