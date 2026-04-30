@@ -28,10 +28,11 @@
     <jakarta.servlet.jsp.jstl.version>3.0.1</jakarta.servlet.jsp.jstl.version>
     <jakarta.inject-api.version>2.0.1</jakarta.inject-api.version>
     <jakarta.annotation-api.version>3.0.0</jakarta.annotation-api.version>
-    <mybatis.spring.version>4.0.0</mybatis.spring.version>
 
     <org.springframework-version>7.0.7</org.springframework-version>
     <spring-security.version>7.0.5</spring-security.version>
+
+    <mybatis.spring.version>4.0.0</mybatis.spring.version>
 
     <junit.version>${junit-v6.version}</junit.version>
     <java-time-jsptags.version>${java-time-jsptags-jakarta.version}</java-time-jsptags.version>
@@ -182,8 +183,8 @@
     <!-- https://mvnrepository.com/artifact/com.oracle.database.jdbc/ojdbc11/ -->
     <dependency>
       <groupId>com.oracle.database.jdbc</groupId>
-      <artifactId>ojdbc11</artifactId>
-      <version>${ojdbc11.version}</version>
+      <artifactId>ojdbc17</artifactId>
+      <version>${ojdbc17.version}</version>
     </dependency>
 
     <dependency>
