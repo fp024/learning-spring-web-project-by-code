@@ -2,4 +2,4 @@
 SETLOCAL
 ECHO [Tomcat Stop...]
 CALL ..\..\set-jdk-21-env.bat
-CALL .\mvnw -Ptomcat-run cargo:stop
+CALL .\mvnw.cmd -Ptomcat-run cargo:stop

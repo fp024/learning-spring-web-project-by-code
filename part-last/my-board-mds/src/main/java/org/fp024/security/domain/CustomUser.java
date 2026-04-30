@@ -1,7 +1,6 @@
 package org.fp024.security.domain;
 
 import java.io.Serial;
-import lombok.Getter;
 import org.fp024.domain.MemberDTO;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -14,16 +13,12 @@ public class CustomUser extends User {
    */
   @Serial private static final long serialVersionUID = -7527477803279659303L;
 
-  @Getter private final MemberDTO member;
-
-  public CustomUser(MemberDTO vo) {
+  public CustomUser(MemberDTO dto) {
     super(
-        vo.getMemberVO().getUserId(),
-        vo.getMemberVO().getUserPassword(),
-        vo.getAuthList().stream()
+        dto.getMemberVO().getUserId(),
+        dto.getMemberVO().getUserPassword(),
+        dto.getAuthList().stream()
             .map(auth -> new SimpleGrantedAuthority(auth.getAuth().name()))
             .toList());
-
-    this.member = vo;
   }
 }

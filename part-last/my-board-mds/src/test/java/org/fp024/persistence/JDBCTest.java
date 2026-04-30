@@ -8,7 +8,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.util.Properties;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.ibatis.io.Resources;
 import org.junit.jupiter.api.Test;
 
 @Slf4j
@@ -17,7 +16,7 @@ class JDBCTest {
 
   public static Properties getDBProperties() {
     Properties properties = new Properties();
-    try (InputStream reader = Resources.getResourceAsStream("database.properties")) {
+    try (InputStream reader = JDBCTest.class.getClassLoader().getResourceAsStream("database.properties")) {
       properties.load(reader);
     } catch (IOException e) {
       throw new IllegalStateException(e);
