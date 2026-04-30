@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
@@ -54,12 +54,9 @@ public class SecurityConfig {
     return new CustomUserDetailsService(memberService);
   }
 
-  // 💡 PasswordEncoder를 BCryptPasswordEncoder로 고정하여 사용
-  //    Spring Security 6 까지는 prefix가 없어도 기본으로 BCrypt로 처리가 되었었는데,
-  //    Spring Security 7부터는 prefix가 필요하다. 그래서 일단 BCryptPasswordEncoder로 고정해서 사용해보자!
   @Bean
   public PasswordEncoder passwordEncoder() {
-    return new BCryptPasswordEncoder();
+    return PasswordEncoderFactories.createDelegatingPasswordEncoder();
   }
 
   @Bean
