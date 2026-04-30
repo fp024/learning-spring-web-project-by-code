@@ -37,8 +37,9 @@ part07의 jex06-board 프로젝트를 Spring 7 + Spring Security 7 + Java 21 환
        return new BCryptPasswordEncoder();
      }
    ```
-
+   
    DB에다가 일괄 업데이트를 해도되긴 되는데.. 일단은 이 프로젝트는 `BCryptPasswordEncoder`를 사용하도록 고정해둠.
+   ==> 💡 근데.. DB를 Docker Compose로 OracleXE 23c로 전환하고 나서, 회원암호에 전부 `{bcrypt}`를 붙여서, 이부분은 다시 DelegatingPasswordEncoder 사용하는 것으로 돌아갔다. 😅 
 
 2. JSON 메시지 컨버터 재설정 방법 변경
 
