@@ -1,9 +1,9 @@
 package org.fp024.servlet.listener;
 
-import jakarta.servlet.ServletContext;
-import jakarta.servlet.ServletContextEvent;
-import jakarta.servlet.ServletContextListener;
-import jakarta.servlet.annotation.WebListener;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
+import javax.servlet.annotation.WebListener;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Collections;
@@ -38,7 +38,8 @@ public class JDBCDriverCleaner implements ServletContextListener {
                       ? parentClassLoader.getClass().getCanonicalName()
                       : "Bootstrap ClassLoader");
 
-              if (driverClassLoader == contextClassLoader || driverClassLoader == parentClassLoader) {
+              if (driverClassLoader == contextClassLoader
+                  || driverClassLoader == parentClassLoader) {
                 try {
                   DriverManager.deregisterDriver(driver);
                   LOGGER.info("### {} 드라이버 등록 해제", driver.getClass().getCanonicalName());
