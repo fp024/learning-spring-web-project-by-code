@@ -248,7 +248,6 @@
                 <type>standalone</type>
                 <properties>
                   <cargo.jvmargs><!-- 
-                  -->--illegal-access=warn <!--
                   -->--add-opens=java.base/java.io=ALL-UNNAMED <!--
                   -->--add-opens=java.base/java.lang=ALL-UNNAMED <!--
                   -->--add-opens=java.rmi/sun.rmi.transport=ALL-UNNAMED <!--
@@ -308,7 +307,6 @@
                 <properties>
                   <cargo.jvmargs><!-- 
                   -->-javaagent:${scouter.agent.lib} <!--
-                  -->--illegal-access=warn <!--
                   -->--add-opens=java.base/java.io=ALL-UNNAMED <!--
                   -->--add-opens=java.base/java.lang=ALL-UNNAMED <!--
                   -->--add-opens=java.rmi/sun.rmi.transport=ALL-UNNAMED <!--

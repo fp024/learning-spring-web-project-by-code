@@ -119,7 +119,6 @@
               <!-- jvmArgs는 FORK 모드에서만 동작한다. -->
               <jvmArgs><!-- 
                   -->-javaagent:${scouter.agent.lib} <!--
-                  -->--illegal-access=warn <!--
                   -->--add-opens=java.base/java.lang=ALL-UNNAMED <!--
                   -->-Djdk.attach.allowAttachSelf=true <!--
                   -->-Dscouter.config=${project.basedir}/../../${scouter.config.file} <!--
