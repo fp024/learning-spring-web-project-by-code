@@ -3,6 +3,7 @@ package org.fp024.config;
 import java.util.List;
 import org.fp024.util.GsonHelper;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.GsonHttpMessageConverter;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -14,6 +15,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 
+@Configuration
 @EnableWebMvc
 @ComponentScan(basePackages = {"org.fp024.controller"})
 @EnableMethodSecurity(securedEnabled = true)
