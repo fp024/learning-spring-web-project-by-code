@@ -6,9 +6,34 @@ name: Maven Build Test
 on:
   push:
     branches: [ master ]
+    paths:
+      - 'part-last/my-board-spring5/**'
+      - 'part-last/my-board/**'
+      - '.github/workflows/maven-build.yml'
 
 jobs:
+  detect-changes:
+    runs-on: ubuntu-latest
+    outputs:
+      my-board-spring5: ${{ steps.filter.outputs.my-board-spring5 }}
+      my-board: ${{ steps.filter.outputs.my-board }}
+      workflow: ${{ steps.filter.outputs.workflow }}
+    steps:
+    - uses: actions/checkout@v4
+    - uses: dorny/paths-filter@v3
+      id: filter
+      with:
+        filters: |
+          my-board-spring5:
+            - 'part-last/my-board-spring5/**'
+          my-board:
+            - 'part-last/my-board/**'
+          workflow:
+            - '.github/workflows/maven-build.yml'
+
   build-my-board-spring5-java17:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.my-board-spring5 == 'true' || needs.detect-changes.outputs.workflow == 'true'
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -27,6 +52,8 @@ jobs:
       run: mvn -B clean test --file part-last/my-board-spring5/pom.xml
 
   build-my-board-java21:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.my-board == 'true' || needs.detect-changes.outputs.workflow == 'true'
     runs-on: ubuntu-latest
     permissions:
       contents: read
