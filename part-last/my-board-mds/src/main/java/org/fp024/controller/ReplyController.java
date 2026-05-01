@@ -89,7 +89,7 @@ public class ReplyController {
       produces = {MediaType.TEXT_PLAIN_VALUE})
   public ResponseEntity<String> remove(@RequestBody ReplyVO vo, @PathVariable("rno") Long rno) {
     LOGGER.info("remove: {}", rno);
-    LOGGER.info("replayer: {}", vo.getReplyer());
+    LOGGER.info("replyer: {}", vo.getReplyer());
     try {
       if (replyService.remove(vo.getRno()) == 1) {
         return new ResponseEntity<>("Success", HttpStatus.OK);
