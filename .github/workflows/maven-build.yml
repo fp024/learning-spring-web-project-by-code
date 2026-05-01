@@ -7,6 +7,7 @@ on:
   push:
     branches: [ master ]
     paths:
+      - 'study-dependencies-parent/**'
       - 'part-last/my-board-spring5/**'
       - 'part-last/my-board/**'
       - '.github/workflows/maven-build.yml'
@@ -15,6 +16,7 @@ jobs:
   detect-changes:
     runs-on: ubuntu-latest
     outputs:
+      common-pom: ${{ steps.filter.outputs.common-pom }}
       my-board-spring5: ${{ steps.filter.outputs.my-board-spring5 }}
       my-board: ${{ steps.filter.outputs.my-board }}
       workflow: ${{ steps.filter.outputs.workflow }}
@@ -24,6 +26,8 @@ jobs:
       id: filter
       with:
         filters: |
+          common-pom:
+            - 'study-dependencies-parent/**'
           my-board-spring5:
             - 'part-last/my-board-spring5/**'
           my-board:
@@ -33,7 +37,7 @@ jobs:
 
   build-my-board-spring5-java17:
     needs: detect-changes
-    if: needs.detect-changes.outputs.my-board-spring5 == 'true' || needs.detect-changes.outputs.workflow == 'true'
+    if: needs.detect-changes.outputs.my-board-spring5 == 'true' || needs.detect-changes.outputs.common-pom == 'true' || needs.detect-changes.outputs.workflow == 'true'
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -53,7 +57,7 @@ jobs:
 
   build-my-board-java21:
     needs: detect-changes
-    if: needs.detect-changes.outputs.my-board == 'true' || needs.detect-changes.outputs.workflow == 'true'
+    if: needs.detect-changes.outputs.my-board == 'true' || needs.detect-changes.outputs.common-pom == 'true' || needs.detect-changes.outputs.workflow == 'true'
     runs-on: ubuntu-latest
     permissions:
       contents: read
