@@ -1,6 +1,8 @@
 package org.fp024.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.EnumSet;
 import lombok.extern.slf4j.Slf4j;
@@ -86,6 +88,8 @@ class BoardControllerTest {
     ModelMap getResult =
         mockMvc
             .perform(MockMvcRequestBuilders.get("/board/get").param("bno", "2"))
+            .andExpect(status().isOk())
+            .andExpect(model().attributeExists("board", "boardContentJson"))
             .andReturn()
             .getModelAndView()
             .getModelMap();

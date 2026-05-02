@@ -17,6 +17,7 @@ import org.fp024.domain.SearchType;
 import org.fp024.domain.generated.BoardAttachVO;
 import org.fp024.domain.generated.BoardVO;
 import org.fp024.service.BoardService;
+import org.fp024.util.GsonHelper;
 import org.fp024.util.ProjectDataUtil;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -86,7 +87,12 @@ public class BoardController {
   public void get(
       @RequestParam("bno") Long bno, @ModelAttribute("criteria") Criteria criteria, Model model) {
     LOGGER.info(".get");
-    model.addAttribute("board", service.get(bno));
+    BoardVO boardVO = service.get(bno);
+    model.addAttribute("board", boardVO);
+    if (boardVO != null) {
+      // 💡 웹 에디터의 View모드에서 사용할 본문 데이터는 JSON으로 변환해서 받음
+      model.addAttribute("boardContentJson", GsonHelper.toJson(boardVO.getContent()));
+    }
   }
 
   @PreAuthorize("principal.username == #boardDTO.boardVO.writer")
