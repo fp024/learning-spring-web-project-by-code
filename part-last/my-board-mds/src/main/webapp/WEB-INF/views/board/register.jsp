@@ -8,6 +8,7 @@
 
 <%@include file="../includes/header.jsp"%>
 <link href="/resources/css/upload-ajax.css" rel="stylesheet">
+<%@include file="../includes/tui-editor-css.jsp" %>
 
 <body id="page-top">
 
@@ -42,7 +43,9 @@
               </div>
               <div class="form-group">
                 <label>Text area</label>
-                <textarea class="form-control" rows="5" name="boardVO.content"></textarea>
+                <%--<textarea class="form-control" rows="5" name="boardVO.content"></textarea>--%>
+                <input type="hidden" name="boardVO.content">
+                <div id="editor"></div>
               </div>
               <div class="form-group">
                 <label>Writer</label>
@@ -100,6 +103,8 @@
     $("button[type='submit']").on("click", function (e) {
       e.preventDefault();
       console.log("submit clicked");
+
+      formObj.find("input[name='boardVO.content']").val(editor.getMarkdown());
 
       var str = "";
 
@@ -222,6 +227,19 @@
       });
     });
 
+  });
+</script>
+<%@include file="../includes/tui-editor-js.jsp" %>
+<script>
+  const { Editor } = toastui;
+  const { codeSyntaxHighlight } = Editor.plugin;
+
+  const editor = new Editor({
+    el: document.querySelector('#editor'),
+    height: '600px',
+    initialEditType: 'markdown',
+    plugins: [codeSyntaxHighlight],
+    previewStyle: 'vertical'
   });
 </script>
 </body>

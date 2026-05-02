@@ -8,6 +8,7 @@
 
 <%@include file="../includes/header.jsp"%>
 <link href="/resources/css/upload-ajax.css" rel="stylesheet">
+<%@include file="../includes/tui-editor-css.jsp" %>
 
 <body id="page-top">
 
@@ -50,8 +51,10 @@
                 <label>Title</label> <input class="form-control" name="boardVO.title" value="<c:out value='${board.title}'/>">
               </div>
               <div class="form-group">
-                <label>Text area</label>
-                <textarea class="form-control" rows="5" name="boardVO.content"><c:out value='${board.content}' /></textarea>
+                <label>Editor area</label>
+                <%-- <textarea class="form-control" rows="5" name="boardVO.content"><c:out value='${board.content}' /></textarea>--%>
+                <input type="hidden" name="boardVO.content">
+                <div id="editor"></div>
               </div>
               <div class="form-group">
                 <label>Writer</label> <input name="boardVO.writer" class="form-control" readonly="readonly" value="<c:out value='${board.writer}'/>">
@@ -215,7 +218,7 @@
   $(document).ready(function () {
     var $formObj = $("#modify-form");
 
-    $formObj.find("button").on("click", function (e) {
+    $formObj.find(".btn").on("click", function (e) {
       e.preventDefault();
 
       var operation = $(this).data("oper"); // data-oper 속성을 이렇게 읽는구나?
@@ -240,6 +243,7 @@
       } else if (operation === "modify") {
         console.log("submit clicked");
 
+        $formObj.find("input[name='boardVO.content']").val(editor.getMarkdown());
         var str = "";
 
         $(".uploadResult ul li").each(function (i, obj) {
@@ -258,6 +262,20 @@
       }
       $formObj.submit();
     });
+  });
+</script>
+<%@include file="../includes/tui-editor-js.jsp" %>
+<script>
+  const { Editor } = toastui;
+  const { codeSyntaxHighlight } = Editor.plugin;
+
+  const editor = new Editor({
+    el: document.querySelector('#editor'),
+    height: '600px',
+    initialEditType: 'markdown',
+    plugins: [codeSyntaxHighlight],
+    previewStyle: 'vertical',
+    initialValue: ${boardContentJson}
   });
 </script>
 </body>

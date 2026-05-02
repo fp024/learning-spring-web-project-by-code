@@ -75,5 +75,6 @@ part07의 jex06-board 프로젝트를 Spring 7 + Spring Security 7 + Java 21 환
       - `db-start.bat`: Oracle DB 컨테이너 생성 및 실행 (이미 있다면 DB 컨테이너 실행만 함)
       - `db-stop.bat`: Oracle DB 컨테이너만 종료, 데이터는 유지됨
       - `db-clean.bat`: Oracle DB 컨테이너 종료 및 데이터 삭제
-- [ ] 다른 프로젝트엔 tui.editor를 붙여보긴 했는데... 여기도 에디터를 붙여보면 좋을 것 같다.
+- [x] 다른 프로젝트엔 tui.editor를 붙여보긴 했는데... 여기도 에디터를 붙여보면 좋을 것 같다.
+  - 동일한 방식으로 tui.editor를 그대로 붙였다. 먼저 적용한 코드에서 약간의 코드 정리만 추가로 했다.
 

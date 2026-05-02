@@ -8,6 +8,7 @@
 
 <%@include file="../includes/header.jsp" %>
 <link href="/resources/css/upload-ajax.css" rel="stylesheet">
+<%@include file="../includes/tui-editor-css.jsp" %>
 
 <body id="page-top">
 
@@ -44,9 +45,11 @@
                                           readonly="readonly">
             </div>
             <div class="form-group">
-              <label>Text area</label>
-              <textarea class="form-control" rows="5" name="content" readonly="readonly"><c:out
-                  value='${board.content}'/></textarea>
+              <label>Viewer Area</label>
+              <%-- <textarea class="form-control" rows="5" name="content" readonly="readonly"><c:out value=''/></textarea> --%>
+              <div class="border rounded" style="min-height: 500px">
+                <div id="viewer"></div>
+              </div>
             </div>
             <div class="form-group">
               <label>Writer</label> <input class="form-control" name="writer" readonly="readonly"
@@ -487,6 +490,20 @@
       $operForm.attr("action", "/board/list").submit();
       $operForm.submit();
     });
+  });
+</script>
+<%@include file="../includes/tui-editor-js.jsp" %>
+<script>
+  const { Editor } = toastui;
+  const { codeSyntaxHighlight } = Editor.plugin;
+
+  const editor = new Editor.factory({
+    el: document.querySelector('#viewer'),
+    viewer: true,
+    height: '600px',
+    initialEditType: 'markdown',
+    plugins: [codeSyntaxHighlight],
+    initialValue: ${boardContentJson}
   });
 </script>
 </body>
