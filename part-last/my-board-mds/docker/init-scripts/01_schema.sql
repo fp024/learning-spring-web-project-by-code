@@ -11,9 +11,9 @@ CREATE SEQUENCE IF NOT EXISTS seq_board START WITH 1 INCREMENT BY 1 NOCACHE NOCY
 CREATE TABLE IF NOT EXISTS tbl_board
 (
     bno        NUMBER(18),
-    title      VARCHAR2(200)  NOT NULL,
-    content    VARCHAR2(2000) NOT NULL,
-    writer     VARCHAR2(50)   NOT NULL,
+    title      VARCHAR2(200) NOT NULL,
+    content    CLOB          NOT NULL,
+    writer     VARCHAR2(50)  NOT NULL,
     regdate    TIMESTAMP(6) DEFAULT SYSTIMESTAMP,
     updatedate TIMESTAMP(6) DEFAULT SYSTIMESTAMP,
     replycnt   NUMBER(10)   DEFAULT 0,

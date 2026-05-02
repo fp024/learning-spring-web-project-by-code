@@ -33,7 +33,7 @@ import org.mybatis.dynamic.sql.util.mybatis3.MyBatis3Utils;
 @Mapper
 public interface BoardMapper extends CommonCountMapper, CommonDeleteMapper, CommonUpdateMapper {
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
-    BasicColumn[] selectList = BasicColumn.columnList(bno, title, content, writer, regdate, updateDate, replyCount);
+    BasicColumn[] selectList = BasicColumn.columnList(bno, title, writer, regdate, updateDate, replyCount, content);
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
     @InsertProvider(type=SqlProviderAdapter.class, method="insert")
@@ -45,11 +45,11 @@ public interface BoardMapper extends CommonCountMapper, CommonDeleteMapper, Comm
     @Results(id="BoardVOResult", value = {
         @Result(column="BNO", property="bno", jdbcType=JdbcType.NUMERIC, id=true),
         @Result(column="TITLE", property="title", jdbcType=JdbcType.VARCHAR),
-        @Result(column="CONTENT", property="content", jdbcType=JdbcType.VARCHAR),
         @Result(column="WRITER", property="writer", jdbcType=JdbcType.VARCHAR),
         @Result(column="REGDATE", property="regdate", jdbcType=JdbcType.TIMESTAMP),
         @Result(column="UPDATEDATE", property="updateDate", jdbcType=JdbcType.TIMESTAMP),
-        @Result(column="REPLYCNT", property="replyCount", jdbcType=JdbcType.NUMERIC)
+        @Result(column="REPLYCNT", property="replyCount", jdbcType=JdbcType.NUMERIC),
+        @Result(column="CONTENT", property="content", jdbcType=JdbcType.CLOB)
     })
     List<BoardVO> selectMany(SelectStatementProvider selectStatement);
 
@@ -80,11 +80,11 @@ public interface BoardMapper extends CommonCountMapper, CommonDeleteMapper, Comm
         return MyBatis3Utils.insert(this::insert, row, boardVO, c ->
             c.map(bno).toProperty("bno")
             .map(title).toProperty("title")
-            .map(content).toProperty("content")
             .map(writer).toProperty("writer")
             .map(regdate).toProperty("regdate")
             .map(updateDate).toProperty("updateDate")
             .map(replyCount).toProperty("replyCount")
+            .map(content).toProperty("content")
         );
     }
 
@@ -93,11 +93,11 @@ public interface BoardMapper extends CommonCountMapper, CommonDeleteMapper, Comm
         return MyBatis3Utils.insert(this::insert, row, boardVO, c ->
             c.map(bno).toProperty("bno")
             .map(title).toPropertyWhenPresent("title", row::getTitle)
-            .map(content).toPropertyWhenPresent("content", row::getContent)
             .map(writer).toPropertyWhenPresent("writer", row::getWriter)
             .map(regdate).toPropertyWhenPresent("regdate", row::getRegdate)
             .map(updateDate).toPropertyWhenPresent("updateDate", row::getUpdateDate)
             .map(replyCount).toPropertyWhenPresent("replyCount", row::getReplyCount)
+            .map(content).toPropertyWhenPresent("content", row::getContent)
         );
     }
 
@@ -132,33 +132,33 @@ public interface BoardMapper extends CommonCountMapper, CommonDeleteMapper, Comm
     static UpdateDSL<UpdateModel> updateAllColumns(BoardVO row, UpdateDSL<UpdateModel> dsl) {
         return dsl.set(bno).equalTo(row::getBno)
                 .set(title).equalTo(row::getTitle)
-                .set(content).equalTo(row::getContent)
                 .set(writer).equalTo(row::getWriter)
                 .set(regdate).equalTo(row::getRegdate)
                 .set(updateDate).equalTo(row::getUpdateDate)
-                .set(replyCount).equalTo(row::getReplyCount);
+                .set(replyCount).equalTo(row::getReplyCount)
+                .set(content).equalTo(row::getContent);
     }
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
     static UpdateDSL<UpdateModel> updateSelectiveColumns(BoardVO row, UpdateDSL<UpdateModel> dsl) {
         return dsl.set(bno).equalToWhenPresent(row::getBno)
                 .set(title).equalToWhenPresent(row::getTitle)
-                .set(content).equalToWhenPresent(row::getContent)
                 .set(writer).equalToWhenPresent(row::getWriter)
                 .set(regdate).equalToWhenPresent(row::getRegdate)
                 .set(updateDate).equalToWhenPresent(row::getUpdateDate)
-                .set(replyCount).equalToWhenPresent(row::getReplyCount);
+                .set(replyCount).equalToWhenPresent(row::getReplyCount)
+                .set(content).equalToWhenPresent(row::getContent);
     }
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
     default int updateByPrimaryKey(BoardVO row) {
         return update(c ->
             c.set(title).equalTo(row::getTitle)
-            .set(content).equalTo(row::getContent)
             .set(writer).equalTo(row::getWriter)
             .set(regdate).equalTo(row::getRegdate)
             .set(updateDate).equalTo(row::getUpdateDate)
             .set(replyCount).equalTo(row::getReplyCount)
+            .set(content).equalTo(row::getContent)
             .where(bno, isEqualTo(row::getBno))
         );
     }
@@ -167,11 +167,11 @@ public interface BoardMapper extends CommonCountMapper, CommonDeleteMapper, Comm
     default int updateByPrimaryKeySelective(BoardVO row) {
         return update(c ->
             c.set(title).equalToWhenPresent(row::getTitle)
-            .set(content).equalToWhenPresent(row::getContent)
             .set(writer).equalToWhenPresent(row::getWriter)
             .set(regdate).equalToWhenPresent(row::getRegdate)
             .set(updateDate).equalToWhenPresent(row::getUpdateDate)
             .set(replyCount).equalToWhenPresent(row::getReplyCount)
+            .set(content).equalToWhenPresent(row::getContent)
             .where(bno, isEqualTo(row::getBno))
         );
     }

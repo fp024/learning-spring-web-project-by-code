@@ -51,6 +51,9 @@
 
       <!-- Oracle에서 bno 컬럼을 NUMBER(18)으로 설정 jdbcType은 따로 지정하지 않으면 NUMERIC으로 설정된다. -->
       <columnOverride column="bno" property="bno" javaType='java.lang.Long'/>
+      <columnOverride column="content" property="content"
+                      jdbcType="CLOB"
+                      javaType='java.lang.String'/>
       <columnOverride column="regdate" property="regdate"
                       javaType='java.time.LocalDateTime'/>
       <columnOverride column="updatedate" property="updateDate"

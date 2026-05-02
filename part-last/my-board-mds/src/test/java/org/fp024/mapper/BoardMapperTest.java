@@ -188,7 +188,7 @@ class BoardMapperTest {
         "select ROWNUM as rn, BNO, TITLE, CONTENT, WRITER, REGDATE, UPDATEDATE, REPLYCNT"
             + " from TBL_BOARD"
             + " where (TITLE like #{parameters.p1,jdbcType=VARCHAR}"
-            + " or CONTENT like #{parameters.p2,jdbcType=VARCHAR}"
+            + " or CONTENT like #{parameters.p2,jdbcType=CLOB}"
             + " or WRITER like #{parameters.p3,jdbcType=VARCHAR})"
             + " and ROWNUM <= #{parameters.p4}",
         selectStatement.getSelectStatement());
@@ -218,7 +218,7 @@ class BoardMapperTest {
         "select ROWNUM as rn, BNO, TITLE, CONTENT, WRITER, REGDATE, UPDATEDATE, REPLYCNT"
             + " from TBL_BOARD"
             + " where (TITLE like #{parameters.p1,jdbcType=VARCHAR}"
-            + " or CONTENT like #{parameters.p2,jdbcType=VARCHAR})"
+            + " or CONTENT like #{parameters.p2,jdbcType=CLOB})"
             + " and ROWNUM <= #{parameters.p3}",
         selectStatement.getSelectStatement());
 
@@ -273,7 +273,7 @@ class BoardMapperTest {
     assertEquals(
         "select ROWNUM as rn, BNO, TITLE, CONTENT, WRITER, REGDATE, UPDATEDATE, REPLYCNT"
             + " from TBL_BOARD"
-            + " where CONTENT like #{parameters.p1,jdbcType=VARCHAR}"
+            + " where CONTENT like #{parameters.p1,jdbcType=CLOB}"
             + " and ROWNUM <= #{parameters.p2}",
         selectStatement.getSelectStatement());
 
@@ -366,7 +366,7 @@ class BoardMapperTest {
         "select ROWNUM as rn, BNO, TITLE, CONTENT, WRITER, REGDATE, UPDATEDATE, REPLYCNT"
             + " from TBL_BOARD"
             + " where TITLE like #{parameters.p1,jdbcType=VARCHAR}"
-            + " or CONTENT like #{parameters.p2,jdbcType=VARCHAR}"
+            + " or CONTENT like #{parameters.p2,jdbcType=CLOB}"
             + " or WRITER like #{parameters.p3,jdbcType=VARCHAR}"
             + " and ROWNUM <= #{parameters.p4}",
         selectStatement.getSelectStatement());
@@ -406,7 +406,7 @@ class BoardMapperTest {
         "select ROWNUM as rn, BNO, TITLE, CONTENT, WRITER, REGDATE, UPDATEDATE, REPLYCNT"
             + " from TBL_BOARD"
             + " where (TITLE like #{parameters.p1,jdbcType=VARCHAR}"
-            + " or CONTENT like #{parameters.p2,jdbcType=VARCHAR}"
+            + " or CONTENT like #{parameters.p2,jdbcType=CLOB}"
             + " or WRITER like #{parameters.p3,jdbcType=VARCHAR})"
             + " and ROWNUM <= #{parameters.p4}",
         selectStatement.getSelectStatement());

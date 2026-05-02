@@ -11,9 +11,6 @@ public class BoardVO {
     private String title;
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
-    private String content;
-
-    @Generated("org.mybatis.generator.api.MyBatisGenerator")
     private String writer;
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
@@ -24,6 +21,9 @@ public class BoardVO {
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
     private int replyCount;
+
+    @Generated("org.mybatis.generator.api.MyBatisGenerator")
+    private String content;
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
     public Long getBno() {
@@ -43,16 +43,6 @@ public class BoardVO {
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
     public void setTitle(String title) {
         this.title = title == null ? null : title.trim();
-    }
-
-    @Generated("org.mybatis.generator.api.MyBatisGenerator")
-    public String getContent() {
-        return content;
-    }
-
-    @Generated("org.mybatis.generator.api.MyBatisGenerator")
-    public void setContent(String content) {
-        this.content = content == null ? null : content.trim();
     }
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
@@ -95,6 +85,16 @@ public class BoardVO {
         this.replyCount = replyCount;
     }
 
+    @Generated("org.mybatis.generator.api.MyBatisGenerator")
+    public String getContent() {
+        return content;
+    }
+
+    @Generated("org.mybatis.generator.api.MyBatisGenerator")
+    public void setContent(String content) {
+        this.content = content == null ? null : content.trim();
+    }
+
     @Override
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
     public String toString() {
@@ -104,11 +104,11 @@ public class BoardVO {
         sb.append("Hash = ").append(hashCode());
         sb.append(", bno=").append(bno);
         sb.append(", title=").append(title);
-        sb.append(", content=").append(content);
         sb.append(", writer=").append(writer);
         sb.append(", regdate=").append(regdate);
         sb.append(", updateDate=").append(updateDate);
         sb.append(", replyCount=").append(replyCount);
+        sb.append(", content=").append(content);
         sb.append("]");
         return sb.toString();
     }

@@ -28,7 +28,7 @@ class CommonUtilTest {
 
   @Test
   void testGetUUID() {
-    // IntelliJ에서 JUnit으로 실행할 때, ${project.basedir}/.nvm/jvm.config 의 설정을 사용하는 것 같지는 않다.
+    // IntelliJ에서 JUnit으로 실행할 때, ${project.basedir}/.mvn/jvm.config 의 설정을 사용하는 것 같지는 않다.
     IntStream.rangeClosed(1, 10).forEach(i -> LOGGER.info("UUID: {}", CommonUtil.getUUID()));
   }
 }

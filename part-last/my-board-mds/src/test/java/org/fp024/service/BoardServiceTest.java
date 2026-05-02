@@ -129,10 +129,10 @@ class BoardServiceTest {
 
     SelectStatementProvider selectStatementProvider = getListSqlDSL(criteria);
     assertEquals(
-        "select BNO, TITLE, CONTENT, WRITER, REGDATE, UPDATEDATE, REPLYCNT from (select /*+"
+        "select BNO, TITLE, WRITER, REGDATE, UPDATEDATE, REPLYCNT, CONTENT from (select /*+"
             + " INDEX_DESC(tbl_board pk_board) */ 'dummy', ROWNUM as rn, BNO, TITLE, CONTENT,"
             + " WRITER, REGDATE, UPDATEDATE, REPLYCNT from TBL_BOARD where (TITLE like"
-            + " #{parameters.p1,jdbcType=VARCHAR} or CONTENT like #{parameters.p2,jdbcType=VARCHAR}"
+            + " #{parameters.p1,jdbcType=VARCHAR} or CONTENT like #{parameters.p2,jdbcType=CLOB}"
             + " or WRITER like #{parameters.p3,jdbcType=VARCHAR}) and ROWNUM <= #{parameters.p4})"
             + " where rn > #{parameters.p5} order by BNO DESC",
         selectStatementProvider.getSelectStatement());
