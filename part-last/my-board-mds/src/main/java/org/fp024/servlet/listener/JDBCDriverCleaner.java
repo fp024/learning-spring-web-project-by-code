@@ -43,10 +43,10 @@ public class JDBCDriverCleaner implements ServletContextListener {
                   DriverManager.deregisterDriver(driver);
                   LOGGER.info("### {} 드라이버 등록 해제", driver.getClass().getName());
                 } catch (SQLException ex) {
-                  LOGGER.warn("### {} 드라이버 등록 해제 실패", driver.getClass().getName(), ex);
+                  LOGGER.error("### {} 드라이버 등록 해제 실패", driver.getClass().getName(), ex);
                 }
               } else {
-                LOGGER.debug(
+                LOGGER.warn(
                     "### {} 드라이버 skip (웹앱/서블릿 컨텍스트 클래스 로더가 로드한 드라이버가 아님)",
                     driver.getClass().getName());
               }
