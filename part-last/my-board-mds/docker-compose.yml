@@ -1,7 +1,7 @@
 services:
-  oracle-xe:
+  oracle-free:
     image: gvenzl/oracle-free:23-slim
-    container_name: my-board-mds-oracle_xe_23c
+    container_name: my-board-mds-oracle_free_23c
     environment:
       ORACLE_PASSWORD: sys_ex
       APP_USER: book_ex

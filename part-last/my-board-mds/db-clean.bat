@@ -1,5 +1,5 @@
 @echo off
-echo [WARNING] This will permanently delete the Oracle XE container and ALL data!
+echo [WARNING] This will permanently delete the Oracle container and ALL data!
 echo.
 set /p confirm=Are you sure you want to proceed? (y/N):
 if /i not "%confirm%"=="y" (
@@ -9,7 +9,7 @@ if /i not "%confirm%"=="y" (
 )
 
 echo.
-echo Stopping and removing Oracle XE container and volumes...
+echo Stopping and removing Oracle container and volumes...
 cd /d "%~dp0"
 docker compose down -v
 echo.

@@ -1,5 +1,5 @@
 @echo off
-echo Stopping Oracle XE Docker container...
+echo Stopping Oracle Docker container...
 cd /d "%~dp0"
 docker compose stop
 echo.

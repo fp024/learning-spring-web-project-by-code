@@ -71,7 +71,7 @@ part07의 jex06-board 프로젝트를 Spring 7 + Spring Security 7 + Java 21 환
 
 - [ ] 이 프로젝트에 먼저 Github 로그인을 먼저 붙여볼까?
   - [x] DB 테이블 수정이 필요한데, Oracle을 Docker로 실행해서 이전 챕터에서 부터 쭈욱 써왔던 DB와 분리되야할 것 같다.
-    - DB를 Docker Compose로 전환해서, `db-start.bat`를 실행하면 OracleXE 23c가 실행되며 테이블/데이터도 초기화된다.
+    - DB를 Docker Compose로 전환해서, `db-start.bat`를 실행하면 OracleFREE 23c가 실행되며 테이블/데이터도 초기화된다.
       - `db-start.bat`: Oracle DB 컨테이너 생성 및 실행 (이미 있다면 DB 컨테이너 실행만 함)
       - `db-stop.bat`: Oracle DB 컨테이너만 종료, 데이터는 유지됨
       - `db-clean.bat`: Oracle DB 컨테이너 종료 및 데이터 삭제
