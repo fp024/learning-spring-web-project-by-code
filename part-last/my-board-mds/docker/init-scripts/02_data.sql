@@ -1,6 +1,6 @@
 -- ============================================================
 -- 02_data.sql
--- book_ex 초기 데이터 (DML) - Oracle 21c
+-- book_ex 초기 데이터 (DML) - OracleXE 23c
 -- ============================================================
 -- @formatter:off
 CONNECT book_ex/book_ex@//localhost:1521/FREEPDB1
