@@ -8,5 +8,5 @@ echo   - JDBC URL : jdbc:oracle:thin:@//localhost:1521/FREEPDB1
 echo   - Username : book_ex
 echo   - Password : book_ex
 echo.
-echo To check logs: docker compose logs -f oracle-xe
-pause
+echo Showing container logs now. Press Ctrl+C to stop watching logs.
+docker compose logs -f oracle-free
