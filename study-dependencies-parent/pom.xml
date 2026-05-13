@@ -89,7 +89,7 @@
     <commons-fileupload.version>1.6.0</commons-fileupload.version>
 
     <!-- Maven 플러그인 버전 관리 -->
-    <mybatis-generator-maven-plugin.version>1.4.2</mybatis-generator-maven-plugin.version>
+    <mybatis-generator-maven-plugin.version>2.0.0</mybatis-generator-maven-plugin.version>
     <maven-war-plugin.version>3.5.1</maven-war-plugin.version>
     <maven-resources-plugin.version>3.5.0</maven-resources-plugin.version>
     <maven-surefire-plugin.version>3.5.5</maven-surefire-plugin.version>
