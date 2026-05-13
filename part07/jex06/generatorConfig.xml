@@ -8,6 +8,12 @@
   <context id="MyBatis3DynamicSqlTest" targetRuntime="MyBatis3DynamicSql">
     <property name="javaFileEncoding" value="UTF-8"/>
 
+    <!--
+      XML Mapper가 자동으로 합쳐지는 것을 방지:
+      overwrite를 true로 해도 append가 되는 현상이 있어서 이 플러그인이 필요하다.
+    -->
+    <plugin type="org.mybatis.generator.plugins.UnmergeableXmlMappersPlugin"/>
+
     <!-- https://mybatis.org/generator/reference/plugins.html -->
     <plugin type="org.mybatis.generator.plugins.ToStringPlugin"/>
 
@@ -25,19 +31,19 @@
     />
 
     <!-- Java 도메인 모델 생성 -->
-    <javaModelGenerator
+    <modelGenerator
         targetPackage="org.fp024.domain.generated"
         targetProject="src/main/java"> <!-- eclipse의 generator에서는 프로젝트 폴더명부터 시작해야하지만, Maven 플러그인으로 실행시는 src부터 시작한다. -->
       <property name="enableSubPackages" value="true"/>
       <property name="trimStrings" value="true"/>
-    </javaModelGenerator>
+    </modelGenerator>
 
     <!-- 메퍼 인터페이스 (레파지토리 인터페이스 ) -->
-    <javaClientGenerator
+    <clientGenerator
         targetPackage="org.fp024.mapper.generated"
         targetProject="src/main/java">
       <property name="enableSubPackages" value="true"/>
-    </javaClientGenerator>
+    </clientGenerator>
 
 
     <!--
