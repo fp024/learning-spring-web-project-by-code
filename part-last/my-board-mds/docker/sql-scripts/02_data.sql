@@ -1,12 +1,10 @@
 -- ============================================================
 -- 02_data.sql
--- book_ex 초기 데이터 (DML) - OracleXE 23c
+-- book_ex / book_ex_test 초기 데이터 (DML) - OracleFREE 23c
 -- ============================================================
--- @formatter:off
-CONNECT book_ex/book_ex@//localhost:1521/FREEPDB1
--- @formatter:on
 
 -- 회원 등록
+-- cspell:disable
 INSERT INTO tbl_member (userid, userpw, username, enabled)
 VALUES ('user00', '{bcrypt}$2a$10$CdNsrwk7cDs7eBNuW7cp8unvLAA8NKXSqA3UfRgysCjvtZyqCLsWm', '일반사용자00', 'Y');
 INSERT INTO tbl_member (userid, userpw, username, enabled)
@@ -27,6 +25,7 @@ INSERT INTO tbl_member (userid, userpw, username, enabled)
 VALUES ('admin91', '{bcrypt}$2a$10$kd0PNukIe.v15HghkXUJIO31BB7ZulAPdMi00LH2O//HuAJAFElMC', '관리자91', 'Y');
 INSERT INTO tbl_member (userid, userpw, username, enabled)
 VALUES ('admin92', '{bcrypt}$2a$10$JqLbWg6o6PfnLr.yObk4v.LZpFHp0/R7cXc0V8gW2AjaXnkImi7WC', '관리자92', 'Y');
+-- cspell:enable
 
 -- 회원 권한 등록
 INSERT INTO tbl_member_auth (userid, auth)

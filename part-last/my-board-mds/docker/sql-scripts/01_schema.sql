@@ -1,12 +1,9 @@
--- ============================================================
+-- =======================================================================
 -- 01_schema.sql
--- book_ex 스키마 DDL (테이블, 시퀀스 등) - OracleXE 23c
--- ============================================================
--- @formatter:off
-CONNECT book_ex/book_ex@//localhost:1521/FREEPDB1
--- @formatter:on
+-- book_ex / book_ex_test 스키마 DDL (테이블, 시퀀스 등) - OracleFREE 23c
+-- =======================================================================
 
--- 시퀀스 (OracleXE 23c: IF NOT EXISTS 지원)
+-- 시퀀스 (OracleFREE 23c: IF NOT EXISTS 지원)
 CREATE SEQUENCE IF NOT EXISTS seq_board START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE;
 CREATE TABLE IF NOT EXISTS tbl_board
 (

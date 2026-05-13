@@ -12,6 +12,7 @@ services:
     volumes:
       - oracle-data:/opt/oracle/oradata
       - ./docker/init-scripts:/container-entrypoint-initdb.d
+      - ./docker/sql-scripts:/opt/oracle/scripts
     healthcheck:
       test: ["CMD", "healthcheck.sh"]
       interval: 10s

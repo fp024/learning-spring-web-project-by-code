@@ -5,6 +5,8 @@ dictionaryDefinitions: []
 dictionaries: []
 words:
   - classloaders
+  - CLOB
+  - Dlvq
   - Dskip
   - errorlevel
   - FREEPDB
@@ -14,14 +16,28 @@ words:
   - hikari
   - initdb
   - Jstl
+  - NEXTVAL
+  - NOCACHE
+  - NOCYCLE
   - oradata
   - regdate
+  - replycnt
+  - replydate
   - replyer
   - rttr
   - SETLOCAL
   - Smails
+  - SQLCODE
+  - SQLERROR
+  - sqlplus
+  - SYSTIMESTAMP
+  - TABLESPACE
   - temurin
   - Thumbnailator
+  - updatedate
+  - uploadpath
+  - userpw
+  - VARCHAR
   - webapps
 ignoreWords: []
 import: []

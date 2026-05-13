@@ -99,6 +99,7 @@ part07의 jex06-board 프로젝트를 Spring 7 + Spring Security 7 + Java 21 환
 |------|------|
 | `web-start.bat` | WAR 빌드 (필요시) → DB 준비 대기 → 웹 서비스 시작. 한 번에 모든 과정 완료 |
 | `web-stop.bat` | 웹 컨테이너 중지 |
+| `web-clean.bat` | 웹 컨테이너 중지 후 삭제 (DB/볼륨 영향 없음) |
 | `web-restart.bat` | 웹 컨테이너 재시작 후 로그 표시 |
 | `web-logs.bat` | 웹 로그 실시간 표시 (재시작 없음) |
 
@@ -129,6 +130,7 @@ web-logs.bat
 
 # 종료
 web-stop.bat               # 웹 중지
+web-clean.bat              # 웹 컨테이너 정리(삭제)
 db-stop.bat                # DB 중지 (데이터 유지)
 
 # 완전히 초기화하고 싶을 때
