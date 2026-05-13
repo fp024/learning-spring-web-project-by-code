@@ -78,3 +78,68 @@ part07의 jex06-board 프로젝트를 Spring 7 + Spring Security 7 + Java 21 환
 - [x] 다른 프로젝트엔 tui.editor를 붙여보긴 했는데... 여기도 에디터를 붙여보면 좋을 것 같다.
   - 동일한 방식으로 tui.editor를 그대로 붙였다. 먼저 적용한 코드에서 약간의 코드 정리만 추가로 했다.
 
+
+## Docker Compose 실행 배치 파일 목록
+
+### 데이터베이스 (Oracle Free 23c) 관련
+
+| 파일 | 설명 |
+|------|------|
+| `db-start.bat` | Oracle DB 컨테이너 생성 및 실행 (이미 있다면 재시작만 함). DB 준비 완료 시까지 대기 |
+| `db-stop.bat` | Oracle DB 컨테이너 중지. 데이터 유지됨 |
+| `db-clean.bat` | Oracle DB 컨테이너 및 볼륨 삭제. 데이터 완전 초기화 |
+
+**DB 접속 정보:**
+- JDBC URL: `jdbc:oracle:thin:@//localhost:1521/FREEPDB1`
+
+
+### 웹 서버 (Tomcat 11) 관련
+
+| 파일 | 설명 |
+|------|------|
+| `web-start.bat` | WAR 빌드 (필요시) → DB 준비 대기 → 웹 서비스 시작. 한 번에 모든 과정 완료 |
+| `web-stop.bat` | 웹 컨테이너 중지 |
+| `web-restart.bat` | 웹 컨테이너 재시작 후 로그 표시 |
+| `web-logs.bat` | 웹 로그 실시간 표시 (재시작 없음) |
+
+**웹 접속 정보:**
+- App URL: `http://localhost:8080/`
+
+### 실행 순서 (처음 시작할 때)
+
+```batch
+# 1. 데이터베이스 시작
+db-start.bat
+
+# 2. 웹 서버 시작 (자동으로 DB 준비 확인 후 시작)
+web-start.bat
+```
+
+### 일반적인 개발 워크플로우
+
+```batch
+# 시작
+web-start.bat              # 자동으로 WAR 빌드 + DB 확인 + 웹 시작
+
+# 개발 중 변경사항 적용
+web-restart.bat            # 웹 컨테이너만 재시작
+
+# 로그 확인
+web-logs.bat
+
+# 종료
+web-stop.bat               # 웹 중지
+db-stop.bat                # DB 중지 (데이터 유지)
+
+# 완전히 초기화하고 싶을 때
+db-clean.bat               # DB 초기화 (데이터 삭제)
+```
+
+### 주의사항
+
+1. **DB 먼저 시작**: `web-start.bat` 실행 전에 `db-start.bat`를 먼저 실행하거나, `web-start.bat`가 자동으로 DB를 준비합니다.
+2. **WAR 빌드**: `web-start.bat`는 WAR 파일이 없으면 자동으로 `mvnw clean package -DskipTests`를 실행합니다.
+3. **로컬 개발**: 로컬에서 `tomcat-run.bat`로 Cargo + Tomcat을 사용하거나, Docker로 웹 서버를 실행할 수 있습니다.
+4. **데이터베이스 접속**: 
+   - 로컬 실행: `localhost:1521` (기본값)
+   - 컨테이너 실행: `oracle-free:1521` (자동 전환)

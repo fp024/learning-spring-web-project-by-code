@@ -1,8 +1,11 @@
 @echo off
-echo Stopping Oracle Docker container...
+set "SERVICE=%~1"
+if "%SERVICE%"=="" set "SERVICE=oracle-free"
+
+echo Stopping Docker service "%SERVICE%"...
 cd /d "%~dp0"
-docker compose stop
+docker compose stop %SERVICE%
 echo.
-echo Done. Data is preserved. Run db-start.bat to restart.
+echo Done. Data is preserved. Run db-start.bat %SERVICE% to restart.
 pause
 

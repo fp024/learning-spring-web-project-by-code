@@ -5,6 +5,8 @@ dictionaryDefinitions: []
 dictionaries: []
 words:
   - classloaders
+  - Dskip
+  - errorlevel
   - FREEPDB
   - Gson
   - gvenzl
@@ -16,7 +18,10 @@ words:
   - regdate
   - replyer
   - rttr
+  - SETLOCAL
   - Smails
+  - temurin
   - Thumbnailator
+  - webapps
 ignoreWords: []
 import: []
