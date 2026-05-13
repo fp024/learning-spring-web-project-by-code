@@ -72,7 +72,7 @@
 
 ---
 
-## mybatis-dynamic-sql 적용한 프로젝트를 Spring 7로 마이그레이션
+# mybatis-dynamic-sql 적용한 프로젝트를 Spring 7로 마이그레이션
 
 * 프로젝트
   * [my-board-mds](my-board-mds)
