@@ -1,6 +1,5 @@
 package org.fp024.mapper.generated;
 
-import jakarta.annotation.Generated;
 import java.sql.JDBCType;
 import java.time.LocalDateTime;
 import org.fp024.domain.EnabledType;
@@ -8,40 +7,32 @@ import org.mybatis.dynamic.sql.AliasableSqlTable;
 import org.mybatis.dynamic.sql.SqlColumn;
 
 public final class MemberVODynamicSqlSupport {
-    @Generated("org.mybatis.generator.api.MyBatisGenerator")
     public static final MemberVO memberVO = new MemberVO();
 
-    @Generated("org.mybatis.generator.api.MyBatisGenerator")
     public static final SqlColumn<String> userId = memberVO.userId;
 
-    @Generated("org.mybatis.generator.api.MyBatisGenerator")
     public static final SqlColumn<String> userPassword = memberVO.userPassword;
 
-    @Generated("org.mybatis.generator.api.MyBatisGenerator")
     public static final SqlColumn<String> userName = memberVO.userName;
 
-    @Generated("org.mybatis.generator.api.MyBatisGenerator")
     public static final SqlColumn<LocalDateTime> registerDate = memberVO.registerDate;
 
-    @Generated("org.mybatis.generator.api.MyBatisGenerator")
     public static final SqlColumn<LocalDateTime> updateDate = memberVO.updateDate;
 
-    @Generated("org.mybatis.generator.api.MyBatisGenerator")
     public static final SqlColumn<EnabledType> enabled = memberVO.enabled;
 
-    @Generated("org.mybatis.generator.api.MyBatisGenerator")
     public static final class MemberVO extends AliasableSqlTable<MemberVO> {
-        public final SqlColumn<String> userId = column("USERID", JDBCType.VARCHAR);
+        public final SqlColumn<String> userId = column("USERID", JDBCType.VARCHAR).withJavaProperty("userId");
 
-        public final SqlColumn<String> userPassword = column("USERPW", JDBCType.VARCHAR);
+        public final SqlColumn<String> userPassword = column("USERPW", JDBCType.VARCHAR).withJavaProperty("userPassword");
 
-        public final SqlColumn<String> userName = column("USERNAME", JDBCType.VARCHAR);
+        public final SqlColumn<String> userName = column("USERNAME", JDBCType.VARCHAR).withJavaProperty("userName");
 
-        public final SqlColumn<LocalDateTime> registerDate = column("REGDATE", JDBCType.TIMESTAMP);
+        public final SqlColumn<LocalDateTime> registerDate = column("REGDATE", JDBCType.TIMESTAMP).withJavaProperty("registerDate");
 
-        public final SqlColumn<LocalDateTime> updateDate = column("UPDATEDATE", JDBCType.TIMESTAMP);
+        public final SqlColumn<LocalDateTime> updateDate = column("UPDATEDATE", JDBCType.TIMESTAMP).withJavaProperty("updateDate");
 
-        public final SqlColumn<EnabledType> enabled = column("ENABLED", JDBCType.CHAR, "org.fp024.typehandler.CustomEnumTypeHandler");
+        public final SqlColumn<EnabledType> enabled = column("ENABLED", JDBCType.CHAR, "org.fp024.typehandler.CustomEnumTypeHandler").withJavaProperty("enabled");
 
         public MemberVO() {
             super("TBL_MEMBER", MemberVO::new);

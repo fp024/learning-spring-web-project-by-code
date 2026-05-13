@@ -3,7 +3,6 @@ package org.fp024.mapper.generated;
 import static org.fp024.mapper.generated.MemberVODynamicSqlSupport.*;
 import static org.mybatis.dynamic.sql.SqlBuilder.isEqualTo;
 
-import jakarta.annotation.Generated;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -16,13 +15,12 @@ import org.apache.ibatis.type.JdbcType;
 import org.fp024.domain.generated.MemberVO;
 import org.fp024.typehandler.CustomEnumTypeHandler;
 import org.mybatis.dynamic.sql.BasicColumn;
-import org.mybatis.dynamic.sql.delete.DeleteDSLCompleter;
-import org.mybatis.dynamic.sql.select.CountDSLCompleter;
-import org.mybatis.dynamic.sql.select.SelectDSLCompleter;
+import org.mybatis.dynamic.sql.dsl.CountDSLCompleter;
+import org.mybatis.dynamic.sql.dsl.DeleteDSLCompleter;
+import org.mybatis.dynamic.sql.dsl.SelectDSLCompleter;
+import org.mybatis.dynamic.sql.dsl.UpdateDSL;
+import org.mybatis.dynamic.sql.dsl.UpdateDSLCompleter;
 import org.mybatis.dynamic.sql.select.render.SelectStatementProvider;
-import org.mybatis.dynamic.sql.update.UpdateDSL;
-import org.mybatis.dynamic.sql.update.UpdateDSLCompleter;
-import org.mybatis.dynamic.sql.update.UpdateModel;
 import org.mybatis.dynamic.sql.util.SqlProviderAdapter;
 import org.mybatis.dynamic.sql.util.mybatis3.CommonCountMapper;
 import org.mybatis.dynamic.sql.util.mybatis3.CommonDeleteMapper;
@@ -32,10 +30,8 @@ import org.mybatis.dynamic.sql.util.mybatis3.MyBatis3Utils;
 
 @Mapper
 public interface MemberMapper extends CommonCountMapper, CommonDeleteMapper, CommonInsertMapper<MemberVO>, CommonUpdateMapper {
-    @Generated("org.mybatis.generator.api.MyBatisGenerator")
     BasicColumn[] selectList = BasicColumn.columnList(userId, userPassword, userName, registerDate, updateDate, enabled);
 
-    @Generated("org.mybatis.generator.api.MyBatisGenerator")
     @SelectProvider(type=SqlProviderAdapter.class, method="select")
     @Results(id="MemberVOResult", value = {
         @Result(column="USERID", property="userId", jdbcType=JdbcType.VARCHAR, id=true),
@@ -47,93 +43,80 @@ public interface MemberMapper extends CommonCountMapper, CommonDeleteMapper, Com
     })
     List<MemberVO> selectMany(SelectStatementProvider selectStatement);
 
-    @Generated("org.mybatis.generator.api.MyBatisGenerator")
     @SelectProvider(type=SqlProviderAdapter.class, method="select")
     @ResultMap("MemberVOResult")
     Optional<MemberVO> selectOne(SelectStatementProvider selectStatement);
 
-    @Generated("org.mybatis.generator.api.MyBatisGenerator")
     default long count(CountDSLCompleter completer) {
         return MyBatis3Utils.countFrom(this::count, memberVO, completer);
     }
 
-    @Generated("org.mybatis.generator.api.MyBatisGenerator")
     default int delete(DeleteDSLCompleter completer) {
         return MyBatis3Utils.deleteFrom(this::delete, memberVO, completer);
     }
 
-    @Generated("org.mybatis.generator.api.MyBatisGenerator")
     default int deleteByPrimaryKey(String userId_) {
         return delete(c -> 
             c.where(userId, isEqualTo(userId_))
         );
     }
 
-    @Generated("org.mybatis.generator.api.MyBatisGenerator")
     default int insert(MemberVO row) {
         return MyBatis3Utils.insert(this::insert, row, memberVO, c ->
-            c.map(userId).toProperty("userId")
-            .map(userPassword).toProperty("userPassword")
-            .map(userName).toProperty("userName")
-            .map(registerDate).toProperty("registerDate")
-            .map(updateDate).toProperty("updateDate")
-            .map(enabled).toProperty("enabled")
+            c.withMappedColumn(userId)
+            .withMappedColumn(userPassword)
+            .withMappedColumn(userName)
+            .withMappedColumn(registerDate)
+            .withMappedColumn(updateDate)
+            .withMappedColumn(enabled)
         );
     }
 
-    @Generated("org.mybatis.generator.api.MyBatisGenerator")
     default int insertMultiple(Collection<MemberVO> records) {
         return MyBatis3Utils.insertMultiple(this::insertMultiple, records, memberVO, c ->
-            c.map(userId).toProperty("userId")
-            .map(userPassword).toProperty("userPassword")
-            .map(userName).toProperty("userName")
-            .map(registerDate).toProperty("registerDate")
-            .map(updateDate).toProperty("updateDate")
-            .map(enabled).toProperty("enabled")
+            c.withMappedColumn(userId)
+            .withMappedColumn(userPassword)
+            .withMappedColumn(userName)
+            .withMappedColumn(registerDate)
+            .withMappedColumn(updateDate)
+            .withMappedColumn(enabled)
         );
     }
 
-    @Generated("org.mybatis.generator.api.MyBatisGenerator")
     default int insertSelective(MemberVO row) {
         return MyBatis3Utils.insert(this::insert, row, memberVO, c ->
-            c.map(userId).toPropertyWhenPresent("userId", row::getUserId)
-            .map(userPassword).toPropertyWhenPresent("userPassword", row::getUserPassword)
-            .map(userName).toPropertyWhenPresent("userName", row::getUserName)
-            .map(registerDate).toPropertyWhenPresent("registerDate", row::getRegisterDate)
-            .map(updateDate).toPropertyWhenPresent("updateDate", row::getUpdateDate)
-            .map(enabled).toPropertyWhenPresent("enabled", row::getEnabled)
+            c.withMappedColumnWhenPresent(userId, row::getUserId)
+            .withMappedColumnWhenPresent(userPassword, row::getUserPassword)
+            .withMappedColumnWhenPresent(userName, row::getUserName)
+            .withMappedColumnWhenPresent(registerDate, row::getRegisterDate)
+            .withMappedColumnWhenPresent(updateDate, row::getUpdateDate)
+            .withMappedColumnWhenPresent(enabled, row::getEnabled)
         );
     }
 
-    @Generated("org.mybatis.generator.api.MyBatisGenerator")
     default Optional<MemberVO> selectOne(SelectDSLCompleter completer) {
         return MyBatis3Utils.selectOne(this::selectOne, selectList, memberVO, completer);
     }
 
-    @Generated("org.mybatis.generator.api.MyBatisGenerator")
     default List<MemberVO> select(SelectDSLCompleter completer) {
         return MyBatis3Utils.selectList(this::selectMany, selectList, memberVO, completer);
     }
 
-    @Generated("org.mybatis.generator.api.MyBatisGenerator")
     default List<MemberVO> selectDistinct(SelectDSLCompleter completer) {
         return MyBatis3Utils.selectDistinct(this::selectMany, selectList, memberVO, completer);
     }
 
-    @Generated("org.mybatis.generator.api.MyBatisGenerator")
     default Optional<MemberVO> selectByPrimaryKey(String userId_) {
         return selectOne(c ->
             c.where(userId, isEqualTo(userId_))
         );
     }
 
-    @Generated("org.mybatis.generator.api.MyBatisGenerator")
     default int update(UpdateDSLCompleter completer) {
         return MyBatis3Utils.update(this::update, memberVO, completer);
     }
 
-    @Generated("org.mybatis.generator.api.MyBatisGenerator")
-    static UpdateDSL<UpdateModel> updateAllColumns(MemberVO row, UpdateDSL<UpdateModel> dsl) {
+    static UpdateDSL updateAllColumns(MemberVO row, UpdateDSL dsl) {
         return dsl.set(userId).equalTo(row::getUserId)
                 .set(userPassword).equalTo(row::getUserPassword)
                 .set(userName).equalTo(row::getUserName)
@@ -142,8 +125,7 @@ public interface MemberMapper extends CommonCountMapper, CommonDeleteMapper, Com
                 .set(enabled).equalTo(row::getEnabled);
     }
 
-    @Generated("org.mybatis.generator.api.MyBatisGenerator")
-    static UpdateDSL<UpdateModel> updateSelectiveColumns(MemberVO row, UpdateDSL<UpdateModel> dsl) {
+    static UpdateDSL updateSelectiveColumns(MemberVO row, UpdateDSL dsl) {
         return dsl.set(userId).equalToWhenPresent(row::getUserId)
                 .set(userPassword).equalToWhenPresent(row::getUserPassword)
                 .set(userName).equalToWhenPresent(row::getUserName)
@@ -152,7 +134,6 @@ public interface MemberMapper extends CommonCountMapper, CommonDeleteMapper, Com
                 .set(enabled).equalToWhenPresent(row::getEnabled);
     }
 
-    @Generated("org.mybatis.generator.api.MyBatisGenerator")
     default int updateByPrimaryKey(MemberVO row) {
         return update(c ->
             c.set(userPassword).equalTo(row::getUserPassword)
@@ -164,7 +145,6 @@ public interface MemberMapper extends CommonCountMapper, CommonDeleteMapper, Com
         );
     }
 
-    @Generated("org.mybatis.generator.api.MyBatisGenerator")
     default int updateByPrimaryKeySelective(MemberVO row) {
         return update(c ->
             c.set(userPassword).equalToWhenPresent(row::getUserPassword)

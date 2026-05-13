@@ -25,7 +25,7 @@ import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.mybatis.dynamic.sql.select.SelectDSLCompleter;
+import org.mybatis.dynamic.sql.dsl.SelectDSLCompleter;
 
 @Slf4j
 @ExtendWith(MockitoExtension.class)
