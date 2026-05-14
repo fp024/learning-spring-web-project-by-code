@@ -56,3 +56,6 @@ coverage
 !.vscode/settings.json
 !.vscode/extensions.json
 javaagent-libs/
+toolchains.xml
+setenv-custom.properties
+docker/web-upload/

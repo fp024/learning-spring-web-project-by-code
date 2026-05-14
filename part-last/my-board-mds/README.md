@@ -145,3 +145,12 @@ db-clean.bat               # DB 초기화 (데이터 삭제)
 4. **데이터베이스 접속**: 
    - 로컬 실행: `localhost:1521` (기본값)
    - 컨테이너 실행: `oracle-free:1521` (자동 전환)
+5. **✨ JDK/toolchains 설정 ✨**:
+  - 프로젝트 루트의 `setenv-custom.properties`가 있으면 그 파일을 우선 사용하고, 없으면 `setenv.properties`를 사용합니다.
+  - 선택된 properties 파일에 아래 3개 키를 반드시 설정해야 합니다.
+    - `JAVA_HOME`
+    - `JDK_VERSION`
+    - `JDK_VENDOR`
+  - `set-jdk-env.bat` 실행 시 `build-scripts/generate-toolchains.ps1`가 `toolchains.xml`을 자동 생성합니다.
+  - `toolchains.xml`은 생성 파일이며 Git 추적 대상이 아닙니다.
+  - `setenv-custom.properties`는 로컬 오버라이드용 파일이며 Git 추적 대상이 아닙니다.
