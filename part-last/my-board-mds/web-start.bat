@@ -5,10 +5,16 @@ set "WAR_FILE=target\my-board-mds-1.0.0-BUILD-SNAPSHOT.war"
 echo Starting web server on Docker Compose...
 cd /d "%~dp0"
 
+REM Ensure docker/web-upload directory exists
+if not exist "docker\web-upload" (
+    echo [Creating docker/web-upload directory...]
+    mkdir docker\web-upload
+)
+
 if not exist "%WAR_FILE%" (
     echo [Building WAR...]
-    CALL ..\..\set-jdk-21-env.bat
-    CALL .\mvnw.cmd clean package -DskipTests
+    CALL .\set-jdk-env.bat
+    CALL .\mvnw.cmd -t .\toolchains.xml clean package -DskipTests -Plinux
     if errorlevel 1 (
         echo [ERROR] Build failed.
         pause

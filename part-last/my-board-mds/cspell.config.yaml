@@ -20,6 +20,9 @@ words:
   - NOCACHE
   - NOCYCLE
   - oradata
+  - Pjetty
+  - Plinux
+  - Ptomcat
   - regdate
   - replycnt
   - replydate
@@ -36,6 +39,7 @@ words:
   - Thumbnailator
   - updatedate
   - uploadpath
+  - usebackq
   - userpw
   - VARCHAR
   - webapps
