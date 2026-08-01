@@ -29,8 +29,8 @@
     <jakarta.inject-api.version>2.0.1</jakarta.inject-api.version>
     <jakarta.annotation-api.version>3.0.0</jakarta.annotation-api.version>
 
-    <org.springframework-version>7.0.7</org.springframework-version>
-    <spring-security.version>7.0.5</spring-security.version>
+    <org.springframework-version>7.0.8</org.springframework-version>
+    <spring-security.version>7.1.0</spring-security.version>
 
     <mybatis.spring.version>4.0.0</mybatis.spring.version>
 
