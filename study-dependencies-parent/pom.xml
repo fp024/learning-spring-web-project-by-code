@@ -29,6 +29,12 @@
 
     <quartz.version>2.5.2</quartz.version>
 
+    <!-- ⚠️ Spring 5와 6 프로젝트에서는 Jackson 2를 유지한다.
+         Spring 7부터 Jackson 3을 지원한다.
+         https://github.com/spring-projects/spring-framework/blob/v7.0.0/spring-jms/src/main/java/org/springframework/jms/support/converter/JacksonJsonMessageConverter.java
+         
+         하위 프로젝트인 part-last/my-board-mds가 Spring 7을 사용하지만, 이 프로젝트는 gson을 사용하고 있다.
+    -->
     <jackson.version>2.21.2</jackson.version>
     <!-- 마이크로 보안 패치가 있을때, jackson-databind 만 패치되기도 함. 
          jackson-databind는 별도로 분리해두는게 낫겠다. -->
